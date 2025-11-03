@@ -71,7 +71,6 @@ namespace GameJam.Controller
                 currentState = SeekerState.MovingToDestination;
         }
 
-        //TODO the cutter guys run behind the rock. maybe use box collider or something idk lol
         //Move to the targeted resource
         void MoveToDestination()
         {
@@ -103,7 +102,7 @@ namespace GameJam.Controller
          * For Debugging purposes.
          * Draw the path that the QuarryWorker will use.
          */
-        void OnDrawGizmos()
+        void OnDrawGizmos() 
         {
             if (!showPath)
                 return;
