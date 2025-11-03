@@ -5,20 +5,48 @@ namespace Controller
 {
     public class CameraController : MonoBehaviour
     {
-        [Header("Movement Settings")] public float moveSpeed = 10f;
-        public float scrollSpeed = 100f;
-        public float minY = 5f;
-        public float maxY = 20f;
+        [Header("Settings")] public float moveSpeed = 10f;
         public float tiltAngle = 65f;
-        public float rotationSpeed = 50f;
+        public float rotationSpeed = 75f;
+        public float zoomSpeed = 75f;
+        public InputActionAsset cameraActionsAsset;
 
-        void Start()
+        private InputAction _moveAction;
+        private InputAction _zoomAction;
+        private InputAction _rotateAction;
+        private float _targetY; //for smooth scrolling
+        private const float MinZoom = 5f;
+        private const float MaxZoom = 20f;
+
+        private void OnEnable()
         {
-            // Set initial rotation to look down at tiltAngle  
-            transform.rotation = Quaternion.Euler(tiltAngle, 0f, 0f);
+            var map = cameraActionsAsset.FindActionMap("Camera");
+
+            _moveAction = map.FindAction("Move");
+            _moveAction.Enable();
+
+            _zoomAction = map.FindAction("Zoom");
+            _zoomAction.Enable();
+
+            _rotateAction = map.FindAction("Rotate");
+            _rotateAction.Enable();
         }
 
-        void Update()
+        private void OnDisable()
+        {
+            _moveAction.Disable();
+            _zoomAction.Disable();
+            _rotateAction.Disable();
+        }
+
+
+        private void Start()
+        {
+            transform.rotation = Quaternion.Euler(tiltAngle, 0f, 0f);
+            _targetY = transform.position.y;
+        }
+
+        private void Update()
         {
             HandleMovement();
             HandleZoom();
@@ -27,39 +55,30 @@ namespace Controller
 
         private void HandleMovement()
         {
-            Vector3 move = Vector3.zero;
-            if (Keyboard.current.wKey.isPressed) move.z += 1f;
-            if (Keyboard.current.sKey.isPressed) move.z -= 1f;
-            if (Keyboard.current.aKey.isPressed) move.x -= 1f;
-            if (Keyboard.current.dKey.isPressed) move.x += 1f;
-
-            // Move in the camera's local XZ plane  
+            Vector2 input = _moveAction.ReadValue<Vector2>();
             Vector3 forward = Vector3.Scale(transform.forward, new Vector3(1, 0, 1)).normalized;
             Vector3 right = transform.right;
-            transform.position += (forward * move.z + right * move.x) * moveSpeed * Time.deltaTime;
+            transform.position += (forward * input.y + right * input.x) * moveSpeed * Time.deltaTime;
         }
 
         private void HandleZoom()
         {
-            if (Mouse.current != null)
-            {
-                Vector2 scroll = Mouse.current.scroll.ReadValue();
-                if (scroll.y != 0f)
-                {
-                    Vector3 pos = transform.position;
-                    pos.y -= scroll.y * scrollSpeed * Time.deltaTime;
-                    pos.y = Mathf.Clamp(pos.y, minY, maxY);
-                    transform.position = pos;
-                }
-            }
+            Vector2 scroll = _zoomAction.ReadValue<Vector2>();
+            float zoomAmount = scroll.y;
+
+            _targetY -= zoomAmount * zoomSpeed * Time.deltaTime;
+            _targetY = Mathf.Clamp(_targetY, MinZoom, MaxZoom);
+
+            Vector3 pos = transform.position;
+            pos.y = Mathf.Lerp(pos.y, _targetY, 10f * Time.deltaTime); //smooth transition
+            transform.position = pos;
         }
 
         private void HandleRotation()
         {
-            float rotation = 0f;
-            if (Keyboard.current.qKey.isPressed) rotation -= 1f;
-            if (Keyboard.current.eKey.isPressed) rotation += 1f;
-            transform.Rotate(Vector3.up, rotation * rotationSpeed * Time.deltaTime, Space.World);
+            float rotationInput = _rotateAction.ReadValue<float>();
+            transform.Rotate(Vector3.up, rotationInput * rotationSpeed * Time.deltaTime, Space.World);
+
             Vector3 euler = transform.eulerAngles;
             euler.x = tiltAngle;
             transform.eulerAngles = euler;

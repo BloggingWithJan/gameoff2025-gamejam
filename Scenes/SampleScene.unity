@@ -275,11 +275,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   moveSpeed: 10
-  scrollSpeed: 100
-  minY: 5
-  maxY: 20
   tiltAngle: 65
-  rotationSpeed: 50
+  rotationSpeed: 100
+  zoomSpeed: 75
+  cameraActionsAsset: {fileID: -944628639613478452, guid: da40df138a9540248b5fc5043da7fd43, type: 3}
 --- !u!1 &360810270
 GameObject:
   m_ObjectHideFlags: 0
