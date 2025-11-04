@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using GameJam.Worker;
 using UnityEngine;
@@ -11,6 +12,8 @@ public class ResourceNode : MonoBehaviour
 
         public bool IsOccupied() => assignedWorker != null;
     }
+
+    public event Action OnResourceDepleted;
 
     public int maxResourceAmount = 100;
     public int currentResourceAmount;
@@ -101,7 +104,17 @@ public class ResourceNode : MonoBehaviour
     {
         int gathered = Mathf.Min(amount, currentResourceAmount);
         currentResourceAmount -= gathered;
+        if (currentResourceAmount <= 0)
+        {
+            ResourceDepleted();
+        }
         return gathered;
+    }
+
+    private void ResourceDepleted()
+    {
+        OnResourceDepleted?.Invoke();
+        Destroy(gameObject);
     }
 
     ///////////////////////////////////////////

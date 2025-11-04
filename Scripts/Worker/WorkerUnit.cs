@@ -40,6 +40,8 @@ namespace GameJam.Worker
         private GameObject instantiatedTool;
         private Coroutine gatherCoroutine;
 
+        private int gatheredAmount;
+
         void Start()
         {
             navMeshAgent = GetComponent<NavMeshAgent>();
@@ -118,6 +120,7 @@ namespace GameJam.Worker
                 {
                     // Successfully reserved a slot
                     targetNode = node;
+                    targetNode.OnResourceDepleted += HandleTargetNodeDepleted;
                     currentState = WorkerState.MovingToResource;
                     return;
                 }
@@ -156,8 +159,13 @@ namespace GameJam.Worker
             navMeshAgent.isStopped = true;
             animator.SetTrigger("gather");
             yield return new WaitForSeconds(currentWorkerType.GetGatherTime());
-            int gatherAmount = targetNode.Gather(currentWorkerType.GetGatherAmount());
-            targetNode.ReleaseSlot(this);
+            if (targetNode != null)
+            {
+                gatheredAmount = targetNode.Gather(currentWorkerType.GetGatherAmount());
+                targetNode.ReleaseSlot(this);
+                targetNode.OnResourceDepleted -= HandleTargetNodeDepleted;
+                targetNode = null;
+            }
             navMeshAgent.isStopped = false;
             animator.SetTrigger("stopGather");
             currentState = WorkerState.ReturningResource;
@@ -175,9 +183,24 @@ namespace GameJam.Worker
             mover.MoveTo(workCamp.transform.position);
             if (mover.IsDestinationReached())
             {
-                workCamp.DepositResources(currentWorkerType.GetGatherAmount());
+                workCamp.DepositResources(gatheredAmount);
+                gatheredAmount = 0;
                 currentState = WorkerState.SearchingForResource;
             }
+        }
+
+        private void HandleTargetNodeDepleted()
+        {
+            if (gatherCoroutine != null)
+            {
+                StopCoroutine(gatherCoroutine);
+                gatherCoroutine = null;
+                navMeshAgent.isStopped = false;
+                animator.SetTrigger("stopGather");
+                gatheredAmount = 0;
+            }
+
+            currentState = WorkerState.SearchingForResource;
         }
 
         //MMMMMMMMMMMMMMMMMMMMM
@@ -189,6 +212,9 @@ namespace GameJam.Worker
 
             if (newWorkerType == null)
                 return;
+
+            if (instantiatedTool != null)
+                Destroy(instantiatedTool);
 
             currentWorkerType = newWorkerType;
             instantiatedTool = Instantiate(newWorkerType.GetToolPrefab(), rightHandTransform);
