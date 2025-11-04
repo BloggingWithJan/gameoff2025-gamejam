@@ -15,3 +15,6 @@ MonoBehaviour:
   typeName: LumberJack
   toolPrefab: {fileID: 7951638916513677963, guid: c78df083b5acedc47834060ac9642e58, type: 3}
   resourceTag: Wood
+  gatherTime: 5
+  gatherAmount: 2
+  gatherSound: {fileID: 8300000, guid: 2e85be738b3bc4f4f9509d662187b5c1, type: 3}

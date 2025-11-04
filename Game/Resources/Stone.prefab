@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6170525698107318825}
+  - component: {fileID: 1870096279020547228}
   m_Layer: 0
   m_Name: Stone
   m_TagString: Stone
@@ -32,6 +33,25 @@ Transform:
   - {fileID: 5374308547964110903}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1870096279020547228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 94807060078948755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc55e05a30781074fa9205f6960e0a7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ResourceNode
+  gatherOffsets:
+  - {x: -0.26932, y: 0, z: 1.188}
+  - {x: -1.313, y: 0, z: 0.405}
+  - {x: -1.515, y: 0, z: -0.94}
+  - {x: -0.287, y: 0, z: -1.53}
+  - {x: 0.65, y: 0, z: -1.68}
+  - {x: 1.385, y: 0, z: -0.605}
 --- !u!1 &9140068073352545757
 GameObject:
   m_ObjectHideFlags: 0

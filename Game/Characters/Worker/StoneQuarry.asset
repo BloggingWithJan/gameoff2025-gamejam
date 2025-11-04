@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: StoneQuarry
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Worker.WorkerType
   typeName: StoneQuarry
-  toolPrefab: {fileID: 2333683425857768080, guid: 3649bde2f9331f84d8549d8567156c60, type: 3}
+  toolPrefab: {fileID: 9124940930354330362, guid: 3649bde2f9331f84d8549d8567156c60, type: 3}
   resourceTag: Stone
+  gatherTime: 5
+  gatherAmount: 10
+  gatherSound: {fileID: 8300000, guid: b0bd56fef2752c9489ae26f1e8506ad2, type: 3}

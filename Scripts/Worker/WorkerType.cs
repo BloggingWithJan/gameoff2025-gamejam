@@ -16,6 +16,15 @@ namespace GameJam.Worker
         [SerializeField]
         string resourceTag;
 
+        [SerializeField]
+        float gatherTime = 5f;
+
+        [SerializeField]
+        int gatherAmount = 2;
+
+        [SerializeField]
+        AudioClip gatherSound;
+
         public GameObject GetToolPrefab()
         {
             return toolPrefab;
@@ -24,6 +33,21 @@ namespace GameJam.Worker
         public string GetResourceTag()
         {
             return resourceTag;
+        }
+
+        public float GetGatherTime()
+        {
+            return gatherTime;
+        }
+
+        public int GetGatherAmount()
+        {
+            return gatherAmount;
+        }
+
+        public AudioClip GetGatherSound()
+        {
+            return gatherSound;
         }
     }
 }

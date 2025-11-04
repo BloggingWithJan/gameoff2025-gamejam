@@ -1,3 +1,4 @@
+using System.Collections;
 using GameJam.Core;
 using GameJam.Movement;
 using UnityEngine;
@@ -24,16 +25,20 @@ namespace GameJam.Worker
         [SerializeField]
         WorkerType initialWorkerType;
 
+        [SerializeField]
+        WorkCamp workCamp;
+
         private WorkerType currentWorkerType;
         private NavMeshAgent navMeshAgent;
         private Mover mover;
         private Health health;
         private Animator animator;
+        private AudioSource audioSource;
 
         private WorkerState currentState;
-        private GameObject targetResource;
-        private Vector3 workLocation;
+        private ResourceNode targetNode;
         private GameObject instantiatedTool;
+        private Coroutine gatherCoroutine;
 
         void Start()
         {
@@ -41,15 +46,18 @@ namespace GameJam.Worker
             mover = GetComponent<Mover>();
             animator = GetComponent<Animator>();
             health = GetComponent<Health>();
+            audioSource = GetComponent<AudioSource>();
+            //navMeshAgent tuning so there are less collisions between multiple workers
+            navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
+            navMeshAgent.avoidancePriority = Random.Range(30, 60);
+            //starting work cycle
             currentState = WorkerState.SearchingForResource;
-            workLocation = transform.position;
             if (initialWorkerType != null)
             {
                 SetWorkerType(initialWorkerType);
             }
         }
 
-        // Update is called once per frame
         void Update()
         {
             if (health.IsDead())
@@ -74,49 +82,102 @@ namespace GameJam.Worker
             }
         }
 
+        //search for the nearest resource node of the correct type and try to reserve a slot for gathering - otherwise check next resource node
         private void SearchForResource()
         {
-            var resources = GameObject.FindGameObjectsWithTag(currentWorkerType.GetResourceTag());
-            float closestDist = Mathf.Infinity;
-            foreach (var resource in resources)
+            var resourceObjects = GameObject.FindGameObjectsWithTag(
+                currentWorkerType.GetResourceTag()
+            );
+
+            // Create a list of resource nodes with their distances
+            var resourcesWithDistance = new System.Collections.Generic.List<(
+                ResourceNode node,
+                float distance
+            )>();
+
+            foreach (var resourceObj in resourceObjects)
             {
-                float dist = Vector3.Distance(transform.position, resource.transform.position);
-                if (dist < closestDist)
+                ResourceNode node = resourceObj.GetComponent<ResourceNode>();
+                if (node != null && node.CanGather(currentWorkerType.GetGatherAmount()))
                 {
-                    closestDist = dist;
-                    targetResource = resource;
+                    float distance = Vector3.Distance(
+                        transform.position,
+                        resourceObj.transform.position
+                    );
+                    resourcesWithDistance.Add((node, distance));
                 }
             }
-            if (targetResource != null)
+
+            // Sort by distance (closest first)
+            resourcesWithDistance.Sort((a, b) => a.distance.CompareTo(b.distance));
+
+            // Try to reserve a slot, starting with the closest resource
+            foreach (var (node, _) in resourcesWithDistance)
             {
-                currentState = WorkerState.MovingToResource;
+                if (node.TryReserveSlot(this))
+                {
+                    // Successfully reserved a slot
+                    targetNode = node;
+                    currentState = WorkerState.MovingToResource;
+                    return;
+                }
             }
+
+            // No available slots found in any resource
+            targetNode = null;
         }
 
+        //move to the reserved slot at the resource node - switch to gathering state when reached
         private void MoveToResource()
         {
-            //no target resource - go back to searching
-            if (targetResource == null)
-            {
-                currentState = WorkerState.SearchingForResource;
-                return;
-            }
-
-            mover.MoveTo(targetResource.transform.position);
+            mover.MoveTo(targetNode.GetSlotPosition(this));
             if (mover.IsDestinationReached())
+            {
+                // Face towards the resource center
+                Vector3 facingDirection = targetNode.GetFacingDirection(this);
+                if (facingDirection != Vector3.zero)
+                {
+                    transform.rotation = Quaternion.LookRotation(facingDirection);
+                }
+
                 currentState = WorkerState.GatheringResource;
+            }
         }
 
         private void GatherResource()
         {
+            if (gatherCoroutine != null)
+                return;
+            gatherCoroutine = StartCoroutine(GatherLoop());
+        }
+
+        private IEnumerator GatherLoop()
+        {
+            navMeshAgent.isStopped = true;
+            animator.SetTrigger("gather");
+            yield return new WaitForSeconds(currentWorkerType.GetGatherTime());
+            int gatherAmount = targetNode.Gather(currentWorkerType.GetGatherAmount());
+            targetNode.ReleaseSlot(this);
+            navMeshAgent.isStopped = false;
+            animator.SetTrigger("stopGather");
             currentState = WorkerState.ReturningResource;
+        }
+
+        // event is triggered when the gather animation hits the resource
+        void Hit()
+        {
+            audioSource.PlayOneShot(currentWorkerType.GetGatherSound());
         }
 
         private void ReturnResource()
         {
-            mover.MoveTo(workLocation);
+            gatherCoroutine = null; //clear gatherCoroutine
+            mover.MoveTo(workCamp.transform.position);
             if (mover.IsDestinationReached())
+            {
+                workCamp.DepositResources(currentWorkerType.GetGatherAmount());
                 currentState = WorkerState.SearchingForResource;
+            }
         }
 
         //MMMMMMMMMMMMMMMMMMMMM
@@ -131,6 +192,7 @@ namespace GameJam.Worker
 
             currentWorkerType = newWorkerType;
             instantiatedTool = Instantiate(newWorkerType.GetToolPrefab(), rightHandTransform);
+
             //TODO
         }
     }
