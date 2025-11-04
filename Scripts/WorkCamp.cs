@@ -1,3 +1,4 @@
+using GameJam.Resource;
 using UnityEngine;
 
 public class WorkCamp : MonoBehaviour

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6170525698107318825}
   - component: {fileID: 1870096279020547228}
+  - component: {fileID: 1533924029578936100}
   m_Layer: 0
   m_Name: Stone
   m_TagString: Stone
@@ -45,13 +46,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc55e05a30781074fa9205f6960e0a7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResourceNode
-  gatherOffsets:
-  - {x: -0.26932, y: 0, z: 1.188}
-  - {x: -1.313, y: 0, z: 0.405}
-  - {x: -1.515, y: 0, z: -0.94}
-  - {x: -0.287, y: 0, z: -1.53}
-  - {x: 0.65, y: 0, z: -1.68}
-  - {x: 1.385, y: 0, z: -0.605}
+  maxResourceAmount: 100
+  currentResourceAmount: 0
+  numberOfGatherSlots: 4
+  gatherRadius: 2
+--- !u!208 &1533924029578936100
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 94807060078948755}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1, y: 1, z: 1}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 1, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &9140068073352545757
 GameObject:
   m_ObjectHideFlags: 0

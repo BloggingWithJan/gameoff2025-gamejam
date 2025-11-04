@@ -1,6 +1,7 @@
 using System.Collections;
 using GameJam.Core;
 using GameJam.Movement;
+using GameJam.Resource;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -8,7 +9,7 @@ namespace GameJam.Worker
 {
     public class WorkerUnit : MonoBehaviour
     {
-        enum WorkerState
+        public enum WorkerState
         {
             SearchingForResource,
             MovingToResource,
@@ -28,6 +29,8 @@ namespace GameJam.Worker
         [SerializeField]
         WorkCamp workCamp;
 
+        public WorkerState currentState;
+
         private WorkerType currentWorkerType;
         private NavMeshAgent navMeshAgent;
         private Mover mover;
@@ -35,7 +38,6 @@ namespace GameJam.Worker
         private Animator animator;
         private AudioSource audioSource;
 
-        private WorkerState currentState;
         private ResourceNode targetNode;
         private GameObject instantiatedTool;
         private Coroutine gatherCoroutine;
@@ -52,6 +54,9 @@ namespace GameJam.Worker
             //navMeshAgent tuning so there are less collisions between multiple workers
             navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
             navMeshAgent.avoidancePriority = Random.Range(30, 60);
+            // navMeshAgent.avoidancePriority = 99; // lowest priority
+            // navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
+
             //starting work cycle
             currentState = WorkerState.SearchingForResource;
             if (initialWorkerType != null)
