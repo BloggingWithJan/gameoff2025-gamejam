@@ -23,10 +23,10 @@ public class EnemyAIController : MonoBehaviour
         if (health.IsDead())
             return;
 
-        AttackBehavior();
+        AttackBehaviour();
     }
 
-    private void AttackBehavior()
+    private void AttackBehaviour()
     {
         if (fighter.CanAttack(target))
         {

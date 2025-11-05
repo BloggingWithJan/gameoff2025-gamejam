@@ -6,17 +6,17 @@ namespace GameJam.UI
     public class StateInfo : MonoBehaviour
     {
         [SerializeField]
-        GameObject workerUnit;
+        GameObject gathererUnit;
 
         [SerializeField]
         GameObject worldSpaceCanvas;
 
         void LateUpdate()
         {
-            WorkerUnit worker = workerUnit.GetComponent<WorkerUnit>();
+            Gatherer gatherer = gathererUnit.GetComponent<Gatherer>();
             if (
-                worker != null
-                && worker.currentState == WorkerUnit.WorkerState.SearchingForResource
+                gatherer != null
+                && gatherer.currentState == Gatherer.GathererState.SearchingForResource
             )
             {
                 worldSpaceCanvas.SetActive(true);

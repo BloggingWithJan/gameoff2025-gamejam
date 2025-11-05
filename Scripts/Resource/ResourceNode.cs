@@ -10,9 +10,9 @@ namespace GameJam.Resource
         private class GatherSlot
         {
             public Vector3 offset;
-            public WorkerUnit assignedWorker;
+            public Gatherer assignedGatherer;
 
-            public bool IsOccupied() => assignedWorker != null;
+            public bool IsOccupied() => assignedGatherer != null;
         }
 
         public event Action OnResourceDepleted;
@@ -67,7 +67,7 @@ namespace GameJam.Resource
 
         //     return false;
         // }
-        public bool TryReserveSlot(WorkerUnit worker)
+        public bool TryReserveSlot(Gatherer gatherer)
         {
             int nearestSlotIndex = -1;
             float nearestDistance = float.MaxValue;
@@ -78,7 +78,7 @@ namespace GameJam.Resource
                 if (!gatherSlots[i].IsOccupied())
                 {
                     Vector3 slotWorldPos = transform.position + gatherSlots[i].offset;
-                    float distance = Vector3.Distance(worker.transform.position, slotWorldPos);
+                    float distance = Vector3.Distance(gatherer.transform.position, slotWorldPos);
 
                     if (distance < nearestDistance)
                     {
@@ -91,16 +91,16 @@ namespace GameJam.Resource
             // Assign the nearest slot if found
             if (nearestSlotIndex >= 0)
             {
-                gatherSlots[nearestSlotIndex].assignedWorker = worker;
+                gatherSlots[nearestSlotIndex].assignedGatherer = gatherer;
                 return true;
             }
 
             return false;
         }
 
-        public Vector3 GetSlotPosition(WorkerUnit worker)
+        public Vector3 GetSlotPosition(Gatherer gatherer)
         {
-            int slotIndex = gatherSlots.FindIndex(slot => slot.assignedWorker == worker);
+            int slotIndex = gatherSlots.FindIndex(slot => slot.assignedGatherer == gatherer);
             if (slotIndex >= 0 && slotIndex < gatherSlots.Count)
             {
                 return transform.position + gatherSlots[slotIndex].offset;
@@ -108,19 +108,19 @@ namespace GameJam.Resource
             return transform.position;
         }
 
-        public void ReleaseSlot(WorkerUnit worker)
+        public void ReleaseSlot(Gatherer gatherer)
         {
-            int slotIndex = gatherSlots.FindIndex(slot => slot.assignedWorker == worker);
+            int slotIndex = gatherSlots.FindIndex(slot => slot.assignedGatherer == gatherer);
             if (slotIndex >= 0 && slotIndex < gatherSlots.Count)
             {
-                gatherSlots[slotIndex].assignedWorker = null;
+                gatherSlots[slotIndex].assignedGatherer = null;
             }
         }
 
-        /// Get direction from the worker's slot to the resource center so the worker can face the resource while gathering
-        public Vector3 GetFacingDirection(WorkerUnit worker)
+        /// Get direction from the gatherer's slot to the resource center so the gatherer can face the resource while gathering
+        public Vector3 GetFacingDirection(Gatherer gatherer)
         {
-            int slotIndex = gatherSlots.FindIndex(slot => slot.assignedWorker == worker);
+            int slotIndex = gatherSlots.FindIndex(slot => slot.assignedGatherer == gatherer);
             if (slotIndex >= 0 && slotIndex < gatherSlots.Count)
             {
                 Vector3 slotPos = transform.position + gatherSlots[slotIndex].offset;

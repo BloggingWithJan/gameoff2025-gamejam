@@ -7,10 +7,11 @@ using UnityEngine.AI;
 
 namespace GameJam.Worker
 {
-    public class WorkerUnit : MonoBehaviour
+    public class Gatherer : MonoBehaviour, IAction
     {
-        public enum WorkerState
+        public enum GathererState
         {
+            Idle,
             SearchingForResource,
             MovingToResource,
             GatheringResource,
@@ -24,14 +25,14 @@ namespace GameJam.Worker
         Transform leftHandTransform;
 
         [SerializeField]
-        WorkerType initialWorkerType;
+        GathererType initialGathererType;
 
         [SerializeField]
         WorkCamp workCamp;
 
-        public WorkerState currentState;
+        public GathererState currentState;
 
-        private WorkerType currentWorkerType;
+        private GathererType currentGathererType;
         private NavMeshAgent navMeshAgent;
         private Mover mover;
         private Health health;
@@ -60,10 +61,9 @@ namespace GameJam.Worker
             navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
 
             //starting work cycle
-            currentState = WorkerState.SearchingForResource;
-            if (initialWorkerType != null)
+            if (initialGathererType != null)
             {
-                SetWorkerType(initialWorkerType);
+                SetGathererType(initialGathererType);
             }
         }
 
@@ -71,21 +71,23 @@ namespace GameJam.Worker
         {
             if (health.IsDead())
                 return;
-            if (currentWorkerType == null)
+            if (currentGathererType == null)
+                return;
+            if (currentState == GathererState.Idle)
                 return;
 
             switch (currentState)
             {
-                case WorkerState.SearchingForResource:
+                case GathererState.SearchingForResource:
                     SearchForResource();
                     break;
-                case WorkerState.MovingToResource:
+                case GathererState.MovingToResource:
                     MoveToResource();
                     break;
-                case WorkerState.GatheringResource:
+                case GathererState.GatheringResource:
                     GatherResource();
                     break;
-                case WorkerState.ReturningResource:
+                case GathererState.ReturningResource:
                     ReturnResource();
                     break;
             }
@@ -95,7 +97,7 @@ namespace GameJam.Worker
         private void SearchForResource()
         {
             var resourceObjects = GameObject.FindGameObjectsWithTag(
-                currentWorkerType.GetResourceTag()
+                currentGathererType.GetResourceTag()
             );
 
             // Create a list of resource nodes with their distances
@@ -107,7 +109,7 @@ namespace GameJam.Worker
             foreach (var resourceObj in resourceObjects)
             {
                 ResourceNode node = resourceObj.GetComponent<ResourceNode>();
-                if (node != null && node.CanGather(currentWorkerType.GetGatherAmount()))
+                if (node != null && node.CanGather(currentGathererType.GetGatherAmount()))
                 {
                     float distance = Vector3.Distance(
                         transform.position,
@@ -128,7 +130,7 @@ namespace GameJam.Worker
                     // Successfully reserved a slot
                     targetNode = node;
                     targetNode.OnResourceDepleted += HandleTargetNodeDepleted;
-                    currentState = WorkerState.MovingToResource;
+                    currentState = GathererState.MovingToResource;
                     return;
                 }
             }
@@ -140,7 +142,7 @@ namespace GameJam.Worker
         //move to the reserved slot at the resource node - switch to gathering state when reached
         private void MoveToResource()
         {
-            mover.StartMoveAction(targetNode.GetSlotPosition(this));
+            mover.MoveTo(targetNode.GetSlotPosition(this));
             if (mover.IsDestinationReached())
             {
                 // Face towards the resource center
@@ -150,7 +152,7 @@ namespace GameJam.Worker
                     transform.rotation = Quaternion.LookRotation(facingDirection);
                 }
 
-                currentState = WorkerState.GatheringResource;
+                currentState = GathererState.GatheringResource;
             }
         }
 
@@ -164,67 +166,85 @@ namespace GameJam.Worker
         private IEnumerator GatherLoop()
         {
             animator.SetTrigger("gather");
-            yield return new WaitForSeconds(currentWorkerType.GetGatherTime());
+            yield return new WaitForSeconds(currentGathererType.GetGatherTime());
             if (targetNode != null)
             {
-                gatheredAmount = targetNode.Gather(currentWorkerType.GetGatherAmount());
+                gatheredAmount = targetNode.Gather(currentGathererType.GetGatherAmount());
                 targetNode.ReleaseSlot(this);
                 targetNode.OnResourceDepleted -= HandleTargetNodeDepleted;
                 targetNode = null;
             }
             animator.SetTrigger("stopGather");
-            currentState = WorkerState.ReturningResource;
+            currentState = GathererState.ReturningResource;
         }
 
         // event is triggered when the gather animation hits the resource
         void Hit()
         {
-            audioSource.PlayOneShot(currentWorkerType.GetGatherSound());
+            audioSource.PlayOneShot(currentGathererType.GetGatherSound());
         }
 
         private void ReturnResource()
         {
             gatherCoroutine = null; //clear gatherCoroutine
-            mover.StartMoveAction(workCamp.transform.position);
+            mover.MoveTo(workCamp.transform.position);
             if (mover.IsDestinationReached())
             {
                 workCamp.DepositResources(gatheredAmount);
                 gatheredAmount = 0;
-                currentState = WorkerState.SearchingForResource;
+                currentState = GathererState.SearchingForResource;
             }
         }
 
         private void HandleTargetNodeDepleted()
         {
+            Cancel();
+            currentState = GathererState.SearchingForResource;
+        }
+
+        public void Gather()
+        {
+            actionScheduler.StartAction(this);
+            if (currentState == GathererState.Idle)
+                currentState = GathererState.SearchingForResource;
+        }
+
+        public void Cancel()
+        {
             if (gatherCoroutine != null)
             {
                 StopCoroutine(gatherCoroutine);
                 gatherCoroutine = null;
-                navMeshAgent.isStopped = false;
                 animator.SetTrigger("stopGather");
                 gatheredAmount = 0;
             }
 
-            currentState = WorkerState.SearchingForResource;
+            if (targetNode != null)
+            {
+                targetNode.ReleaseSlot(this);
+                targetNode.OnResourceDepleted -= HandleTargetNodeDepleted;
+                targetNode = null;
+            }
+
+            navMeshAgent.isStopped = true;
+            currentState = GathererState.Idle;
         }
 
         //MMMMMMMMMMMMMMMMMMMMM
         // Call this method to change the current task
-        public void SetWorkerType(WorkerType newWorkerType)
+        public void SetGathererType(GathererType newGathererType)
         {
-            if (currentWorkerType == newWorkerType)
+            if (currentGathererType == newGathererType)
                 return;
 
-            if (newWorkerType == null)
+            if (newGathererType == null)
                 return;
 
             if (instantiatedTool != null)
                 Destroy(instantiatedTool);
 
-            currentWorkerType = newWorkerType;
-            instantiatedTool = Instantiate(newWorkerType.GetToolPrefab(), rightHandTransform);
-
-            //TODO
+            currentGathererType = newGathererType;
+            instantiatedTool = Instantiate(newGathererType.GetToolPrefab(), rightHandTransform);
         }
     }
 }

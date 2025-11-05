@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69fe332464fdbc04291b90a5d7e96eab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.UI.StateInfo
-  workerUnit: {fileID: 1741436728937980818}
+  gathererUnit: {fileID: 1741436728937980818}
   worldSpaceCanvas: {fileID: 1228073217639438951}
 --- !u!1 &1228073217639438951
 GameObject:
@@ -317,6 +317,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7239e28fe7e69984d832aa39880f5930, type: 3}
       insertIndex: -1
       addedObject: {fileID: -3300752849062929597}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7239e28fe7e69984d832aa39880f5930, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4686923475531817422}
   m_SourcePrefab: {fileID: 100100000, guid: 7239e28fe7e69984d832aa39880f5930, type: 3}
 --- !u!4 &1396401580904479016 stripped
 Transform:
@@ -423,7 +426,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Worker.WorkerUnit
   rightHandTransform: {fileID: 8038839325427465754}
   leftHandTransform: {fileID: 3366210998595020132}
-  initialWorkerType: {fileID: 11400000, guid: 7178724753e3135469fbf76bdae183b7, type: 2}
+  initialGathererType: {fileID: 11400000, guid: 1759060df29cb2c439f2a3d42deb3183, type: 2}
   workCamp: {fileID: 0}
   currentState: 0
 --- !u!82 &-3300752849062929597
@@ -523,6 +526,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4686923475531817422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1741436728937980818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5f80437b92a1b44b98ea9e544cf0ac6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Controller.UnitController
 --- !u!4 &3366210998595020132 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -5017971254852617305, guid: 7239e28fe7e69984d832aa39880f5930, type: 3}

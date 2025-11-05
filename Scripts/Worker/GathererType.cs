@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace GameJam.Worker
 {
-    [CreateAssetMenu(fileName = "WorkerType", menuName = "WorkerType/New Worker Type")]
-    public class WorkerType : ScriptableObject
+    [CreateAssetMenu(fileName = "GathererType", menuName = "GathererType/New Gatherer Type")]
+    public class GathererType : ScriptableObject
     {
         [SerializeField]
         string typeName;
