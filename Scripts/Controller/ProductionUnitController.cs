@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GameJam.Controller
 {
-    public class UnitController : MonoBehaviour
+    public class ProductionUnitController : MonoBehaviour
     {
         private Health health;
 
