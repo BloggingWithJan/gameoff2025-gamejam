@@ -54,15 +54,45 @@ namespace GameJam.Resource
             }
         }
 
+        // public bool TryReserveSlot(WorkerUnit worker)
+        // {
+        //     for (int i = 0; i < gatherSlots.Count; i++)
+        //     {
+        //         if (!gatherSlots[i].IsOccupied())
+        //         {
+        //             gatherSlots[i].assignedWorker = worker;
+        //             return true;
+        //         }
+        //     }
+
+        //     return false;
+        // }
         public bool TryReserveSlot(WorkerUnit worker)
         {
+            int nearestSlotIndex = -1;
+            float nearestDistance = float.MaxValue;
+
+            // Find the nearest available slot
             for (int i = 0; i < gatherSlots.Count; i++)
             {
                 if (!gatherSlots[i].IsOccupied())
                 {
-                    gatherSlots[i].assignedWorker = worker;
-                    return true;
+                    Vector3 slotWorldPos = transform.position + gatherSlots[i].offset;
+                    float distance = Vector3.Distance(worker.transform.position, slotWorldPos);
+
+                    if (distance < nearestDistance)
+                    {
+                        nearestDistance = distance;
+                        nearestSlotIndex = i;
+                    }
                 }
+            }
+
+            // Assign the nearest slot if found
+            if (nearestSlotIndex >= 0)
+            {
+                gatherSlots[nearestSlotIndex].assignedWorker = worker;
+                return true;
             }
 
             return false;

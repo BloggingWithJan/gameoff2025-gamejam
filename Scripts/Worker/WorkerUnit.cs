@@ -37,6 +37,7 @@ namespace GameJam.Worker
         private Health health;
         private Animator animator;
         private AudioSource audioSource;
+        private ActionScheduler actionScheduler;
 
         private ResourceNode targetNode;
         private GameObject instantiatedTool;
@@ -51,11 +52,12 @@ namespace GameJam.Worker
             animator = GetComponent<Animator>();
             health = GetComponent<Health>();
             audioSource = GetComponent<AudioSource>();
+            actionScheduler = GetComponent<ActionScheduler>();
             //navMeshAgent tuning so there are less collisions between multiple workers
-            navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
-            navMeshAgent.avoidancePriority = Random.Range(30, 60);
-            // navMeshAgent.avoidancePriority = 99; // lowest priority
-            // navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
+            // navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
+            // navMeshAgent.avoidancePriority = Random.Range(30, 60);
+            navMeshAgent.avoidancePriority = 99; // lowest priority
+            navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
 
             //starting work cycle
             currentState = WorkerState.SearchingForResource;
@@ -138,7 +140,7 @@ namespace GameJam.Worker
         //move to the reserved slot at the resource node - switch to gathering state when reached
         private void MoveToResource()
         {
-            mover.MoveTo(targetNode.GetSlotPosition(this));
+            mover.StartMoveAction(targetNode.GetSlotPosition(this));
             if (mover.IsDestinationReached())
             {
                 // Face towards the resource center
@@ -161,7 +163,6 @@ namespace GameJam.Worker
 
         private IEnumerator GatherLoop()
         {
-            navMeshAgent.isStopped = true;
             animator.SetTrigger("gather");
             yield return new WaitForSeconds(currentWorkerType.GetGatherTime());
             if (targetNode != null)
@@ -171,7 +172,6 @@ namespace GameJam.Worker
                 targetNode.OnResourceDepleted -= HandleTargetNodeDepleted;
                 targetNode = null;
             }
-            navMeshAgent.isStopped = false;
             animator.SetTrigger("stopGather");
             currentState = WorkerState.ReturningResource;
         }
@@ -185,7 +185,7 @@ namespace GameJam.Worker
         private void ReturnResource()
         {
             gatherCoroutine = null; //clear gatherCoroutine
-            mover.MoveTo(workCamp.transform.position);
+            mover.StartMoveAction(workCamp.transform.position);
             if (mover.IsDestinationReached())
             {
                 workCamp.DepositResources(gatheredAmount);
