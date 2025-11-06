@@ -8,6 +8,8 @@ namespace UI.Managers
     {
         public GameObject basePrefab;
         public GameObject quarryPrefab;
+        public GameObject rockPrefab;
+        public GameObject treePrefab;
         public LayerMask groundMask;
 
         private GameObject currentPrefab;
@@ -19,27 +21,66 @@ namespace UI.Managers
         {
             if (!placing || Mouse.current == null) return;
 
-            //Ray from camera to mouse  
             Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-            if (Physics.Raycast(ray, out RaycastHit hit, 500f, groundMask))
+            if (!Physics.Raycast(ray, out RaycastHit hit, 500f, groundMask)) return;
+
+            // Move preview to mouse position
+            previewInstance.transform.position = hit.point;
+
+            // Cancel placement with right click
+            if (Mouse.current.rightButton.wasPressedThisFrame)
             {
-                //Move preview **always**  
-                previewInstance.transform.position = hit.point;
-
-                //Visual feedback if over UI  
-                if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
-                    SetPreviewColor(Color.red); //blocked  
-                else
-                    SetPreviewColor(Color.green); //allowed  
-
-                //Place building (only if not over UI)  
-                if (Mouse.current.leftButton.wasPressedThisFrame && !IsPointerOverUI())
-                    PlaceBuilding(hit.point);
-
-                //Cancel placement  
-                if (Mouse.current.rightButton.wasPressedThisFrame)
-                    CancelPlacement();
+                CancelPlacement();
+                return;
             }
+
+            // Skip if pointer is over UI
+            if (IsPointerOverUI())
+            {
+                SetPreviewColor(Color.red);
+                return;
+            }
+
+            // Validate placement
+            bool valid = IsValidPlacement(hit.point);
+            SetPreviewColor(valid ? Color.green : Color.red);
+
+            // Place building only if valid
+            if (valid && Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                PlaceBuilding(hit.point);
+            }
+        }
+
+        private bool IsValidPlacement(Vector3 position)
+        {
+            if (!previewInstance) return true;
+
+            BoxCollider box = previewInstance.GetComponent<BoxCollider>();
+            if (!box) return true;
+
+            box.enabled = false;
+
+            Vector3 worldCenter = position + previewInstance.transform.rotation * box.center;
+            Vector3 halfExtents = Vector3.Scale(box.size * 0.5f, previewInstance.transform.lossyScale);
+
+            Collider[] overlaps = Physics.OverlapBox(
+                worldCenter,
+                halfExtents,
+                previewInstance.transform.rotation
+            );
+
+            box.enabled = true;
+
+            foreach (Collider c in overlaps)
+            {
+                if (c.isTrigger || c.CompareTag("Ground"))
+                    continue;
+
+                return false; // Blocked by something solid
+            }
+
+            return true;
         }
 
         public void StartPlacement(GameObject prefab)
@@ -89,5 +130,7 @@ namespace UI.Managers
 
         public void OnClickQuarry() => StartPlacement(quarryPrefab);
         public void OnClickBase() => StartPlacement(basePrefab);
+        public void OnClickRock() => StartPlacement(rockPrefab);
+        public void OnClickTree() => StartPlacement(treePrefab);
     }
 }
