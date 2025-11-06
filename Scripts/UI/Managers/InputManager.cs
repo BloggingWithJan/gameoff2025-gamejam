@@ -1,32 +1,35 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InputManager : MonoBehaviour
+namespace UI.Managers
 {
-    public InputActionAsset uiControlsAsset; // assign your UIControls input actions here
-    public GameObject buildingPanel; // assign your panel here
-
-    private InputAction _bAction;
-
-    private void OnEnable()
+    public class InputManager : MonoBehaviour
     {
-        var map = uiControlsAsset.FindActionMap("UI"); // match your action map name
-        _bAction = map.FindAction("PressB"); // match your action name
-        _bAction.performed += OnBPressed;
-        _bAction.Enable();
-    }
+        public InputActionAsset uiControlsAsset;
+        public GameObject buildingPanel;
 
-    private void OnDisable()
-    {
-        _bAction.performed -= OnBPressed;
-        _bAction.Disable();
-    }
+        private InputAction _bAction;
 
-    private void OnBPressed(InputAction.CallbackContext context)
-    {
-        if (buildingPanel != null)
+        private void OnEnable()
         {
-            buildingPanel.SetActive(!buildingPanel.activeSelf); // toggle panel
+            var map = uiControlsAsset.FindActionMap("UI");
+            _bAction = map.FindAction("PressB");
+            _bAction.performed += OnBPressed;
+            _bAction.Enable();
+        }
+
+        private void OnDisable()
+        {
+            _bAction.performed -= OnBPressed;
+            _bAction.Disable();
+        }
+
+        private void OnBPressed(InputAction.CallbackContext context)
+        {
+            if (buildingPanel != null)
+            {
+                buildingPanel.SetActive(!buildingPanel.activeSelf);
+            }
         }
     }
 }
