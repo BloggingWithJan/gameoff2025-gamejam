@@ -1,6 +1,7 @@
 using GameJam.Resource;
 using UnityEngine;
 
+//TODO: class name is politically incorrect
 public class WorkCamp : MonoBehaviour
 {
     public void DepositResources(int amount)
