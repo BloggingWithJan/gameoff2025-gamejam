@@ -114,12 +114,15 @@ namespace UI.Managers
         private void DrawOutlineForBoxCollider(BoxCollider box, LineRenderer lr, Color color, float yOffset = 0f)
         {
             Vector3 half = Vector3.Scale(box.size * 0.5f, box.transform.lossyScale);
+            Vector3 adjustedCenter = new Vector3(box.center.x, yOffset, box.center.z);
+
             Vector3[] corners = new Vector3[5];
-            corners[0] = box.transform.TransformPoint(new Vector3(-half.x, yOffset, -half.z));
-            corners[1] = box.transform.TransformPoint(new Vector3(half.x, yOffset, -half.z));
-            corners[2] = box.transform.TransformPoint(new Vector3(half.x, yOffset, half.z));
-            corners[3] = box.transform.TransformPoint(new Vector3(-half.x, yOffset, half.z));
+            corners[0] = box.transform.TransformPoint(adjustedCenter + new Vector3(-half.x, 0f, -half.z));
+            corners[1] = box.transform.TransformPoint(adjustedCenter + new Vector3(half.x, 0f, -half.z));
+            corners[2] = box.transform.TransformPoint(adjustedCenter + new Vector3(half.x, 0f, half.z));
+            corners[3] = box.transform.TransformPoint(adjustedCenter + new Vector3(-half.x, 0f, half.z));
             corners[4] = corners[0];
+
 
             lr.positionCount = corners.Length;
             lr.startColor = lr.endColor = color;
@@ -189,10 +192,5 @@ namespace UI.Managers
 
         private bool IsPointerOverUI() =>
             EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
-        
-        public void OnClickQuarry() => StartPlacement(quarryPrefab);
-        public void OnClickBase() => StartPlacement(basePrefab);
-        public void OnClickRock() => StartPlacement(rockPrefab);
-        public void OnClickTree() => StartPlacement(treePrefab);
     }
 }
