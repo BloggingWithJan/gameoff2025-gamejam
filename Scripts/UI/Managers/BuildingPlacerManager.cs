@@ -8,7 +8,6 @@ namespace UI.Managers
 {
     public class BuildingPlacerManager : MonoBehaviour
     {
-        public FloatingTextManager floatingTextManager;
         public LayerMask groundMask;
 
         private GameObject currentPrefab;
@@ -56,13 +55,13 @@ namespace UI.Managers
             {
                 if (overUI)
                 {
-                    floatingTextManager.ShowFloatingText("Cannot place over UI!");
+                    FloatingTextManager.Instance.ShowFloatingText("Cannot place over UI!");
                     return;
                 }
 
                 if (!valid)
                 {
-                    floatingTextManager.ShowFloatingText("Placement blocked!");
+                    FloatingTextManager.Instance.ShowFloatingText("Placement blocked!");
                     return;
                 }
 
@@ -180,7 +179,7 @@ namespace UI.Managers
             bool hasSufficientResources = ResourceManager.Instance.HasSufficientResources(buildingData);
             if (!hasSufficientResources)
             {
-                floatingTextManager.ShowFloatingText("Not enough resources!");
+                FloatingTextManager.Instance.ShowFloatingText("Not enough resources!");
                 return;
             }
 
