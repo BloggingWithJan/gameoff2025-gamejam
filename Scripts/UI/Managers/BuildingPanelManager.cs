@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -16,29 +17,59 @@ namespace UI.Managers
         public Button rockButton;
         public Button treeButton;
 
+        [Header("Prefabs")] public GameObject quarryPrefab;
+        public GameObject basePrefab;
+        public GameObject rockPrefab;
+        public GameObject treePrefab;
+
         private void Awake()
         {
-            //TODO replace
-            Sprite defaultSprite = Resources.Load<Sprite>("Sprites/defaultsprite");
-
             // Setup Quarry
-            quarryButton.onClick.AddListener(() => placerManager.StartPlacement(placerManager.quarryPrefab));
-            AddTooltipEvents(quarryButton, "Quarry", "Mines rocks like a champ.", "Cost: 100 gold", defaultSprite);
+            quarryButton.onClick.AddListener(() => placerManager.StartPlacement(quarryPrefab));
+            if (quarryPrefab.TryGetComponent<BuildingData>(out BuildingData quarryData))
+            {
+                AddTooltipEvents(quarryButton, quarryData);
+            }
+            else
+            {
+                Debug.LogError($"Can't find BuildingData component on GameObject {gameObject.name}");
+            }
 
             // Setup Base
-            baseButton.onClick.AddListener(() => placerManager.StartPlacement(placerManager.basePrefab));
-            AddTooltipEvents(baseButton, "Base", "Your main headquarters.", "Cost: 500 gold", defaultSprite);
+            baseButton.onClick.AddListener(() => placerManager.StartPlacement(basePrefab));
+            if (basePrefab.TryGetComponent<BuildingData>(out BuildingData baseData))
+            {
+                AddTooltipEvents(baseButton, baseData);
+            }
+            else
+            {
+                Debug.LogError($"Can't find BuildingData component on GameObject {gameObject.name}");
+            }
 
             // Setup Rock
-            rockButton.onClick.AddListener(() => placerManager.StartPlacement(placerManager.rockPrefab));
-            AddTooltipEvents(rockButton, "Rock", "Just a big rock.", "Cost: 10 gold", defaultSprite);
+            rockButton.onClick.AddListener(() => placerManager.StartPlacement(rockPrefab));
+            if (rockPrefab.TryGetComponent<BuildingData>(out BuildingData rockData))
+            {
+                AddTooltipEvents(rockButton, rockData);
+            }
+            else
+            {
+                Debug.LogError($"Can't find BuildingData component on GameObject {gameObject.name}");
+            }
 
             // Setup Tree
-            treeButton.onClick.AddListener(() => placerManager.StartPlacement(placerManager.treePrefab));
-            AddTooltipEvents(treeButton, "Tree", "Provides wood over time.", "Cost: 20 gold", defaultSprite);
+            treeButton.onClick.AddListener(() => placerManager.StartPlacement(treePrefab));
+            if (treePrefab.TryGetComponent<BuildingData>(out BuildingData treeData))
+            {
+                AddTooltipEvents(treeButton, treeData);
+            }
+            else
+            {
+                Debug.LogError($"Can't find BuildingData component on GameObject {gameObject.name}");
+            }
         }
 
-        private void AddTooltipEvents(Button button, string name, string description, string cost, Sprite icon)
+        private void AddTooltipEvents(Button button, BuildingData data)
         {
             EventTrigger trigger = button.gameObject.GetComponent<EventTrigger>();
             if (trigger == null)
@@ -49,7 +80,11 @@ namespace UI.Managers
             {
                 eventID = EventTriggerType.PointerEnter
             };
-            entryEnter.callback.AddListener((data) => ShowTooltip(name, description, cost, icon));
+            entryEnter.callback.AddListener((_) =>
+            {
+                tooltipManager.SetTooltip(data.buildingName, data.description, data.icon, data.costs);
+                tooltipManager.ShowTooltip();
+            });
             trigger.triggers.Add(entryEnter);
 
             // PointerExit
@@ -57,22 +92,8 @@ namespace UI.Managers
             {
                 eventID = EventTriggerType.PointerExit
             };
-            entryExit.callback.AddListener((data) => HideTooltip());
+            entryExit.callback.AddListener((_) => tooltipManager.HideTooltip());
             trigger.triggers.Add(entryExit);
-        }
-
-        private void ShowTooltip(string buildingName, string description, string cost, Sprite icon)
-        {
-            tooltipManager.tooltipPanel.SetActive(true);
-            tooltipManager.buildingName.text = buildingName;
-            tooltipManager.buildingDescription.text = description;
-            tooltipManager.buildingCostText.text = cost;
-            tooltipManager.buildingIcon.sprite = icon;
-        }
-
-        private void HideTooltip()
-        {
-            tooltipManager.tooltipPanel.SetActive(false);
         }
 
         public void TogglePanel()

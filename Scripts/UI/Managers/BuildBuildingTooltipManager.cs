@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,9 +9,11 @@ namespace UI.Managers
     {
         public GameObject tooltipPanel;
         public TMP_Text buildingName;
-        public TMP_Text buildingDescription;
-        public TMP_Text buildingCostText;
         public Image buildingIcon;
+        public TMP_Text buildingDescription;
+
+        [Header("Resource Panels")]
+        public List<ResourceUIPanel> resourcePanels;
 
         private RectTransform rectTransform;
 
@@ -47,16 +50,30 @@ namespace UI.Managers
             rectTransform.position = new Vector3(posX, posY, 0f);
         }
 
-        public void SetTooltip(string name, string description, string cost)
+        public void SetTooltip(string name, string description, Sprite icon, List<ResourceCost> costs)
         {
             buildingName.text = name;
             buildingDescription.text = description;
-            buildingCostText.text = cost;
+            buildingIcon.sprite = icon;
+
+            //Hide all resource panels initially
+            foreach (var panel in resourcePanels)
+                panel.panel.SetActive(false);
+
+            //Show panels that exist in the costs list
+            foreach (var cost in costs)
+            {
+                var uiPanel = resourcePanels.Find(p => p.resource == cost.resource);
+                if (uiPanel != null)
+                {
+                    uiPanel.amountText.text = cost.amount.ToString();
+                    uiPanel.panel.SetActive(true);
+                }
+            }
         }
 
-        public void ShowTooltip(string name, string description, string cost)
+        public void ShowTooltip()
         {
-            SetTooltip(name, description, cost);
             tooltipPanel.SetActive(true);
         }
 

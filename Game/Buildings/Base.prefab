@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1185334241636002993}
   - component: {fileID: -2530275125541182038}
   - component: {fileID: 296334395256761310}
+  - component: {fileID: -4277468224442115610}
   m_Layer: 0
   m_Name: Base
   m_TagString: Untagged
@@ -68,6 +69,27 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3, y: 4, z: 3}
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &-4277468224442115610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 838543337544683574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdc07ed7143304749aba12fd54c54031, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  buildingName: Base
+  description: Workers will use your Base to collect Wood
+  icon: {fileID: 21300000, guid: 0cd12699ccfe7b6408d14d1697df109e, type: 3}
+  costs:
+  - resource: 0
+    amount: 5
+  - resource: 1
+    amount: 5
+  refunds: []
 --- !u!1001 &3153203298466110055
 PrefabInstance:
   m_ObjectHideFlags: 0

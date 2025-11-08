@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Resource;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -7,10 +8,6 @@ namespace UI.Managers
 {
     public class BuildingPlacerManager : MonoBehaviour
     {
-        public GameObject basePrefab;
-        public GameObject quarryPrefab;
-        public GameObject rockPrefab;
-        public GameObject treePrefab;
         public LayerMask groundMask;
 
         private GameObject currentPrefab;
@@ -20,6 +17,8 @@ namespace UI.Managers
         private LineRenderer previewOutline;
 
         private readonly Dictionary<Collider, LineRenderer> blockedOutlines = new();
+        private Vector2? lastMousePos;
+        private float rotationSpeed = 0.3f;
 
         void Update()
         {
@@ -44,6 +43,12 @@ namespace UI.Managers
             DrawOutlineForBoxCollider(previewInstance.GetComponent<BoxCollider>(), previewOutline, previewColor, 0.02f);
 
             UpdateBlockingOutlines(blockers);
+
+            if (Keyboard.current.rKey.isPressed)
+            {
+                RotatePreview();
+                return;
+            }
 
             if (valid && !overUI && Mouse.current.leftButton.wasPressedThisFrame)
                 PlaceBuilding(hit.point);
@@ -123,7 +128,6 @@ namespace UI.Managers
             corners[3] = box.transform.TransformPoint(adjustedCenter + new Vector3(-half.x, 0f, half.z));
             corners[4] = corners[0];
 
-
             lr.positionCount = corners.Length;
             lr.startColor = lr.endColor = color;
             lr.SetPositions(corners);
@@ -150,7 +154,25 @@ namespace UI.Managers
 
         private void PlaceBuilding(Vector3 position)
         {
-            Instantiate(currentPrefab, position, Quaternion.identity);
+            // Check if player has enough resources first
+            var buildingData = currentPrefab.GetComponent<BuildingData>();
+            if (buildingData == null)
+            {
+                Debug.LogError($"Can't find BuildingData component on GameObject {gameObject.name}");
+            }
+
+            bool hasSufficientResources = ResourceManager.Instance.HasSufficientResources(buildingData);
+            if (!hasSufficientResources)
+            {
+                Debug.Log("Not enough resources to place building");
+                return;
+            }
+
+            ResourceManager.Instance.DeductResources(buildingData);
+
+            // Instantiate building
+            GameObject instantiatedObject = Instantiate(currentPrefab, position, Quaternion.identity);
+            instantiatedObject.transform.rotation = previewInstance.transform.rotation;
             ClearBlockerOutlines();
             Destroy(previewInstance);
             placing = false;
@@ -161,6 +183,13 @@ namespace UI.Managers
             ClearBlockerOutlines();
             if (previewInstance) Destroy(previewInstance);
             placing = false;
+        }
+
+        private void RotatePreview()
+        {
+            if (!previewInstance) return;
+
+            previewInstance.transform.Rotate(Vector3.up, Space.Self);
         }
 
         private void ClearBlockerOutlines()

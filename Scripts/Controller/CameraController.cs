@@ -5,18 +5,20 @@ namespace Controller
 {
     public class CameraController : MonoBehaviour
     {
-        [Header("Settings")] public float moveSpeed = 10f;
+        [Header("Settings")] public float moveSpeed = 30f;
+        public float mousePanSpeed = 5f;
         public float tiltAngle = 65f;
         public float rotationSpeed = 75f;
-        public float zoomSpeed = 75f;
+        public float zoomSpeed = 150f;
+        public float minZoom = 3f;
+        public float maxZoom = 30f;
         public InputActionAsset cameraActionsAsset;
 
         private InputAction _moveAction;
         private InputAction _zoomAction;
         private InputAction _rotateAction;
+        private InputAction _mouseDeltaMove;
         private float _targetY; //for smooth scrolling
-        private const float MinZoom = 5f;
-        private const float MaxZoom = 20f;
 
         private void OnEnable()
         {
@@ -30,6 +32,9 @@ namespace Controller
 
             _rotateAction = map.FindAction("Rotate");
             _rotateAction.Enable();
+
+            _mouseDeltaMove = map.FindAction("MouseDeltaMove");
+            _mouseDeltaMove.Enable();
         }
 
         private void OnDisable()
@@ -51,6 +56,7 @@ namespace Controller
             HandleMovement();
             HandleZoom();
             HandleRotation();
+            HandleMousePan();
         }
 
         private void HandleMovement()
@@ -67,10 +73,10 @@ namespace Controller
             float zoomAmount = scroll.y;
 
             _targetY -= zoomAmount * zoomSpeed * Time.deltaTime;
-            _targetY = Mathf.Clamp(_targetY, MinZoom, MaxZoom);
+            _targetY = Mathf.Clamp(_targetY, minZoom, maxZoom);
 
             Vector3 pos = transform.position;
-            pos.y = Mathf.Lerp(pos.y, _targetY, 10f * Time.deltaTime); //smooth transition
+            pos.y = Mathf.Lerp(pos.y, _targetY, 5f * Time.deltaTime); //smooth transition
             transform.position = pos;
         }
 
@@ -82,6 +88,22 @@ namespace Controller
             Vector3 euler = transform.eulerAngles;
             euler.x = tiltAngle;
             transform.eulerAngles = euler;
+        }
+
+
+        private void HandleMousePan()
+        {
+            // Only pan if middle mouse is held
+            if (Mouse.current.middleButton.isPressed)
+            {
+                Vector2 delta = _mouseDeltaMove.ReadValue<Vector2>();
+
+                Vector3 right = transform.right;
+                Vector3 forward = Vector3.Scale(transform.forward, new Vector3(1, 0, 1)).normalized;
+
+                // Invert delta to match drag motion
+                transform.position += (right * -delta.x + forward * -delta.y) * mousePanSpeed * Time.deltaTime;
+            }
         }
     }
 }
