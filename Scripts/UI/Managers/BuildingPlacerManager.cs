@@ -8,6 +8,7 @@ namespace UI.Managers
 {
     public class BuildingPlacerManager : MonoBehaviour
     {
+        public FloatingTextManager floatingTextManager;
         public LayerMask groundMask;
 
         private GameObject currentPrefab;
@@ -38,8 +39,9 @@ namespace UI.Managers
             bool overUI = IsPointerOverUI();
             var (valid, blockers) = IsValidPlacement(hit.point);
 
-            Color previewColor = overUI ? Color.red : (valid ? Color.green : Color.red);
+            Color previewColor = (overUI || !valid) ? Color.red : Color.green;
             SetPreviewColor(previewColor);
+
             DrawOutlineForBoxCollider(previewInstance.GetComponent<BoxCollider>(), previewOutline, previewColor, 0.02f);
 
             UpdateBlockingOutlines(blockers);
@@ -50,8 +52,22 @@ namespace UI.Managers
                 return;
             }
 
-            if (valid && !overUI && Mouse.current.leftButton.wasPressedThisFrame)
+            if (Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                if (overUI)
+                {
+                    floatingTextManager.ShowFloatingText("Cannot place over UI!");
+                    return;
+                }
+
+                if (!valid)
+                {
+                    floatingTextManager.ShowFloatingText("Placement blocked!");
+                    return;
+                }
+
                 PlaceBuilding(hit.point);
+            }
         }
 
         private (bool valid, List<Collider> blockers) IsValidPlacement(Vector3 position)
@@ -164,7 +180,7 @@ namespace UI.Managers
             bool hasSufficientResources = ResourceManager.Instance.HasSufficientResources(buildingData);
             if (!hasSufficientResources)
             {
-                Debug.Log("Not enough resources to place building");
+                floatingTextManager.ShowFloatingText("Not enough resources!");
                 return;
             }
 
