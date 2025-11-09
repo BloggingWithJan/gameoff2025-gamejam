@@ -3,12 +3,15 @@ using Resource;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 namespace UI.Managers
 {
     public class BuildBuildingPlacerManager : MonoBehaviour
     {
         public LayerMask groundMask;
+        public GameObject buildPlacingControls;
+        
         private GameObject _currentPrefab;
         private GameObject _previewInstance;
         private bool _isPlacing;
@@ -177,6 +180,8 @@ namespace UI.Managers
             _previewOutline.startColor = _previewOutline.endColor = Color.red;
             _previewOutline.useWorldSpace = true;
             _isPlacing = true;
+            
+            buildPlacingControls.SetActive(true);
         }
 
         private void PlaceBuilding(Vector3 position)
@@ -203,6 +208,7 @@ namespace UI.Managers
             ClearBlockerOutlines();
             Destroy(_previewInstance);
             _isPlacing = false;
+            buildPlacingControls.SetActive(false);
         }
 
         private void CancelPlacement()
@@ -210,6 +216,7 @@ namespace UI.Managers
             ClearBlockerOutlines();
             if (_previewInstance) Destroy(_previewInstance);
             _isPlacing = false;
+            buildPlacingControls.SetActive(false);
         }
 
         private void RotatePreview()
