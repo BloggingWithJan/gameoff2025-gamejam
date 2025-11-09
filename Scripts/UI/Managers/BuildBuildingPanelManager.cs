@@ -14,11 +14,13 @@ namespace UI.Managers
 
         [Header("Buttons")] public Button quarryButton;
         public Button baseButton;
+        public Button towerButton;
         public Button rockButton;
         public Button treeButton;
 
         [Header("Prefabs")] public GameObject quarryPrefab;
         public GameObject basePrefab;
+        public GameObject towerPrefab;
         public GameObject rockPrefab;
         public GameObject treePrefab;
 
@@ -40,6 +42,17 @@ namespace UI.Managers
             if (basePrefab.TryGetComponent<BuildingData>(out BuildingData baseData))
             {
                 AddTooltipEvents(baseButton, baseData);
+            }
+            else
+            {
+                Debug.LogError($"Can't find BuildingData component on GameObject {gameObject.name}");
+            }
+            
+            // Setup Tower
+            towerButton.onClick.AddListener(() => placerManager.StartPlacement(towerPrefab));
+            if (towerPrefab.TryGetComponent<BuildingData>(out BuildingData towerData))
+            {
+                AddTooltipEvents(towerButton, towerData);
             }
             else
             {
