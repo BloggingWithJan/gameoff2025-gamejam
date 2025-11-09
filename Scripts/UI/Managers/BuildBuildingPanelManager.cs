@@ -95,7 +95,7 @@ namespace UI.Managers
             };
             entryEnter.callback.AddListener((_) =>
             {
-                tooltipManager.SetTooltip(data.buildingName, data.description, data.icon, data.costs);
+                tooltipManager.SetTooltip(data.buildingName, data.description, data.costs);
                 tooltipManager.ShowTooltip();
             });
             trigger.triggers.Add(entryEnter);

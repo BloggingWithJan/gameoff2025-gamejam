@@ -12,7 +12,6 @@ namespace UI.Managers
     {
         public GameObject tooltipPanel;
         public TMP_Text buildingName;
-        public Image buildingIcon;
         public TMP_Text buildingDescription;
 
         [Header("Resource Panels")]
@@ -53,11 +52,10 @@ namespace UI.Managers
             rectTransform.position = new Vector3(posX, posY, 0f);
         }
 
-        public void SetTooltip(string name, string description, Sprite icon, List<ResourceCost> costs)
+        public void SetTooltip(string name, string description, List<ResourceCost> costs)
         {
             buildingName.text = name;
             buildingDescription.text = description;
-            buildingIcon.sprite = icon;
 
             //Hide all resource panels initially
             foreach (var panel in resourcePanels)
