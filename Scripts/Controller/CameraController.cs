@@ -6,9 +6,8 @@ namespace Controller
     public class CameraController : MonoBehaviour
     {
         [Header("Settings")] public float moveSpeed = 30f;
-        public float mousePanSpeed = 5f;
-        public float tiltAngle = 65f;
-        public float rotationSpeed = 75f;
+        public float rotationSpeed = 15f;
+        public float tiltSpeed = 15f;
         public float zoomSpeed = 150f;
         public float minZoom = 3f;
         public float maxZoom = 30f;
@@ -16,9 +15,12 @@ namespace Controller
 
         private InputAction _moveAction;
         private InputAction _zoomAction;
-        private InputAction _rotateAction;
         private InputAction _mouseDeltaMove;
-        private float _targetY; //for smooth scrolling
+
+        private Vector3 _pivotPoint;
+        private float _distanceToPivot;
+        private float _pitch; //vertical angle
+        private float _yaw; //horizontal angle
 
         private void OnEnable()
         {
@@ -30,9 +32,6 @@ namespace Controller
             _zoomAction = map.FindAction("Zoom");
             _zoomAction.Enable();
 
-            _rotateAction = map.FindAction("Rotate");
-            _rotateAction.Enable();
-
             _mouseDeltaMove = map.FindAction("MouseDeltaMove");
             _mouseDeltaMove.Enable();
         }
@@ -41,22 +40,27 @@ namespace Controller
         {
             _moveAction.Disable();
             _zoomAction.Disable();
-            _rotateAction.Disable();
+            _mouseDeltaMove.Disable();
         }
-
 
         private void Start()
         {
-            transform.rotation = Quaternion.Euler(tiltAngle, 0f, 0f);
-            _targetY = transform.position.y;
+            // Initialize pivot point to current forward direction
+            _pivotPoint = transform.position + transform.forward * 10f;
+            _distanceToPivot = Vector3.Distance(transform.position, _pivotPoint);
+
+            Vector3 angles = transform.eulerAngles;
+            _yaw = angles.y;
+            _pitch = angles.x;
         }
 
         private void Update()
         {
             HandleMovement();
             HandleZoom();
-            HandleRotation();
-            HandleMousePan();
+
+            if (Mouse.current.middleButton.isPressed)
+                HandleMouseOrbit();
         }
 
         private void HandleMovement()
@@ -65,6 +69,9 @@ namespace Controller
             Vector3 forward = Vector3.Scale(transform.forward, new Vector3(1, 0, 1)).normalized;
             Vector3 right = transform.right;
             transform.position += (forward * input.y + right * input.x) * moveSpeed * Time.deltaTime;
+
+            // Update pivot to maintain relative offset
+            _pivotPoint += (forward * input.y + right * input.x) * moveSpeed * Time.deltaTime;
         }
 
         private void HandleZoom()
@@ -72,38 +79,34 @@ namespace Controller
             Vector2 scroll = _zoomAction.ReadValue<Vector2>();
             float zoomAmount = scroll.y;
 
-            _targetY -= zoomAmount * zoomSpeed * Time.deltaTime;
-            _targetY = Mathf.Clamp(_targetY, minZoom, maxZoom);
+            _distanceToPivot -= zoomAmount * zoomSpeed * Time.deltaTime;
+            _distanceToPivot = Mathf.Clamp(_distanceToPivot, minZoom, maxZoom);
 
-            Vector3 pos = transform.position;
-            pos.y = Mathf.Lerp(pos.y, _targetY, 5f * Time.deltaTime); //smooth transition
-            transform.position = pos;
+            UpdateCameraPosition();
         }
 
-        private void HandleRotation()
+        /**
+         * Rotation and Tilting
+         */
+        private void HandleMouseOrbit()
         {
-            float rotationInput = _rotateAction.ReadValue<float>();
-            transform.Rotate(Vector3.up, rotationInput * rotationSpeed * Time.deltaTime, Space.World);
+            Vector2 delta = _mouseDeltaMove.ReadValue<Vector2>();
 
-            Vector3 euler = transform.eulerAngles;
-            euler.x = tiltAngle;
-            transform.eulerAngles = euler;
+            // Invert drag directions
+            _yaw += delta.x * rotationSpeed * Time.deltaTime; // flipped sign for horizontal
+            _pitch -= delta.y * tiltSpeed * Time.deltaTime; // keep vertical inverted
+
+            // Clamp vertical angle to avoid flipping
+            _pitch = Mathf.Clamp(_pitch, 10f, 85f);
+
+            UpdateCameraPosition();
         }
 
-
-        private void HandleMousePan()
+        private void UpdateCameraPosition()
         {
-            // Only pan if middle mouse is held
-            if (Mouse.current.middleButton.isPressed)
-            {
-                Vector2 delta = _mouseDeltaMove.ReadValue<Vector2>();
-
-                Vector3 right = transform.right;
-                Vector3 forward = Vector3.Scale(transform.forward, new Vector3(1, 0, 1)).normalized;
-
-                // Invert delta to match drag motion
-                transform.position += (right * -delta.x + forward * -delta.y) * mousePanSpeed * Time.deltaTime;
-            }
+            Quaternion rotation = Quaternion.Euler(_pitch, _yaw, 0f);
+            transform.position = _pivotPoint - rotation * Vector3.forward * _distanceToPivot;
+            transform.LookAt(_pivotPoint);
         }
     }
 }

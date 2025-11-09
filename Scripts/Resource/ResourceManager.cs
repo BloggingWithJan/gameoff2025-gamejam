@@ -8,13 +8,13 @@ namespace Resource
     {
         public static ResourceManager Instance { get; private set; }
 
-        [Header("UI References")]
-        [SerializeField] private TMP_Text woodText;
+        [Header("UI References")] [SerializeField]
+        private TMP_Text woodText;
+
         [SerializeField] private TMP_Text stoneText;
         [SerializeField] private TMP_Text coinText;
 
-        [Header("Values")]
-        [SerializeField] private int wood;
+        [Header("Values")] [SerializeField] private int wood;
         [SerializeField] private int stone;
         [SerializeField] private int coin;
 
@@ -59,7 +59,7 @@ namespace Resource
             _resources[type] = Mathf.Max(0, amount);
             UpdateUIText(type);
         }
-        
+
         public void AddResource(ResourceType type, int amount)
         {
             if (!_resources.ContainsKey(type)) return;
@@ -80,6 +80,20 @@ namespace Resource
                 if (_resources[cost.resource] < cost.amount)
                     return false;
             }
+
+            return true;
+        }
+
+        public bool HasSufficientResources(ResourceCost cost)
+        {
+            if (!_resources.ContainsKey(cost.resource))
+            {
+                Debug.LogError($"Resource type {cost.resource} not implemented");
+                return false;
+            }
+
+            if (_resources[cost.resource] < cost.amount)
+                return false;
 
             return true;
         }
@@ -110,6 +124,20 @@ namespace Resource
         {
             if (_uiTexts.TryGetValue(type, out TMP_Text text))
                 text.text = _resources[type].ToString();
+            
+            // Sync to serialized fields for live Inspector updates
+            wood = _resources[ResourceType.Wood];
+            stone = _resources[ResourceType.Stone];
+            coin = _resources[ResourceType.Coins];
+        }
+        
+        [ContextMenu("Sync From Inspector")]
+        private void SyncFromInspector()
+        {
+            _resources[ResourceType.Wood] = wood;
+            _resources[ResourceType.Stone] = stone;
+            _resources[ResourceType.Coins] = coin;
+            UpdateUI();
         }
     }
 }

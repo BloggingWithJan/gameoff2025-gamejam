@@ -1,7 +1,10 @@
 using System.Collections.Generic;
+using System.Resources;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Resource;
+using ResourceManager = Resource.ResourceManager;
 
 namespace UI.Managers
 {
@@ -67,6 +70,7 @@ namespace UI.Managers
                 if (uiPanel != null)
                 {
                     uiPanel.amountText.text = cost.amount.ToString();
+                    uiPanel.amountText.color = ResourceManager.Instance.HasSufficientResources(cost) ? Color.white : Color.red;
                     uiPanel.panel.SetActive(true);
                 }
             }

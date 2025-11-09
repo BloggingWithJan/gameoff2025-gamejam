@@ -5,11 +5,11 @@ using UnityEngine.UI;
 
 namespace UI.Managers
 {
-    public class BuildingPanelManager : MonoBehaviour
+    public class BuildBuildingPanelManager : MonoBehaviour
     {
         public GameObject buildingPanel;
 
-        public BuildingPlacerManager placerManager;
+        public BuildBuildingPlacerManager placerManager;
         public BuildBuildingTooltipManager tooltipManager;
 
         [Header("Buttons")] public Button quarryButton;
