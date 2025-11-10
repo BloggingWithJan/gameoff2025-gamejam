@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5181280738143056358}
   - component: {fileID: 4611831031464097781}
   m_Layer: 0
-  m_Name: tower
+  m_Name: TowerModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -101,8 +101,8 @@ GameObject:
   - component: {fileID: 8491733573141201251}
   - component: {fileID: 7420247021934626742}
   m_Layer: 0
-  m_Name: Tower
-  m_TagString: Untagged
+  m_Name: tower
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdc07ed7143304749aba12fd54c54031, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildingData
-  buildingName: Arrow Tower
+  buildingName: Tower
   description: Automatically shoots arrows at nearby enemies
   costs:
   - resource: 0

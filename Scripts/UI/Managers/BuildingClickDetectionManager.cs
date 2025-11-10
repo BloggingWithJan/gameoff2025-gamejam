@@ -40,12 +40,12 @@ namespace UI.Managers
                         return;
                     }
 
-                    BuildingData building = clickedObject.GetComponent<BuildingData>();
-                    if (building == null)
+                    BuildingData buildingData = clickedObject.GetComponent<BuildingData>();
+                    if (buildingData == null)
                         return;
 
                     currentBuilding = clickedObject;
-                    buildingInfoPanel.SetData(building);
+                    buildingInfoPanel.SetData(buildingData);
                 }
             }
         }

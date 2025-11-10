@@ -19,7 +19,7 @@ public class BuildingInfoPanel : MonoBehaviour
         if (building == null) return;
 
         if (buildingNameText != null)
-            buildingNameText.text = building.name;
+            buildingNameText.text = building.buildingName;
 
         if (descriptionText != null)
             descriptionText.text = building.description;
