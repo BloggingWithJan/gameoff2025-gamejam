@@ -2,7 +2,7 @@ using System;
 using System.Xml.Serialization;
 using UnityEngine;
 
-namespace GameJam.Worker
+namespace GameJam.Production
 {
     [CreateAssetMenu(fileName = "GathererType", menuName = "GathererType/New Gatherer Type")]
     public class GathererType : ScriptableObject

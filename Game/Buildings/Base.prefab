@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: -2530275125541182038}
   - component: {fileID: 296334395256761310}
   - component: {fileID: -4277468224442115610}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -83,7 +83,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   buildingName: Base
   description: Workers will use your Base to collect Wood
-  icon: {fileID: 21300000, guid: 0cd12699ccfe7b6408d14d1697df109e, type: 3}
   costs:
   - resource: 0
     amount: 5
@@ -153,6 +152,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: eef2435b4988a5942877c73f70cbf612, type: 3}
       propertyPath: m_Name
       value: structure-canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: eef2435b4988a5942877c73f70cbf612, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -227,6 +230,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: d2d2935b14064884e818dcc198b30244, type: 3}
       propertyPath: m_Name
       value: structure-floor
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d2d2935b14064884e818dcc198b30244, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4607668393258877731, guid: d2d2935b14064884e818dcc198b30244, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

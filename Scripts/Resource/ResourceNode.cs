@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using GameJam.Worker;
+using GameJam.Production;
 using UnityEngine;
 
 namespace GameJam.Resource
@@ -54,19 +54,6 @@ namespace GameJam.Resource
             }
         }
 
-        // public bool TryReserveSlot(WorkerUnit worker)
-        // {
-        //     for (int i = 0; i < gatherSlots.Count; i++)
-        //     {
-        //         if (!gatherSlots[i].IsOccupied())
-        //         {
-        //             gatherSlots[i].assignedWorker = worker;
-        //             return true;
-        //         }
-        //     }
-
-        //     return false;
-        // }
         public bool TryReserveSlot(Gatherer gatherer)
         {
             int nearestSlotIndex = -1;
@@ -145,7 +132,7 @@ namespace GameJam.Resource
         private void ResourceDepleted()
         {
             OnResourceDepleted?.Invoke();
-            Destroy(gameObject);
+            Destroy(gameObject, 1f);
         }
 
         ///////////////////////////////////////////

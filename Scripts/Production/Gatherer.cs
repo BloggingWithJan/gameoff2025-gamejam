@@ -5,13 +5,14 @@ using GameJam.Resource;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace GameJam.Worker
+namespace GameJam.Production
 {
     public class Gatherer : MonoBehaviour, IAction
     {
         public enum GathererState
         {
             Idle,
+            MoveToProductionBuilding,
             SearchingForResource,
             MovingToResource,
             GatheringResource,
@@ -24,11 +25,7 @@ namespace GameJam.Worker
         [SerializeField]
         Transform leftHandTransform;
 
-        [SerializeField]
-        GathererType initialGathererType;
-
-        [SerializeField]
-        WorkCamp workCamp;
+        private ProductionBuilding productionBuilding;
 
         public GathererState currentState;
 
@@ -59,25 +56,20 @@ namespace GameJam.Worker
             // navMeshAgent.avoidancePriority = Random.Range(30, 60);
             navMeshAgent.avoidancePriority = 99; // lowest priority
             navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
-
-            //starting work cycle
-            if (initialGathererType != null)
-            {
-                SetGathererType(initialGathererType);
-            }
         }
 
         void Update()
         {
             if (health.IsDead())
                 return;
-            if (currentGathererType == null)
-                return;
             if (currentState == GathererState.Idle)
                 return;
 
             switch (currentState)
             {
+                case GathererState.MoveToProductionBuilding:
+                    MoveToProductionBuilding();
+                    break;
                 case GathererState.SearchingForResource:
                     SearchForResource();
                     break;
@@ -90,6 +82,35 @@ namespace GameJam.Worker
                 case GathererState.ReturningResource:
                     ReturnResource();
                     break;
+            }
+        }
+
+        public void Gather(ProductionBuilding building)
+        {
+            GetComponent<ActionScheduler>().StartAction(this);
+            if (productionBuilding == building)
+            {
+                currentState = GathererState.MoveToProductionBuilding;
+                return;
+            }
+
+            if (building.RequestGathererSlot(this))
+            {
+                if (productionBuilding != null)
+                {
+                    productionBuilding.ReleaseGathererSlot(this);
+                }
+                productionBuilding = building;
+                currentState = GathererState.MoveToProductionBuilding;
+            }
+        }
+
+        private void MoveToProductionBuilding()
+        {
+            mover.MoveTo(productionBuilding.transform.position);
+            if (mover.IsDestinationReached())
+            {
+                SetGathererType(productionBuilding.GetGathererType());
             }
         }
 
@@ -169,17 +190,24 @@ namespace GameJam.Worker
             yield return new WaitForSeconds(currentGathererType.GetGatherTime());
             if (targetNode != null)
             {
-                gatheredAmount = targetNode.Gather(currentGathererType.GetGatherAmount());
-                targetNode.ReleaseSlot(this);
-                targetNode.OnResourceDepleted -= HandleTargetNodeDepleted;
-                targetNode = null;
+                try
+                {
+                    gatheredAmount = targetNode.Gather(currentGathererType.GetGatherAmount());
+                    targetNode.ReleaseSlot(this);
+                    targetNode.OnResourceDepleted -= HandleTargetNodeDepleted;
+                    targetNode = null;
+                }
+                catch
+                {
+                    gatheredAmount = 0;
+                }
             }
             animator.SetTrigger("stopGather");
             currentState = GathererState.ReturningResource;
         }
 
         // event is triggered when the gather animation hits the resource
-        void Hit()
+        private void Hit()
         {
             audioSource.PlayOneShot(currentGathererType.GetGatherSound());
         }
@@ -187,10 +215,10 @@ namespace GameJam.Worker
         private void ReturnResource()
         {
             gatherCoroutine = null; //clear gatherCoroutine
-            mover.MoveTo(workCamp.transform.position);
+            mover.MoveTo(productionBuilding.transform.position);
             if (mover.IsDestinationReached())
             {
-                workCamp.DepositResources(gatheredAmount);
+                productionBuilding.DepositResources(gatheredAmount);
                 gatheredAmount = 0;
                 currentState = GathererState.SearchingForResource;
             }
@@ -200,13 +228,6 @@ namespace GameJam.Worker
         {
             Cancel();
             currentState = GathererState.SearchingForResource;
-        }
-
-        public void Gather()
-        {
-            actionScheduler.StartAction(this);
-            if (currentState == GathererState.Idle)
-                currentState = GathererState.SearchingForResource;
         }
 
         public void Cancel()
@@ -230,12 +251,13 @@ namespace GameJam.Worker
             currentState = GathererState.Idle;
         }
 
-        //MMMMMMMMMMMMMMMMMMMMM
-        // Call this method to change the current task
-        public void SetGathererType(GathererType newGathererType)
+        private void SetGathererType(GathererType newGathererType)
         {
             if (currentGathererType == newGathererType)
+            {
+                currentState = GathererState.SearchingForResource;
                 return;
+            }
 
             if (newGathererType == null)
                 return;
@@ -245,6 +267,7 @@ namespace GameJam.Worker
 
             currentGathererType = newGathererType;
             instantiatedTool = Instantiate(newGathererType.GetToolPrefab(), rightHandTransform);
+            currentState = GathererState.SearchingForResource;
         }
     }
 }
