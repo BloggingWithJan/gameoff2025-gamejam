@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 2808834347379911383}
   - component: {fileID: 681040036461673439}
   - component: {fileID: 549027286272746299}
+  - component: {fileID: 6343789882314187911}
   m_Layer: 7
   m_Name: Lumberjack Lodge
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -71,6 +72,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WorkCamp
   maxGathererSlots: 3
   gathererType: {fileID: 11400000, guid: 1759060df29cb2c439f2a3d42deb3183, type: 2}
+--- !u!114 &6343789882314187911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7639224785505410922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdc07ed7143304749aba12fd54c54031, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BuildingData
+  buildingName: Lumberjack Lodge
+  description: Workers will chop nearby Trees to produce Wood
+  costs:
+  - resource: 0
+    amount: 10
+  refunds: []
 --- !u!1001 &822216259362849040
 PrefabInstance:
   m_ObjectHideFlags: 0

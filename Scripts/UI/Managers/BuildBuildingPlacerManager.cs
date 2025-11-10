@@ -40,6 +40,10 @@ namespace UI.Managers
 
             if (Mouse.current == null || !TryGetGroundHit(out RaycastHit hit))
             {
+                Debug.LogError("No Ground Hit. ");
+                Debug.LogError(  Mouse.current == null);
+                Debug.LogError("Rayhit");
+                Debug.LogError(!TryGetGroundHit(out RaycastHit moma));
                 return;
             }
 
