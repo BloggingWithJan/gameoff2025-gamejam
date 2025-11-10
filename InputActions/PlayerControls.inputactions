@@ -16,6 +16,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "RightClick",
+                    "type": "PassThrough",
+                    "id": "4182c811-d891-49b9-8615-0e499b199e49",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Click",
                     "type": "PassThrough",
                     "id": "fa3a0893-ed5c-4bc7-8ad4-ad52e6a8e50d",
@@ -56,6 +65,17 @@
                     "processors": "",
                     "groups": "Touch",
                     "action": "Point",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b02c088c-4e13-4c82-be4d-a60ad10ac360",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "RightClick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

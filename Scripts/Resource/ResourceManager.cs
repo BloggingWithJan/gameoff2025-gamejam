@@ -8,15 +8,25 @@ namespace Resource
     {
         public static ResourceManager Instance { get; private set; }
 
-        [Header("UI References")] [SerializeField]
+        [Header("UI References")]
+        [SerializeField]
         private TMP_Text woodText;
 
-        [SerializeField] private TMP_Text stoneText;
-        [SerializeField] private TMP_Text coinText;
+        [SerializeField]
+        private TMP_Text stoneText;
 
-        [Header("Values")] [SerializeField] private int wood;
-        [SerializeField] private int stone;
-        [SerializeField] private int coin;
+        [SerializeField]
+        private TMP_Text coinText;
+
+        [Header("Values")]
+        [SerializeField]
+        private int wood;
+
+        [SerializeField]
+        private int stone;
+
+        [SerializeField]
+        private int coin;
 
         private Dictionary<ResourceType, int> _resources;
         private Dictionary<ResourceType, TMP_Text> _uiTexts;
@@ -36,14 +46,14 @@ namespace Resource
             {
                 { ResourceType.Wood, wood },
                 { ResourceType.Stone, stone },
-                { ResourceType.Coins, coin }
+                { ResourceType.Coins, coin },
             };
 
             _uiTexts = new Dictionary<ResourceType, TMP_Text>
             {
                 { ResourceType.Wood, woodText },
                 { ResourceType.Stone, stoneText },
-                { ResourceType.Coins, coinText }
+                { ResourceType.Coins, coinText },
             };
         }
 
@@ -62,7 +72,8 @@ namespace Resource
 
         public void AddResource(ResourceType type, int amount)
         {
-            if (!_resources.ContainsKey(type)) return;
+            if (!_resources.ContainsKey(type))
+                return;
             _resources[type] += amount;
             UpdateUIText(type);
         }
@@ -124,13 +135,13 @@ namespace Resource
         {
             if (_uiTexts.TryGetValue(type, out TMP_Text text))
                 text.text = _resources[type].ToString();
-            
+
             // Sync to serialized fields for live Inspector updates
             wood = _resources[ResourceType.Wood];
             stone = _resources[ResourceType.Stone];
             coin = _resources[ResourceType.Coins];
         }
-        
+
         [ContextMenu("Sync From Inspector")]
         private void SyncFromInspector()
         {

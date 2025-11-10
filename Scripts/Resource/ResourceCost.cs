@@ -5,14 +5,14 @@ public enum ResourceType
 {
     Wood,
     Stone,
-    Coins
+    Coins,
 }
 
 [Serializable]
 public class ResourceCost
 {
-    public ResourceType resource; 
-    public int amount;            
+    public ResourceType resource;
+    public int amount;
 
     public ResourceCost(ResourceType resource, int amount)
     {

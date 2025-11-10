@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using GameJam.Production;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,6 +13,7 @@ namespace GameJam.Core
         public InputActionAsset PlayerActionAsset;
         private InputAction _pointAction;
         private InputAction _clickAction;
+        private InputAction _rightClickAction;
         private ISelectable _currentHoveredEntity;
 
         [SerializeField]
@@ -31,12 +34,16 @@ namespace GameJam.Core
 
             _clickAction = map.FindAction("Click");
             _clickAction.Enable();
+
+            _rightClickAction = map.FindAction("RightClick");
+            _rightClickAction.Enable();
         }
 
         private void OnDisable()
         {
             _pointAction.Disable();
             _clickAction.Disable();
+            _rightClickAction.Disable();
         }
 
         void Update()
@@ -46,6 +53,47 @@ namespace GameJam.Core
             {
                 HandleClickSelection();
                 UpdateHoverFeedback();
+            }
+            HandleRightClick();
+        }
+
+        private void HandleRightClick()
+        {
+            Boolean interaction = false;
+            if (_rightClickAction.WasPerformedThisFrame())
+            {
+                Ray ray = Camera.main.ScreenPointToRay(_pointAction.ReadValue<Vector2>());
+                if (Physics.Raycast(ray, out RaycastHit hit))
+                {
+                    GameObject target = hit.collider.gameObject;
+
+                    if (target.GetComponent<ProductionBuilding>() != null)
+                    {
+                        interaction = true;
+                    }
+                    if (target.tag == "Enemy")
+                    {
+                        interaction = true;
+                    }
+
+                    foreach (var entity in selectedEntities)
+                    {
+                        IUnitCommandable commandable = (
+                            entity as MonoBehaviour
+                        ).GetComponent<IUnitCommandable>();
+                        if (commandable != null)
+                        {
+                            if (interaction)
+                            {
+                                commandable.InteractWith(target);
+                            }
+                            else
+                            {
+                                commandable.MoveTo(hit.point);
+                            }
+                        }
+                    }
+                }
             }
         }
 
