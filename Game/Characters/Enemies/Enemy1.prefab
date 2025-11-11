@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: e4df42724f0aaff4eb3ef140408f0c84, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -25.69337
+      value: -18.11
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e4df42724f0aaff4eb3ef140408f0c84, type: 3}
       propertyPath: m_LocalPosition.y
@@ -18,7 +18,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e4df42724f0aaff4eb3ef140408f0c84, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.04605
+      value: 14.1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e4df42724f0aaff4eb3ef140408f0c84, type: 3}
       propertyPath: m_LocalRotation.w
@@ -48,13 +48,45 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7134394785105016132, guid: e4df42724f0aaff4eb3ef140408f0c84, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: -5151492872390713093, guid: e4df42724f0aaff4eb3ef140408f0c84, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: -5069531478518834764, guid: e4df42724f0aaff4eb3ef140408f0c84, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e4df42724f0aaff4eb3ef140408f0c84, type: 3}
       propertyPath: m_Name
       value: Enemy1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e4df42724f0aaff4eb3ef140408f0c84, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e4df42724f0aaff4eb3ef140408f0c84, type: 3}
       propertyPath: m_TagString
       value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 3250163066507786643, guid: e4df42724f0aaff4eb3ef140408f0c84, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5788240856288092216, guid: e4df42724f0aaff4eb3ef140408f0c84, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8303906797054990637, guid: e4df42724f0aaff4eb3ef140408f0c84, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8908311948669537042, guid: e4df42724f0aaff4eb3ef140408f0c84, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -81,6 +113,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e4df42724f0aaff4eb3ef140408f0c84, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7632758723904902774}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e4df42724f0aaff4eb3ef140408f0c84, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1569287414521982738}
   m_SourcePrefab: {fileID: 100100000, guid: e4df42724f0aaff4eb3ef140408f0c84, type: 3}
 --- !u!4 &1606123297583857613 stripped
 Transform:
@@ -207,3 +242,25 @@ CapsuleCollider:
   m_Height: 0.8
   m_Direction: 1
   m_Center: {x: 0, y: 0.35, z: 0}
+--- !u!95 &1569287414521982738
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7056993406292533829}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: da78c019838f66c408238811b9c86760, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

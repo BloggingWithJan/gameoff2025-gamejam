@@ -52,10 +52,10 @@ namespace GameJam.Production
             audioSource = GetComponent<AudioSource>();
             actionScheduler = GetComponent<ActionScheduler>();
             //navMeshAgent tuning so there are less collisions between multiple workers
-            // navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
-            // navMeshAgent.avoidancePriority = Random.Range(30, 60);
-            navMeshAgent.avoidancePriority = 99; // lowest priority
-            navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
+            navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
+            navMeshAgent.avoidancePriority = Random.Range(30, 60);
+            // navMeshAgent.avoidancePriority = 99; // lowest priority
+            // navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
         }
 
         void Update()
@@ -266,7 +266,16 @@ namespace GameJam.Production
                 Destroy(instantiatedTool);
 
             currentGathererType = newGathererType;
-            instantiatedTool = Instantiate(newGathererType.GetToolPrefab(), rightHandTransform);
+            if (newGathererType.GetToolPrefab() != null)
+            {
+                instantiatedTool = Instantiate(newGathererType.GetToolPrefab(), rightHandTransform);
+            }
+
+            if (newGathererType.GetAnimatorOverride() != null)
+            {
+                animator.runtimeAnimatorController = newGathererType.GetAnimatorOverride();
+            }
+
             currentState = GathererState.SearchingForResource;
         }
     }

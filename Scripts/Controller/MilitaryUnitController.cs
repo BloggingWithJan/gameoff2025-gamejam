@@ -1,10 +1,11 @@
 using GameJam.Combat;
 using GameJam.Core;
+using GameJam.Movement;
 using UnityEngine;
 
 namespace GameJam.Controller
 {
-    public class MilitaryUnitController : MonoBehaviour
+    public class MilitaryUnitController : MonoBehaviour, IUnitCommandable
     {
         [SerializeField]
         private float detectionRadius = 10f;
@@ -26,15 +27,15 @@ namespace GameJam.Controller
             if (health.IsDead())
                 return;
 
-            if (currenTarget == null)
-            {
-                ScanForEnemies();
-            }
+            // if (currenTarget == null)
+            // {
+            //     ScanForEnemies();
+            // }
 
-            if (currenTarget != null)
-            {
-                AttackBehaviour();
-            }
+            // if (currenTarget != null)
+            // {
+            //     AttackBehaviour();
+            // }
         }
 
         private void ScanForEnemies()
@@ -72,6 +73,21 @@ namespace GameJam.Controller
         private void AttackBehaviour()
         {
             fighter.Attack(currenTarget);
+        }
+
+        public void MoveTo(Vector3 destination)
+        {
+            GetComponent<Mover>().StartMoveAction(destination);
+        }
+
+        //TODO: refactor
+        public void InteractWith(GameObject target)
+        {
+            if (target.tag == "Enemy")
+            {
+                Debug.Log("Attacking enemy " + target.name);
+                fighter.Attack(target);
+            }
         }
     }
 }
