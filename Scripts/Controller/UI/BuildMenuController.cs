@@ -1,15 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace UI.Managers
 {
-    public class BuildBuildingPanelManager : MonoBehaviour
+    public class BuildMenuController : MonoBehaviour
     {
         public GameObject buildingPanel;
 
-        public BuildBuildingPlacerManager placerManager;
+        [FormerlySerializedAs("placerManager")] public BuildingPlacementController placementController;
         public BuildBuildingTooltipManager tooltipManager;
 
         [Header("Buttons")] public Button quarryButton;
@@ -31,7 +32,7 @@ namespace UI.Managers
         private void Awake()
         {
             // Setup Quarry
-            quarryButton.onClick.AddListener(() => placerManager.StartPlacement(quarryPrefab));
+            quarryButton.onClick.AddListener(() => placementController.StartPlacement(quarryPrefab));
             if (quarryPrefab.TryGetComponent<BuildingData>(out BuildingData quarryData))
             {
                 AddTooltipEvents(quarryButton, quarryData);
@@ -42,7 +43,7 @@ namespace UI.Managers
             }
             
             // Setup Lumberjack Lodge
-            lumberjackLodgeButton.onClick.AddListener(() => placerManager.StartPlacement(lumberjackLodgePrefab));
+            lumberjackLodgeButton.onClick.AddListener(() => placementController.StartPlacement(lumberjackLodgePrefab));
             if (lumberjackLodgePrefab.TryGetComponent<BuildingData>(out BuildingData lumberjackLodgeData))
             {
                 AddTooltipEvents(lumberjackLodgeButton, lumberjackLodgeData);
@@ -53,7 +54,7 @@ namespace UI.Managers
             }
             
             // Setup Food Lodge
-            foodLodgeButton.onClick.AddListener(() => placerManager.StartPlacement(foodLodgePrefab));
+            foodLodgeButton.onClick.AddListener(() => placementController.StartPlacement(foodLodgePrefab));
             if (foodLodgePrefab.TryGetComponent<BuildingData>(out BuildingData foodLodgeData))
             {
                 AddTooltipEvents(foodLodgeButton, foodLodgeData);
@@ -64,7 +65,7 @@ namespace UI.Managers
             }
 
             // Setup Base
-            baseButton.onClick.AddListener(() => placerManager.StartPlacement(basePrefab));
+            baseButton.onClick.AddListener(() => placementController.StartPlacement(basePrefab));
             if (basePrefab.TryGetComponent<BuildingData>(out BuildingData baseData))
             {
                 AddTooltipEvents(baseButton, baseData);
@@ -75,7 +76,7 @@ namespace UI.Managers
             }
             
             // Setup Tower
-            towerButton.onClick.AddListener(() => placerManager.StartPlacement(towerPrefab));
+            towerButton.onClick.AddListener(() => placementController.StartPlacement(towerPrefab));
             if (towerPrefab.TryGetComponent<BuildingData>(out BuildingData towerData))
             {
                 AddTooltipEvents(towerButton, towerData);
@@ -86,7 +87,7 @@ namespace UI.Managers
             }
 
             // Setup Rock
-            rockButton.onClick.AddListener(() => placerManager.StartPlacement(rockPrefab));
+            rockButton.onClick.AddListener(() => placementController.StartPlacement(rockPrefab));
             if (rockPrefab.TryGetComponent<BuildingData>(out BuildingData rockData))
             {
                 AddTooltipEvents(rockButton, rockData);
@@ -97,7 +98,7 @@ namespace UI.Managers
             }
 
             // Setup Tree
-            treeButton.onClick.AddListener(() => placerManager.StartPlacement(treePrefab));
+            treeButton.onClick.AddListener(() => placementController.StartPlacement(treePrefab));
             if (treePrefab.TryGetComponent<BuildingData>(out BuildingData treeData))
             {
                 AddTooltipEvents(treeButton, treeData);

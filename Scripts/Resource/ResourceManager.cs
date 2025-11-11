@@ -123,6 +123,28 @@ namespace Resource
                 UpdateUIText(cost.resource);
             }
         }
+        
+        public void RefundResourcesPartially(BuildingData buildingData)
+        {
+            foreach (var cost in buildingData.costs)
+            {
+                if (!_resources.ContainsKey(cost.resource))
+                {
+                    Debug.LogError($"Resource type {cost.resource} not implemented for refund.");
+                    continue;
+                }
+
+                // Calculate 50% of the cost. Integer division (cost.amount / 2) automatically
+                // floors the result, ensuring we don't refund more than half.
+                int refundAmount = cost.amount / 2;
+
+                if (refundAmount > 0)
+                {
+                    _resources[cost.resource] += refundAmount;
+                    UpdateUIText(cost.resource);
+                }
+            }
+        }
 
         [ContextMenu("Update Resource UI")]
         private void UpdateUI()

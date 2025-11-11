@@ -18,8 +18,6 @@ public class BuildingInfoPanel : MonoBehaviour
 
         if (descriptionText != null)
             descriptionText.text = building.description;
-        
-        Debug.Log("Set");
     }
 
     public void ClosePanel()

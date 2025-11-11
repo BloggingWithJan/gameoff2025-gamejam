@@ -7,14 +7,19 @@ using UnityEngine.Serialization;
 
 namespace UI.Managers
 {
-    public class BuildBuildingPlacerManager : MonoBehaviour
+    public class BuildingPlacementController : MonoBehaviour
     {
         public LayerMask groundMask;
         public GameObject buildPlacingControls;
-
+        
         private GameObject _currentPrefab;
         private GameObject _previewInstance;
         private bool _isPlacing;
+        
+        //if a building gets moved
+        private GameObject _currentBuilding;
+        private bool _ismoving;
+        
         private Renderer[] _previewRenderers;
         private LineRenderer _previewOutline;
         private readonly Dictionary<Collider, LineRenderer> _blockedOutlines = new();
@@ -82,13 +87,13 @@ namespace UI.Managers
             {
                 if (overUI)
                 {
-                    FloatingTextManager.Instance.ShowFloatingText("Cannot place over UI!");
+                    FloatingTextController.Instance.ShowFloatingText("Cannot place over UI!");
                     return;
                 }
 
                 if (!valid)
                 {
-                    FloatingTextManager.Instance.ShowFloatingText("Placement blocked!");
+                    FloatingTextController.Instance.ShowFloatingText("Placement blocked!");
                     return;
                 }
 
@@ -163,11 +168,29 @@ namespace UI.Managers
             lr.SetPositions(corners);
         }
 
+
+
+        public void RepositionBuilding(GameObject building)
+        {
+            if (_isPlacing) CancelPlacement();
+
+            _ismoving = true;
+            _currentBuilding = building;
+
+            StartPlacement(building);
+        }
+
         public void StartPlacement(GameObject prefab)
         {
             if (_isPlacing) CancelPlacement();
             _currentPrefab = prefab;
             _previewInstance = Instantiate(prefab);
+
+            if (_ismoving)
+            {
+                _currentBuilding.SetActive(false); //hide original
+            }
+
             SetPreviewMaterial(_previewInstance);
             _previewRenderers = _previewInstance.GetComponentsInChildren<Renderer>();
             _previewOutline = _previewInstance.AddComponent<LineRenderer>();
@@ -183,28 +206,31 @@ namespace UI.Managers
 
         private void PlaceBuilding(Vector3 position)
         {
-            // Check if player has enough resources first
-            var buildingData = _currentPrefab.GetComponent<BuildingData>();
-            if (buildingData == null)
+            if (_ismoving)
             {
-                Debug.LogError($"Can't find BuildingData component on GameObject {gameObject.name}");
+                // move original building to new position
+                _currentBuilding.transform.position = position;
+                _currentBuilding.transform.rotation = _previewInstance.transform.rotation;
+                _currentBuilding.SetActive(true);
+            }
+            else
+            {
+                // normal placement (pay resources)
+                var buildingData = _currentPrefab.GetComponent<BuildingData>();
+                if (!ResourceManager.Instance.HasSufficientResources(buildingData))
+                {
+                    FloatingTextController.Instance.ShowFloatingText("Not enough resources!");
+                    return;
+                }
+
+                ResourceManager.Instance.DeductResources(buildingData);
+                Instantiate(_currentPrefab, position, _previewInstance.transform.rotation);
             }
 
-            bool hasSufficientResources = ResourceManager.Instance.HasSufficientResources(buildingData);
-            if (!hasSufficientResources)
-            {
-                FloatingTextManager.Instance.ShowFloatingText("Not enough resources!");
-                return;
-            }
-
-            ResourceManager.Instance
-                .DeductResources(
-                    buildingData); // Instantiate building
-            GameObject instantiatedObject = Instantiate(_currentPrefab, position, Quaternion.identity);
-            instantiatedObject.transform.rotation = _previewInstance.transform.rotation;
-            ClearBlockerOutlines();
             Destroy(_previewInstance);
+            ClearBlockerOutlines();
             _isPlacing = false;
+            _ismoving = false;
             buildPlacingControls.SetActive(false);
         }
 
@@ -212,14 +238,21 @@ namespace UI.Managers
         {
             ClearBlockerOutlines();
             if (_previewInstance) Destroy(_previewInstance);
+
+            if (_ismoving)
+            {
+                _currentBuilding.SetActive(true);
+            }
+
             _isPlacing = false;
+            _ismoving = false;
             buildPlacingControls.SetActive(false);
         }
 
         private void RotatePreview()
         {
             if (!_previewInstance) return;
-            _previewInstance.transform.Rotate(Vector3.up, Space.Self);
+            _previewInstance.transform.Rotate(Vector3.up, 90f * Time.deltaTime);
         }
 
         private void ClearBlockerOutlines()
@@ -250,5 +283,20 @@ namespace UI.Managers
         }
 
         private bool IsPointerOverUI() => EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+
+
+        public void DeleteBuilding(GameObject building)
+        {
+            if (building == null) return;
+
+            building.TryGetComponent(out BuildingData buildingData);
+
+            if (buildingData != null)
+            {
+                ResourceManager.Instance.RefundResourcesPartially(buildingData);
+            }
+
+            Destroy(building);
+        }
     }
 }

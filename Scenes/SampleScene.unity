@@ -2347,7 +2347,7 @@ GameObject:
   - component: {fileID: 310995527}
   - component: {fileID: 310995528}
   m_Layer: 0
-  m_Name: BuildBuildingTooltipManager
+  m_Name: BuildingTooltipManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4669,6 +4669,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 2740829063210888962, guid: c36b59fae0db8b0428f356a079e990be, type: 3}
+      propertyPath: m_TagString
+      value: Building
+      objectReference: {fileID: 0}
     - target: {fileID: 3082435477526856401, guid: c36b59fae0db8b0428f356a079e990be, type: 3}
       propertyPath: m_Name
       value: Food Lodge
@@ -6779,7 +6783,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.BuildButton
   buildingPanel: {fileID: 930149816}
-  placerManager: {fileID: 1313745636}
+  placementController: {fileID: 1313745636}
   tooltipManager: {fileID: 310995528}
   quarryButton: {fileID: 1882478390}
   baseButton: {fileID: 52075995}
@@ -8835,7 +8839,7 @@ GameObject:
   - component: {fileID: 1313745635}
   - component: {fileID: 1313745636}
   m_Layer: 0
-  m_Name: BuildingPlacerManager
+  m_Name: BuildingPlacementManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10310,7 +10314,7 @@ MonoBehaviour:
   buildingInfoPanel: {fileID: 465665683}
   moveButton: {fileID: 1186080756}
   deleteButton: {fileID: 209873}
-  _buildingPlacerManager: {fileID: 1313745636}
+  buildingPlacementController: {fileID: 1313745636}
 --- !u!1 &1597362669
 GameObject:
   m_ObjectHideFlags: 0

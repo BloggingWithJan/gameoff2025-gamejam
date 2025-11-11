@@ -3,9 +3,9 @@ using UnityEngine.InputSystem;
 
 namespace UI.Managers
 {
-    public class FloatingTextManager : MonoBehaviour
+    public class FloatingTextController : MonoBehaviour
     {
-        public static FloatingTextManager Instance { get; private set; }
+        public static FloatingTextController Instance { get; private set; }
 
         [SerializeField] private Canvas uiCanvas;
         [SerializeField] private GameObject floatingTextPrefab;

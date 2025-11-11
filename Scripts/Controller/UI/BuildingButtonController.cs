@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 namespace UI.Managers
 {
-    public class InputManager : MonoBehaviour
+    public class BuildingButtonController : MonoBehaviour
     {
         public InputActionAsset uiControlsAsset;
         public GameObject buildingPanel;
