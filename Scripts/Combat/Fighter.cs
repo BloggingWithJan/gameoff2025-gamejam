@@ -100,5 +100,16 @@ namespace GameJam.Combat
             Animator animator = GetComponent<Animator>();
             weapon.Spawn(rightHandTransform, leftHandTransform, animator);
         }
+
+        public bool IsCurrentTargetDead()
+        {
+            if (target == null)
+                return true;
+            if (target.IsDead())
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

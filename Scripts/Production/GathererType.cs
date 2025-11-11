@@ -14,6 +14,9 @@ namespace GameJam.Production
         GameObject toolPrefab;
 
         [SerializeField]
+        AnimatorOverrideController animatorOverride;
+
+        [SerializeField]
         string resourceTag;
 
         [SerializeField]
@@ -48,6 +51,11 @@ namespace GameJam.Production
         public AudioClip GetGatherSound()
         {
             return gatherSound;
+        }
+
+        public AnimatorOverrideController GetAnimatorOverride()
+        {
+            return animatorOverride;
         }
     }
 }
