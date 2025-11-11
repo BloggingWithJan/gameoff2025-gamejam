@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 261778682933459905}
   - component: {fileID: 3869463488482448894}
   - component: {fileID: 4845038341243929933}
+  - component: {fileID: 8167226434668735254}
   m_Layer: 0
   m_Name: Food Lodge
   m_TagString: Untagged
@@ -70,6 +71,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Production.ProductionBuilding
   maxGathererSlots: 3
   gathererType: {fileID: 11400000, guid: 2f219bc075b04134489939ba9eba86d9, type: 2}
+--- !u!114 &8167226434668735254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3082435477526856401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdc07ed7143304749aba12fd54c54031, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BuildingData
+  buildingName: Food Lodge
+  description: TODO
+  costs:
+  - resource: 0
+    amount: 15
+  refunds: []
 --- !u!1001 &3082723097691640403
 PrefabInstance:
   m_ObjectHideFlags: 0

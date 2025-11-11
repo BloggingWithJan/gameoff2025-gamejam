@@ -1,13 +1,20 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
+using Button = UnityEngine.UI.Button;
 
 namespace UI.Managers
 {
     public class BuildingClickDetector : MonoBehaviour
     {
         [SerializeField] private BuildingInfoPanel buildingInfoPanel;
+        [SerializeField] private Button moveButton;
+        [SerializeField] private Button deleteButton;
+        [SerializeField] private BuildBuildingPlacerManager _buildingPlacerManager;
+        
         private GameObject currentBuilding;
+        
 
         void Update()
         {

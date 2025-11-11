@@ -2639,7 +2639,7 @@ GameObject:
   - component: {fileID: 360810274}
   - component: {fileID: 360810273}
   - component: {fileID: 360810272}
-  m_Layer: 6
+  m_Layer: 3
   m_Name: Plane
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -4699,63 +4699,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 261778682933459905, guid: c36b59fae0db8b0428f356a079e990be, type: 3}
   m_PrefabInstance: {fileID: 733756215}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &745771581
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 7056993406292533829, guid: 72ecf84c47087ad4ebe59d20b272be64, type: 3}
-      propertyPath: m_Name
-      value: Enemy1 (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 7684454543918594303, guid: 72ecf84c47087ad4ebe59d20b272be64, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -17.072811
-      objectReference: {fileID: 0}
-    - target: {fileID: 7684454543918594303, guid: 72ecf84c47087ad4ebe59d20b272be64, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7684454543918594303, guid: 72ecf84c47087ad4ebe59d20b272be64, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 12.393768
-      objectReference: {fileID: 0}
-    - target: {fileID: 7684454543918594303, guid: 72ecf84c47087ad4ebe59d20b272be64, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7684454543918594303, guid: 72ecf84c47087ad4ebe59d20b272be64, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7684454543918594303, guid: 72ecf84c47087ad4ebe59d20b272be64, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7684454543918594303, guid: 72ecf84c47087ad4ebe59d20b272be64, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7684454543918594303, guid: 72ecf84c47087ad4ebe59d20b272be64, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7684454543918594303, guid: 72ecf84c47087ad4ebe59d20b272be64, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7684454543918594303, guid: 72ecf84c47087ad4ebe59d20b272be64, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 72ecf84c47087ad4ebe59d20b272be64, type: 3}
 --- !u!1 &740688562
 GameObject:
   m_ObjectHideFlags: 0
@@ -4892,6 +4835,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 740688562}
   m_CullTransparentMesh: 1
+--- !u!1001 &745771581
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7056993406292533829, guid: 72ecf84c47087ad4ebe59d20b272be64, type: 3}
+      propertyPath: m_Name
+      value: Enemy1 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684454543918594303, guid: 72ecf84c47087ad4ebe59d20b272be64, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -17.072811
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684454543918594303, guid: 72ecf84c47087ad4ebe59d20b272be64, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684454543918594303, guid: 72ecf84c47087ad4ebe59d20b272be64, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 12.393768
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684454543918594303, guid: 72ecf84c47087ad4ebe59d20b272be64, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684454543918594303, guid: 72ecf84c47087ad4ebe59d20b272be64, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684454543918594303, guid: 72ecf84c47087ad4ebe59d20b272be64, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684454543918594303, guid: 72ecf84c47087ad4ebe59d20b272be64, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684454543918594303, guid: 72ecf84c47087ad4ebe59d20b272be64, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684454543918594303, guid: 72ecf84c47087ad4ebe59d20b272be64, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7684454543918594303, guid: 72ecf84c47087ad4ebe59d20b272be64, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 72ecf84c47087ad4ebe59d20b272be64, type: 3}
 --- !u!1001 &752757898
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6787,12 +6787,14 @@ MonoBehaviour:
   rockButton: {fileID: 1444392840}
   treeButton: {fileID: 495958935}
   lumberjackLodgeButton: {fileID: 468088437}
+  foodLodgeButton: {fileID: 1597362671}
   quarryPrefab: {fileID: 2742072698946110283, guid: 20fd5b894ef7ee54187d23a9546a6086, type: 3}
   basePrefab: {fileID: 838543337544683574, guid: 5cfe7c1b2ca5ece43965e455b880f722, type: 3}
   towerPrefab: {fileID: 1808645244560942380, guid: 4809fb1cce7858c4ca009cdc687a8c82, type: 3}
   rockPrefab: {fileID: 94807060078948755, guid: f68dc31b969f9904d8b71accb1be68e3, type: 3}
   treePrefab: {fileID: 4391544495835618487, guid: d3d6d551d061a984c8a47fecc5b5534f, type: 3}
   lumberjackLodgePrefab: {fileID: 7639224785505410922, guid: 22ec1764ab4be8844b60554dc07b2962, type: 3}
+  foodLodgePrefab: {fileID: 3082435477526856401, guid: c36b59fae0db8b0428f356a079e990be, type: 3}
 --- !u!4 &1035776104
 Transform:
   m_ObjectHideFlags: 0
@@ -6999,6 +7001,7 @@ GameObject:
   - component: {fileID: 1058321123}
   - component: {fileID: 1058321125}
   - component: {fileID: 1058321124}
+  - component: {fileID: 1058321126}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -7045,7 +7048,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 3
+  m_text: Food
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -7124,6 +7127,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1058321122}
   m_CullTransparentMesh: 1
+--- !u!114 &1058321126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1058321122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdc07ed7143304749aba12fd54c54031, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BuildingData
+  buildingName: Food Lounge
+  description: Workers will harvest food
+  costs:
+  - resource: 0
+    amount: 15
+  refunds: []
 --- !u!1 &1079022226
 GameObject:
   m_ObjectHideFlags: 0
@@ -9044,7 +9065,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Build [B]
+  m_text: 'Build [B]'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -10287,6 +10308,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   buildingInfoPanel: {fileID: 465665683}
+  moveButton: {fileID: 1186080756}
+  deleteButton: {fileID: 209873}
+  _buildingPlacerManager: {fileID: 1313745636}
 --- !u!1 &1597362669
 GameObject:
   m_ObjectHideFlags: 0
@@ -10300,7 +10324,7 @@ GameObject:
   - component: {fileID: 1597362672}
   - component: {fileID: 1597362671}
   m_Layer: 5
-  m_Name: Button (2)
+  m_Name: FoodLodge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10959,7 +10983,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1675635840}
   m_Layer: 5
-  m_Name: BottomRight
+  m_Name: BuildBuildingPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

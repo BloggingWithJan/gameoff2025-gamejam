@@ -11,7 +11,7 @@ namespace UI.Managers
     {
         public LayerMask groundMask;
         public GameObject buildPlacingControls;
-        
+
         private GameObject _currentPrefab;
         private GameObject _previewInstance;
         private bool _isPlacing;
@@ -39,30 +39,23 @@ namespace UI.Managers
             if (!_isPlacing) return;
 
             if (Mouse.current == null || !TryGetGroundHit(out RaycastHit hit))
-            {
-                Debug.LogError("No Ground Hit. ");
-                Debug.LogError(  Mouse.current == null);
-                Debug.LogError("Rayhit");
-                Debug.LogError(!TryGetGroundHit(out RaycastHit moma));
                 return;
-            }
 
             _previewInstance.transform.position = hit.point;
 
             bool isOverUI = IsPointerOverUI();
             var (isValid, blockers) = IsValidPlacement(hit.point);
-            
+
             UpdateVisuals(isOverUI, isValid, blockers);
 
             HandleInput(hit, isOverUI, isValid);
-            
         }
-        
+
         private void UpdateVisuals(bool isOverUI, bool isValid, List<Collider> blockers)
         {
             Color previewColor = (isOverUI || !isValid) ? Color.red : Color.green;
             SetPreviewColor(previewColor);
-            
+
             if (_previewInstance.TryGetComponent<BoxCollider>(out var boxCollider))
             {
                 DrawOutlineForBoxCollider(boxCollider, _previewOutline, previewColor, 0.02f);
@@ -71,7 +64,7 @@ namespace UI.Managers
             UpdateBlockingOutlines(blockers);
         }
 
-        private void HandleInput(RaycastHit hit,  bool overUI, bool valid)
+        private void HandleInput(RaycastHit hit, bool overUI, bool valid)
         {
             if (Mouse.current.rightButton.wasPressedThisFrame)
             {
@@ -184,7 +177,7 @@ namespace UI.Managers
             _previewOutline.startColor = _previewOutline.endColor = Color.red;
             _previewOutline.useWorldSpace = true;
             _isPlacing = true;
-            
+
             buildPlacingControls.SetActive(true);
         }
 
