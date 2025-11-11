@@ -17,12 +17,14 @@ namespace UI.Managers
         public Button towerButton;
         public Button rockButton;
         public Button treeButton;
+        public Button lumberjackLodgeButton;
 
         [Header("Prefabs")] public GameObject quarryPrefab;
         public GameObject basePrefab;
         public GameObject towerPrefab;
         public GameObject rockPrefab;
         public GameObject treePrefab;
+        public GameObject lumberjackLodgePrefab;
 
         private void Awake()
         {
@@ -31,6 +33,17 @@ namespace UI.Managers
             if (quarryPrefab.TryGetComponent<BuildingData>(out BuildingData quarryData))
             {
                 AddTooltipEvents(quarryButton, quarryData);
+            }
+            else
+            {
+                Debug.LogError($"Can't find BuildingData component on GameObject {gameObject.name}");
+            }
+            
+            // Setup Lumberjack Lodge
+            lumberjackLodgeButton.onClick.AddListener(() => placerManager.StartPlacement(lumberjackLodgePrefab));
+            if (lumberjackLodgePrefab.TryGetComponent<BuildingData>(out BuildingData lumberjackLodgeData))
+            {
+                AddTooltipEvents(lumberjackLodgeButton, lumberjackLodgeData);
             }
             else
             {
