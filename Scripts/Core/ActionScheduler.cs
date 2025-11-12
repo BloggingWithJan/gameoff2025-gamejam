@@ -27,5 +27,13 @@ namespace GameJam.Core
         {
             StartAction(null);
         }
+
+        public void CancelIfCurrentActionIs(IAction action)
+        {
+            if (currentAction == action)
+            {
+                CancelCurrentAction();
+            }
+        }
     }
 }

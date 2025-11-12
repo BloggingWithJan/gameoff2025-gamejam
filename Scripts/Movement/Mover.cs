@@ -8,17 +8,25 @@ namespace GameJam.Movement
     {
         private NavMeshAgent agent;
         private Animator animator;
+        private ActionScheduler actionScheduler;
 
         void Start()
         {
             agent = GetComponent<NavMeshAgent>();
             animator = GetComponent<Animator>();
+            actionScheduler = GetComponent<ActionScheduler>();
         }
 
         // Update is called once per frame
         void Update()
         {
             UpdateAnimator();
+
+            //check if destination is reached to stop the agent
+            if (IsDestinationReached())
+            {
+                actionScheduler.CancelIfCurrentActionIs(this);
+            }
         }
 
         public void Cancel()

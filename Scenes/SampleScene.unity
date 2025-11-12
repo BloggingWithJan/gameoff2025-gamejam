@@ -1897,6 +1897,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Food
       objectReference: {fileID: 0}
+    - target: {fileID: 2356484669120136540, guid: 1111562f84a33fa4d81a91c14521acb8, type: 3}
+      propertyPath: maxResourceAmount
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 5073571499607077802, guid: 1111562f84a33fa4d81a91c14521acb8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 6.65
