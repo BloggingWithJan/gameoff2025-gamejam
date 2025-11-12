@@ -1,7 +1,8 @@
+using UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace UI.Managers
+namespace Controller.UI
 {
     public class FloatingTextController : MonoBehaviour
     {
@@ -21,7 +22,7 @@ namespace UI.Managers
             Instance = this;
         }
 
-        public void ShowFloatingText(string message)
+        public void ShowFloatingText(string message, Color color)
         {
             if (Mouse.current == null || floatingTextPrefab == null || uiCanvas == null) return;
 
@@ -30,7 +31,7 @@ namespace UI.Managers
             GameObject ft = Instantiate(floatingTextPrefab, uiCanvas.transform);
             ft.transform.position = mousePos;
 
-            ft.GetComponent<FloatingText>().SetText(message);
+            ft.GetComponent<FloatingText>().SetText(message, color);
         }
     }
 }

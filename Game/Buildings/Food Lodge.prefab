@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8167226434668735254}
   m_Layer: 0
   m_Name: Food Lodge
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -84,7 +84,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildingData
   buildingName: Food Lodge
-  description: TODO
+  description: Workers will use the Food Lodge to produce Food
   costs:
   - resource: 0
     amount: 15

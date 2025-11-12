@@ -8,7 +8,7 @@ using ResourceManager = Resource.ResourceManager;
 
 namespace UI.Managers
 {
-    public class BuildBuildingTooltipManager : MonoBehaviour
+    public class BuildingTooltipController : MonoBehaviour
     {
         public GameObject tooltipPanel;
         public TMP_Text buildingName;

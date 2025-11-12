@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 681040036461673439}
   - component: {fileID: 549027286272746299}
   - component: {fileID: 6343789882314187911}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Lumberjack Lodge
   m_TagString: Building
   m_Icon: {fileID: 0}

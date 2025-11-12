@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Controller.UI;
 using Resource;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -11,15 +12,16 @@ namespace UI.Managers
     {
         public LayerMask groundMask;
         public GameObject buildPlacingControls;
+        public GameObject buildingsParent;
         
         private GameObject _currentPrefab;
         private GameObject _previewInstance;
         private bool _isPlacing;
-        
+
         //if a building gets moved
         private GameObject _currentBuilding;
         private bool _ismoving;
-        
+
         private Renderer[] _previewRenderers;
         private LineRenderer _previewOutline;
         private readonly Dictionary<Collider, LineRenderer> _blockedOutlines = new();
@@ -87,13 +89,13 @@ namespace UI.Managers
             {
                 if (overUI)
                 {
-                    FloatingTextController.Instance.ShowFloatingText("Cannot place over UI!");
+                    FloatingTextController.Instance.ShowFloatingText("Cannot place over UI!", Color.red);
                     return;
                 }
 
                 if (!valid)
                 {
-                    FloatingTextController.Instance.ShowFloatingText("Placement blocked!");
+                    FloatingTextController.Instance.ShowFloatingText("Placement blocked!", Color.red);
                     return;
                 }
 
@@ -168,8 +170,6 @@ namespace UI.Managers
             lr.SetPositions(corners);
         }
 
-
-
         public void RepositionBuilding(GameObject building)
         {
             if (_isPlacing) CancelPlacement();
@@ -184,7 +184,7 @@ namespace UI.Managers
         {
             if (_isPlacing) CancelPlacement();
             _currentPrefab = prefab;
-            _previewInstance = Instantiate(prefab);
+            _previewInstance = Instantiate(prefab, buildingsParent.transform);
 
             if (_ismoving)
             {
@@ -219,12 +219,12 @@ namespace UI.Managers
                 var buildingData = _currentPrefab.GetComponent<BuildingData>();
                 if (!ResourceManager.Instance.HasSufficientResources(buildingData))
                 {
-                    FloatingTextController.Instance.ShowFloatingText("Not enough resources!");
+                    FloatingTextController.Instance.ShowFloatingText("Not enough resources!", Color.red);
                     return;
                 }
 
                 ResourceManager.Instance.DeductResources(buildingData);
-                Instantiate(_currentPrefab, position, _previewInstance.transform.rotation);
+                Instantiate(_currentPrefab, position, _previewInstance.transform.rotation, buildingsParent.transform);
             }
 
             Destroy(_previewInstance);

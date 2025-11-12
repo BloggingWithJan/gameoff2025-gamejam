@@ -11,7 +11,7 @@ namespace UI.Managers
         public GameObject buildingPanel;
 
         [FormerlySerializedAs("placerManager")] public BuildingPlacementController placementController;
-        public BuildBuildingTooltipManager tooltipManager;
+        [FormerlySerializedAs("tooltipManager")] public BuildingTooltipController tooltipController;
 
         [Header("Buttons")] public Button quarryButton;
         public Button baseButton;
@@ -122,8 +122,8 @@ namespace UI.Managers
             };
             entryEnter.callback.AddListener((_) =>
             {
-                tooltipManager.SetTooltip(data.buildingName, data.description, data.costs);
-                tooltipManager.ShowTooltip();
+                tooltipController.SetTooltip(data.buildingName, data.description, data.costs);
+                tooltipController.ShowTooltip();
             });
             trigger.triggers.Add(entryEnter);
 
@@ -132,7 +132,7 @@ namespace UI.Managers
             {
                 eventID = EventTriggerType.PointerExit
             };
-            entryExit.callback.AddListener((_) => tooltipManager.HideTooltip());
+            entryExit.callback.AddListener((_) => tooltipController.HideTooltip());
             trigger.triggers.Add(entryExit);
         }
 
