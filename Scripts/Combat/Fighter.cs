@@ -19,11 +19,14 @@ namespace GameJam.Combat
         Health fighter;
         float timeSinceLastAttack = Mathf.Infinity;
 
+        private ActionScheduler actionScheduler;
+
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
             SpawnWeapon();
             fighter = GetComponent<Health>();
+            actionScheduler = GetComponent<ActionScheduler>();
         }
 
         // Update is called once per frame
@@ -31,9 +34,15 @@ namespace GameJam.Combat
         {
             timeSinceLastAttack += Time.deltaTime;
             if (target == null)
+            {
+                actionScheduler.CancelIfCurrentActionIs(this);
                 return;
+            }
             if (target.IsDead())
+            {
+                actionScheduler.CancelIfCurrentActionIs(this);
                 return;
+            }
             if (fighter.IsDead())
                 return;
 

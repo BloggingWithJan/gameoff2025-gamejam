@@ -156,8 +156,9 @@ namespace GameJam.Production
                 }
             }
 
-            // No available slots found in any resource
+            // No available slots found in any resource - go back to idle
             targetNode = null;
+            actionScheduler.CancelCurrentAction();
         }
 
         //move to the reserved slot at the resource node - switch to gathering state when reached

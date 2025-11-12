@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: -2530275125541182038}
   - component: {fileID: 296334395256761310}
   - component: {fileID: -4277468224442115610}
+  - component: {fileID: 5232068000923233468}
   m_Layer: 7
   m_Name: Base
   m_TagString: Building
@@ -91,6 +92,22 @@ MonoBehaviour:
   - resource: 1
     amount: 5
   refunds: []
+--- !u!208 &5232068000923233468
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 838543337544683574}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1.5, y: 2, z: 1.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 1, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1001 &3153203298466110055
 PrefabInstance:
   m_ObjectHideFlags: 0

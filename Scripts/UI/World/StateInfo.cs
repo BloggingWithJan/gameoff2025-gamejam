@@ -20,6 +20,7 @@ namespace GameJam.UI
         private Gatherer gatherer;
         private Fighter fighter;
         private Mover mover;
+        private Health health;
 
         void Start()
         {
@@ -27,12 +28,18 @@ namespace GameJam.UI
             gatherer = unit.GetComponent<Gatherer>();
             fighter = unit.GetComponent<Fighter>();
             mover = unit.GetComponent<Mover>();
+            health = unit.GetComponent<Health>();
         }
 
         void LateUpdate()
         {
             if (actionScheduler == null)
                 return;
+            if (health.IsDead())
+            {
+                worldSpaceCanvas.SetActive(false);
+                return;
+            }
 
             if (actionScheduler.GetCurrentAction() is null)
             {

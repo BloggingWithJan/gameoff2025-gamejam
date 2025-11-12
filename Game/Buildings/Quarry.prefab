@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 9014282773208371216}
   - component: {fileID: -6133672192212524218}
   - component: {fileID: -4302358994391839684}
+  - component: {fileID: 1763223578643939324}
   m_Layer: 7
   m_Name: Quarry
   m_TagString: Building
@@ -90,6 +91,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProductionBuilding
   maxGathererSlots: 3
   gathererType: {fileID: 11400000, guid: 7178724753e3135469fbf76bdae183b7, type: 2}
+--- !u!208 &1763223578643939324
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2742072698946110283}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1.25, y: 0.75, z: 1.25}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -0.2, y: 0.75, z: -0.3}
+  m_TimeToStationary: 0.5
 --- !u!1 &6085929440036152400
 GameObject:
   m_ObjectHideFlags: 0

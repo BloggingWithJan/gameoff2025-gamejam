@@ -12,7 +12,7 @@ namespace GameJam.Controller
         ProductionBuilding homeBuilding;
 
         [SerializeField]
-        float enemyAggroRange = 5f;
+        float autoCombatRange = 4f;
 
         private ActionScheduler actionScheduler;
         private Health health;
@@ -36,13 +36,18 @@ namespace GameJam.Controller
             if (health.IsDead())
                 return;
 
-            //TODO cancels movement actions right now when an enemy is in range
-            //may use ActionScheduler better - not only start an action also end/cancel an action
-            GameObject newTarget = FindNearestEnemy();
-            if (newTarget != null)
+            //gathering should be interrupted by combat if an enemy comes close
+            // if (actionScheduler.GetCurrentAction() is Gatherer && FindNearestEnemy() != null)
+            // {
+            //     AutoCombatBehavior();
+            //     return;
+            // }
+
+            //if no current action is taken place, start automatic behaviors
+            if (actionScheduler.GetCurrentAction() is null)
             {
-                if (fighter.IsCurrentTargetDead())
-                    fighter.Attack(newTarget);
+                if (AutoCombatBehavior())
+                    return;
             }
         }
 
@@ -66,19 +71,17 @@ namespace GameJam.Controller
                 Debug.Log("Attacking enemy " + target.name);
                 GetComponent<Fighter>().Attack(target);
             }
+        }
 
-            // currentMode = UnitMode.Manual;
-
-            // if (target.GetComponent<WorkCamp>() != null) { }
-
-            // GetComponent<Mover>().StartMoveAction(target.transform.position);
-            //workertype ändern sobald die destination erreicht wurde
-
-            //einfach prüfen ob  target die componente oder die hat - je nachdem
-            //je nachdem was für ein gameObject
-            //entweder gatheren
-            //oder angreifen
-            //...
+        private bool AutoCombatBehavior()
+        {
+            GameObject newTarget = FindNearestEnemy();
+            if (newTarget != null)
+            {
+                fighter.Attack(newTarget);
+                return true;
+            }
+            return false;
         }
 
         private GameObject FindNearestEnemy()
@@ -96,7 +99,7 @@ namespace GameJam.Controller
                 float distanceToEnemy = Vector3.Distance(currentPosition, enemy.transform.position);
 
                 // Only consider enemies within aggro range
-                if (distanceToEnemy <= enemyAggroRange && distanceToEnemy < shortestDistance)
+                if (distanceToEnemy <= autoCombatRange && distanceToEnemy < shortestDistance)
                 {
                     shortestDistance = distanceToEnemy;
                     nearestEnemy = enemy;
@@ -104,6 +107,12 @@ namespace GameJam.Controller
             }
 
             return nearestEnemy;
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.pink;
+            Gizmos.DrawWireSphere(transform.position, autoCombatRange);
         }
     }
 }

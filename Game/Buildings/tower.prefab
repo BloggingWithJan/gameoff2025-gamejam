@@ -100,6 +100,7 @@ GameObject:
   - component: {fileID: 6058495685926247511}
   - component: {fileID: 8491733573141201251}
   - component: {fileID: 7420247021934626742}
+  - component: {fileID: 589268079720934535}
   m_Layer: 0
   m_Name: tower
   m_TagString: Building
@@ -142,8 +143,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 4, y: 11, z: 4}
-  m_Center: {x: 0, y: 5.1124997, z: 0}
+  m_Size: {x: 4, y: 9, z: 4}
+  m_Center: {x: 0, y: 3.5, z: 0}
 --- !u!114 &7420247021934626742
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -164,3 +165,19 @@ MonoBehaviour:
   - resource: 1
     amount: 50
   refunds: []
+--- !u!208 &589268079720934535
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1808645244560942380}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 2, y: 4.5, z: 2}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 3.5, z: 0}
+  m_TimeToStationary: 0.5
