@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Resources;
+using Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,7 +9,7 @@ using ResourceManager = Resource.ResourceManager;
 
 namespace UI.Managers
 {
-    public class BuildBuildingTooltipManager : MonoBehaviour
+    public class BuildingTooltipController : MonoBehaviour
     {
         public GameObject tooltipPanel;
         public TMP_Text buildingName;

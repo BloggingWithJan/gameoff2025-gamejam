@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 296334395256761310}
   - component: {fileID: -4277468224442115610}
   - component: {fileID: 5232068000923233468}
+  - component: {fileID: 7441203986064729300}
   m_Layer: 7
   m_Name: Base
   m_TagString: Building
@@ -108,6 +109,20 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 1, z: 0}
   m_TimeToStationary: 0.5
+--- !u!114 &7441203986064729300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 838543337544683574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42cfb5c8c4bcc4548bc346d82cabca98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Core.BaseSelectable
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 0.1
 --- !u!1001 &3153203298466110055
 PrefabInstance:
   m_ObjectHideFlags: 0
