@@ -27,6 +27,11 @@ namespace Core
 
         private Vector2 dragStart;
         private bool isDragging;
+        
+        private readonly HashSet<string> ignoredTags = new()
+        {
+            "Building"
+        };
 
         private void OnEnable()
         {
@@ -220,6 +225,10 @@ namespace Core
                 if (selectableMono == null)
                     continue;
 
+                //skip if tag is in ignored list
+                if (ignoredTags.Contains(selectableMono.tag))
+                    continue;
+                
                 // Convert world position to screen position
                 Vector3 screenPos = mainCamera.WorldToScreenPoint(
                     selectableMono.transform.position

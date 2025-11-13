@@ -1,4 +1,5 @@
 using System.Collections;
+using Data;
 using GameJam.Core;
 using GameJam.Movement;
 using GameJam.Production;
