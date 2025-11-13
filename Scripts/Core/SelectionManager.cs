@@ -71,6 +71,10 @@ namespace GameJam.Core
                     {
                         interaction = true;
                     }
+                    if (target.GetComponent<MilitaryBuilding>() != null)
+                    {
+                        interaction = true;
+                    }
                     if (target.tag == "Enemy")
                     {
                         interaction = true;

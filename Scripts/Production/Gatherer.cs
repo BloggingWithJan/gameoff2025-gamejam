@@ -19,12 +19,6 @@ namespace GameJam.Production
             ReturningResource,
         }
 
-        [SerializeField]
-        Transform rightHandTransform;
-
-        [SerializeField]
-        Transform leftHandTransform;
-
         private ProductionBuilding productionBuilding;
 
         public GathererState currentState;
@@ -36,9 +30,9 @@ namespace GameJam.Production
         private Animator animator;
         private AudioSource audioSource;
         private ActionScheduler actionScheduler;
+        private Unit unit;
 
         private ResourceNode targetNode;
-        private GameObject instantiatedTool;
         private Coroutine gatherCoroutine;
 
         private int gatheredAmount;
@@ -51,11 +45,7 @@ namespace GameJam.Production
             health = GetComponent<Health>();
             audioSource = GetComponent<AudioSource>();
             actionScheduler = GetComponent<ActionScheduler>();
-            //navMeshAgent tuning so there are less collisions between multiple workers
-            navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
-            navMeshAgent.avoidancePriority = Random.Range(30, 60);
-            // navMeshAgent.avoidancePriority = 99; // lowest priority
-            // navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
+            unit = GetComponent<Unit>();
         }
 
         void Update()
@@ -110,6 +100,7 @@ namespace GameJam.Production
             mover.MoveTo(productionBuilding.transform.position);
             if (mover.IsDestinationReached())
             {
+                Debug.Log("Reached production building " + productionBuilding.name);
                 SetGathererType(productionBuilding.GetGathererType());
             }
         }
@@ -208,7 +199,7 @@ namespace GameJam.Production
         }
 
         // event is triggered when the gather animation hits the resource
-        private void Hit()
+        private void GatherAnimationEvent()
         {
             audioSource.PlayOneShot(currentGathererType.GetGatherSound());
         }
@@ -263,19 +254,10 @@ namespace GameJam.Production
             if (newGathererType == null)
                 return;
 
-            if (instantiatedTool != null)
-                Destroy(instantiatedTool);
-
             currentGathererType = newGathererType;
-            if (newGathererType.GetToolPrefab() != null)
-            {
-                instantiatedTool = Instantiate(newGathererType.GetToolPrefab(), rightHandTransform);
-            }
 
-            if (newGathererType.GetAnimatorOverride() != null)
-            {
-                animator.runtimeAnimatorController = newGathererType.GetAnimatorOverride();
-            }
+            unit.ChangeMeshes(newGathererType.GetHeadMesh(), newGathererType.GetBodyMesh());
+            unit.SpawnWeapon(newGathererType.GetToolPrefab());
 
             currentState = GathererState.SearchingForResource;
         }

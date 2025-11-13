@@ -1,3 +1,4 @@
+using UnityEditor.Animations;
 using UnityEngine;
 
 namespace GameJam.Combat
@@ -25,6 +26,9 @@ namespace GameJam.Combat
 
         GameObject instantiatedWeapon = null;
 
+        private Animator animatorController = null;
+        private RuntimeAnimatorController originalController = null;
+
         public void Spawn(
             Transform rigthHandTransform,
             Transform leftHandTransform,
@@ -39,6 +43,8 @@ namespace GameJam.Combat
 
             if (animatorOverride != null)
             {
+                animatorController = animator;
+                originalController = animator.runtimeAnimatorController;
                 animator.runtimeAnimatorController = animatorOverride;
             }
         }
@@ -61,6 +67,19 @@ namespace GameJam.Combat
         public float GetTimeBetweenAttacks()
         {
             return timeBetweenAttacks;
+        }
+
+        public void Unequip()
+        {
+            if (instantiatedWeapon != null)
+            {
+                Destroy(instantiatedWeapon);
+            }
+
+            if (animatorController != null && originalController != null)
+            {
+                animatorController.runtimeAnimatorController = originalController;
+            }
         }
     }
 }

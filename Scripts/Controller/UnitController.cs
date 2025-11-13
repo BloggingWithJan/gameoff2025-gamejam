@@ -1,12 +1,13 @@
 using GameJam.Combat;
 using GameJam.Core;
+using GameJam.Military;
 using GameJam.Movement;
 using GameJam.Production;
 using UnityEngine;
 
 namespace GameJam.Controller
 {
-    public class ProductionUnitController : MonoBehaviour, IUnitCommandable
+    public class UnitController : MonoBehaviour, IUnitCommandable
     {
         [SerializeField]
         ProductionBuilding homeBuilding;
@@ -18,6 +19,11 @@ namespace GameJam.Controller
         private Health health;
         private Gatherer gatherer;
         private Fighter fighter;
+        private Mover mover;
+        private Soldier soldier;
+
+        public SkinnedMeshRenderer headSlotRenderer;
+        public SkinnedMeshRenderer bodySlotRenderer;
 
         void Start()
         {
@@ -25,6 +31,8 @@ namespace GameJam.Controller
             gatherer = GetComponent<Gatherer>();
             fighter = GetComponent<Fighter>();
             actionScheduler = GetComponent<ActionScheduler>();
+            mover = GetComponent<Mover>();
+            soldier = GetComponent<Soldier>();
             if (homeBuilding != null && gatherer != null)
             {
                 gatherer.Gather(homeBuilding);
@@ -63,7 +71,17 @@ namespace GameJam.Controller
                 ProductionBuilding building = target.GetComponent<ProductionBuilding>();
                 if (gatherer != null)
                 {
+                    Debug.Log("Gathering from production building " + building.name);
                     gatherer.Gather(building);
+                }
+            }
+            if (target.GetComponent<MilitaryBuilding>() != null)
+            {
+                MilitaryBuilding building = target.GetComponent<MilitaryBuilding>();
+                if (soldier != null)
+                {
+                    Debug.Log("Serving military building " + building.name);
+                    soldier.Serve(building);
                 }
             }
             if (target.tag == "Enemy")
