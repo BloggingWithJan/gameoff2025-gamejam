@@ -10,7 +10,7 @@ namespace Controller.UI
     public class BuildingClickDetector : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] private GameObject buildingInfoPanel;
+        [SerializeField] private BuildingInfoPanel buildingInfoPanel;
         [SerializeField] private TMP_Text buildingNameText;
         [SerializeField] private TMP_Text descriptionText;
         [SerializeField] private Button moveButton;
@@ -27,7 +27,7 @@ namespace Controller.UI
             moveButton.onClick.AddListener(OnMoveClicked);
             deleteButton.onClick.AddListener(OnDeleteClicked);
             panelRect = buildingInfoPanel.GetComponent<RectTransform>();
-            buildingInfoPanel.SetActive(false);
+            buildingInfoPanel.HidePanel();
         }
 
         void Update()
@@ -49,7 +49,7 @@ namespace Controller.UI
                     GameObject clicked = hit.collider.gameObject;
 
                     // Toggle off if same building clicked again
-                    if (buildingInfoPanel.activeSelf && currentBuilding == clicked)
+                    if (buildingInfoPanel.IsShown() && currentBuilding == clicked)
                     {
                         ClosePanel();
                         return;
@@ -60,33 +60,26 @@ namespace Controller.UI
 
                     currentBuilding = clicked;
                     followTarget = clicked.transform;
-                    SetPanelData(data);
-                    ShowPanel();
+                    ShowPanel(data);
                 }
             }
 
             // Follow target if panel open
-            if (buildingInfoPanel.activeSelf && followTarget != null)
+            if (buildingInfoPanel.IsShown() && followTarget != null)
             {
                 Vector3 screenPos = Camera.main.WorldToScreenPoint(followTarget.position + offset);
                 panelRect.position = screenPos;
             }
         }
 
-        void SetPanelData(BuildingData building)
+        void ShowPanel(BuildingData data)
         {
-            buildingNameText.text = building.buildingName;
-            descriptionText.text = building.description;
-        }
-
-        void ShowPanel()
-        {
-            buildingInfoPanel.SetActive(true);
+            buildingInfoPanel.ShowPanel(data);
         }
 
         void ClosePanel()
         {
-            buildingInfoPanel.SetActive(false);
+            buildingInfoPanel.HidePanel();
             currentBuilding = null;
             followTarget = null;
         }

@@ -1,19 +1,20 @@
+using System;
+using Controller.UI;
+using Data;
 using UnityEngine;
 
 namespace GameJam.Core
 {
     public class BaseSelectable : MonoBehaviour, ISelectable
     {
-        [SerializeField]
-        private Color outlineColor = Color.white;
+        [SerializeField] private Color outlineColor = Color.white;
 
-        [SerializeField]
-        private float outlineWidth = .1f;
+        [SerializeField] private float outlineWidth = .1f;
 
         private Shader outlineShader;
 
         private bool isSelected = false;
-        public bool IsSelected => isSelected;
+        public bool IsSelected => isSelected; //💩
 
         private Renderer[] unitRenderers;
         private Material[][] originalMaterials; // Store original materials for each renderer
@@ -50,6 +51,28 @@ namespace GameJam.Core
                 return;
             isSelected = true;
             Highlight();
+            ShowInfoPanel();
+        }
+
+        private void HideInfoPanel()
+        {
+            BuildingInfoPanel.Instance.HidePanel();
+            UnitInfoPanel.Instance.HidePanel();
+        }
+
+        private void ShowInfoPanel()
+        {
+            //hide all first so we dont have multiple panels open
+            HideInfoPanel();
+
+            if (gameObject.TryGetComponent<BuildingData>(out var buildingData))
+            {
+                BuildingInfoPanel.Instance.ShowPanel(buildingData);
+            }
+            else if (gameObject.TryGetComponent<Health>(out var unitData))
+            {
+                UnitInfoPanel.Instance.ShowPanel(unitData);
+            }
         }
 
         public void OnDeselect()
@@ -58,6 +81,7 @@ namespace GameJam.Core
                 return;
             isSelected = false;
             UnHighlight();
+            HideInfoPanel();
         }
 
         public void OnHover()
@@ -117,10 +141,9 @@ namespace GameJam.Core
         {
             if (originalMaterials != null && unitRenderers != null)
             {
-                // Restore original materials only (removes outline material)
                 for (int i = 0; i < unitRenderers.Length; i++)
                 {
-                    if (originalMaterials[i] != null)
+                    if (unitRenderers[i] != null && originalMaterials[i] != null)
                     {
                         unitRenderers[i].materials = originalMaterials[i];
                     }

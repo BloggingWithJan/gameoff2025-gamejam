@@ -76,21 +76,23 @@ namespace GameJam.Core
                         interaction = true;
                     }
 
-                    foreach (var entity in selectedEntities)
+                    // Iterate over a copy of the list to safely remove destroyed items
+                    foreach (var entity in selectedEntities.ToList())
                     {
-                        IUnitCommandable commandable = (
-                            entity as MonoBehaviour
-                        ).GetComponent<IUnitCommandable>();
+                        // Skip and clean up destroyed objects
+                        if (entity == null || (entity as UnityEngine.Object) == null)
+                        {
+                            selectedEntities.Remove(entity);
+                            continue;
+                        }
+
+                        IUnitCommandable commandable = (entity as MonoBehaviour)?.GetComponent<IUnitCommandable>();
                         if (commandable != null)
                         {
                             if (interaction)
-                            {
                                 commandable.InteractWith(target);
-                            }
                             else
-                            {
                                 commandable.MoveTo(hit.point);
-                            }
                         }
                     }
                 }
