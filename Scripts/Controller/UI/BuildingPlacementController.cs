@@ -46,6 +46,7 @@ namespace UI.Managers
             if (!_isPlacing) return;
 
             if (Mouse.current == null || !TryGetGroundHit(out RaycastHit hit))
+                Debug.LogError("No ground hit");
                 return;
 
             _previewInstance.transform.position = hit.point;
