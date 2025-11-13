@@ -293,10 +293,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Unit
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 7239e28fe7e69984d832aa39880f5930, type: 3}
-      propertyPath: m_TagString
-      value: Player
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -559,11 +555,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Controller.UnitController
   homeBuilding: {fileID: 0}
   autoCombatRange: 4
-<<<<<<< HEAD:Game/Characters/Unit.prefab
   headSlotRenderer: {fileID: 8187787140044909267}
   bodySlotRenderer: {fileID: 5594987901942833288}
-=======
->>>>>>> 80c5b7afe7cebd25ca911211e46e923d50231526:Game/Characters/Worker/Worker.prefab
 --- !u!114 &6257810412648884243
 MonoBehaviour:
   m_ObjectHideFlags: 0
