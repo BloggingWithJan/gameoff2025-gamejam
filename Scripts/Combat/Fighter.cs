@@ -9,14 +9,9 @@ namespace GameJam.Combat
         [SerializeField]
         Weapon weapon = null;
 
-        [SerializeField]
-        Transform rightHandTransform = null;
-
-        [SerializeField]
-        Transform leftHandTransform = null;
-
         Health target;
         Health fighter;
+        private Unit unit;
         float timeSinceLastAttack = Mathf.Infinity;
 
         private ActionScheduler actionScheduler;
@@ -24,7 +19,8 @@ namespace GameJam.Combat
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
-            SpawnWeapon();
+            unit = GetComponent<Unit>();
+            unit.SpawnWeapon(weapon);
             fighter = GetComponent<Health>();
             actionScheduler = GetComponent<ActionScheduler>();
         }
@@ -35,6 +31,7 @@ namespace GameJam.Combat
             timeSinceLastAttack += Time.deltaTime;
             if (target == null)
             {
+                // Debug.Log("no target");
                 actionScheduler.CancelIfCurrentActionIs(this);
                 return;
             }
@@ -100,14 +97,6 @@ namespace GameJam.Combat
             GetComponent<Animator>().ResetTrigger("attack");
             GetComponent<Animator>().SetTrigger("stopAttack");
             target = null;
-        }
-
-        private void SpawnWeapon()
-        {
-            if (weapon == null)
-                return;
-            Animator animator = GetComponent<Animator>();
-            weapon.Spawn(rightHandTransform, leftHandTransform, animator);
         }
 
         public bool IsCurrentTargetDead()

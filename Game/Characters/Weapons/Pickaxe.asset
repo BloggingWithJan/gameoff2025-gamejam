@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c4050efdc0f5f443b9a5bfbf869d26f, type: 3}
-  m_Name: StandardWeapon
+  m_Name: Pickaxe
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Combat.Weapon
   animatorOverride: {fileID: 0}
-  equippedPrefab: {fileID: 0}
-  weaponDamage: 5
-  weaponRange: 1
+  equippedPrefab: {fileID: 9124940930354330362, guid: 3649bde2f9331f84d8549d8567156c60, type: 3}
+  weaponDamage: 100
+  weaponRange: 5
   timeBetweenAttacks: 1
   isRightHanded: 1

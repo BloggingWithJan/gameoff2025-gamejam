@@ -23,7 +23,7 @@ public class EnemyAIController : MonoBehaviour
         if (health.IsDead())
             return;
 
-        AttackBehaviour();
+        // AttackBehaviour();
     }
 
     private void AttackBehaviour()

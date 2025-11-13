@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GameJam.Production;
+using GameJam.Core;
+using Military;
+using Production;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace GameJam.Core
+
+namespace Core
 {
     public class SelectionManager : MonoBehaviour
     {
@@ -68,6 +71,10 @@ namespace GameJam.Core
                     GameObject target = hit.collider.gameObject;
 
                     if (target.GetComponent<ProductionBuilding>() != null)
+                    {
+                        interaction = true;
+                    }
+                    if (target.GetComponent<MilitaryBuilding>() != null)
                     {
                         interaction = true;
                     }

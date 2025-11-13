@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Controller.UI;
+using Data;
 using Resource;
 using UnityEngine;
 using UnityEngine.EventSystems;

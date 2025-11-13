@@ -4,6 +4,7 @@ using GameJam.Combat;
 using GameJam.Core;
 using GameJam.Movement;
 using GameJam.Production;
+using Production;
 using UnityEngine;
 
 namespace GameJam.UI

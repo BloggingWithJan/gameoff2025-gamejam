@@ -3,7 +3,7 @@ using GameJam.Production;
 using Resource;
 using UnityEngine;
 
-namespace GameJam.Production
+namespace Production
 {
     public class ProductionBuilding : MonoBehaviour
     {

@@ -1,5 +1,4 @@
-using System;
-using System.Xml.Serialization;
+using GameJam.Combat;
 using UnityEngine;
 
 namespace GameJam.Production
@@ -11,10 +10,7 @@ namespace GameJam.Production
         string typeName;
 
         [SerializeField]
-        GameObject toolPrefab;
-
-        [SerializeField]
-        AnimatorOverrideController animatorOverride;
+        Weapon toolPrefab;
 
         [SerializeField]
         string resourceTag;
@@ -28,7 +24,13 @@ namespace GameJam.Production
         [SerializeField]
         AudioClip gatherSound;
 
-        public GameObject GetToolPrefab()
+        [SerializeField]
+        Mesh headMesh;
+
+        [SerializeField]
+        Mesh bodyMesh;
+
+        public Weapon GetToolPrefab()
         {
             return toolPrefab;
         }
@@ -53,9 +55,14 @@ namespace GameJam.Production
             return gatherSound;
         }
 
-        public AnimatorOverrideController GetAnimatorOverride()
+        public Mesh GetHeadMesh()
         {
-            return animatorOverride;
+            return headMesh;
+        }
+
+        public Mesh GetBodyMesh()
+        {
+            return bodyMesh;
         }
     }
 }

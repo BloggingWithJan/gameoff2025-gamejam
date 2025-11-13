@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using GameJam.Production;
+using Production;
 using UnityEngine;
 
 namespace GameJam.Resource

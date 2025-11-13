@@ -285,13 +285,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1924330416772942832, guid: 7239e28fe7e69984d832aa39880f5930, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -1793059242609255079, guid: 7239e28fe7e69984d832aa39880f5930, type: 3}
     - target: {fileID: 919132149155446097, guid: 7239e28fe7e69984d832aa39880f5930, type: 3}
       propertyPath: m_Name
-      value: Worker
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 7239e28fe7e69984d832aa39880f5930, type: 3}
-      propertyPath: m_TagString
-      value: Player
+      value: Unit
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -333,6 +333,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7239e28fe7e69984d832aa39880f5930, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3881477725880480646}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7239e28fe7e69984d832aa39880f5930, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -2556948596832467245}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7239e28fe7e69984d832aa39880f5930, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3458672458707965684}
   m_SourcePrefab: {fileID: 100100000, guid: 7239e28fe7e69984d832aa39880f5930, type: 3}
 --- !u!4 &1396401580904479016 stripped
 Transform:
@@ -437,8 +443,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d23627bf94ba81146a7f470c1ac54b4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Worker.WorkerUnit
-  rightHandTransform: {fileID: 8038839325427465754}
-  leftHandTransform: {fileID: 3366210998595020132}
   currentState: 0
 --- !u!82 &-3300752849062929597
 AudioSource:
@@ -551,6 +555,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Controller.UnitController
   homeBuilding: {fileID: 0}
   autoCombatRange: 4
+  headSlotRenderer: {fileID: 8187787140044909267}
+  bodySlotRenderer: {fileID: 5594987901942833288}
 --- !u!114 &6257810412648884243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -601,15 +607,52 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Combat.Fighter
   weapon: {fileID: 11400000, guid: c31254afa6b839247b4a89f59efa5e81, type: 2}
+--- !u!114 &-2556948596832467245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1741436728937980818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97914e3fa53c5ce48ac6235ddf674ad2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Core.Unit
   rightHandTransform: {fileID: 8038839325427465754}
   leftHandTransform: {fileID: 3366210998595020132}
+  headSlotRenderer: {fileID: 8187787140044909267}
+  bodySlotRenderer: {fileID: 5594987901942833288}
+--- !u!114 &3458672458707965684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1741436728937980818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70633dc694a59854fa1b01e3712314f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Military.Soldier
+  currentState: 0
 --- !u!4 &3366210998595020132 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -5017971254852617305, guid: 7239e28fe7e69984d832aa39880f5930, type: 3}
   m_PrefabInstance: {fileID: 1507503746557910723}
   m_PrefabAsset: {fileID: 0}
+--- !u!137 &5594987901942833288 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6435320000920075851, guid: 7239e28fe7e69984d832aa39880f5930, type: 3}
+  m_PrefabInstance: {fileID: 1507503746557910723}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8038839325427465754 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8891244130364874969, guid: 7239e28fe7e69984d832aa39880f5930, type: 3}
+  m_PrefabInstance: {fileID: 1507503746557910723}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &8187787140044909267 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -1924330416772942832, guid: 7239e28fe7e69984d832aa39880f5930, type: 3}
   m_PrefabInstance: {fileID: 1507503746557910723}
   m_PrefabAsset: {fileID: 0}

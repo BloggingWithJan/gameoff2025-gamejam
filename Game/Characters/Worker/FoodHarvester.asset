@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: FoodHarvester
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Production.GathererType
   typeName: Default
-  toolPrefab: {fileID: 0}
-  animatorOverride: {fileID: 22100000, guid: 6ae46bf8af517ed4f951f35156ad686c, type: 2}
+  toolPrefab: {fileID: 11400000, guid: e1e92fa7a809efd4eb42e0d9425f3bd7, type: 2}
   resourceTag: Food
   gatherTime: 3
   gatherAmount: 10
-  gatherSound: {fileID: 0}
+  gatherSound: {fileID: 8300000, guid: 2e85be738b3bc4f4f9509d662187b5c1, type: 3}
+  headMesh: {fileID: -1793059242609255079, guid: d92903b785289cb4eb314d20502362d6, type: 3}
+  bodyMesh: {fileID: 988656143610355917, guid: d92903b785289cb4eb314d20502362d6, type: 3}
