@@ -22,6 +22,8 @@ namespace GameJam.Core
         private Animator animator;
         private NavMeshAgent navMeshAgent;
 
+        public BaseBuilding assignedBuilding;
+
         void Start()
         {
             animator = GetComponent<Animator>();

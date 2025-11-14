@@ -21,8 +21,6 @@ namespace Production
             ReturningResource,
         }
 
-        private ProductionBuilding productionBuilding;
-
         public GathererState currentState;
 
         private GathererType currentGathererType;
@@ -80,30 +78,30 @@ namespace Production
         public void Gather(ProductionBuilding building)
         {
             GetComponent<ActionScheduler>().StartAction(this);
-            if (productionBuilding == building)
+            if (unit.assignedBuilding == building)
             {
                 currentState = GathererState.MoveToProductionBuilding;
                 return;
             }
 
-            if (building.RequestGathererSlot(this))
+            if (building.RequestUnitSlot(unit))
             {
-                if (productionBuilding != null)
+                if (unit.assignedBuilding != null)
                 {
-                    productionBuilding.ReleaseGathererSlot(this);
+                    unit.assignedBuilding.ReleaseUnitSlot(unit);
                 }
-                productionBuilding = building;
+                unit.assignedBuilding = building;
                 currentState = GathererState.MoveToProductionBuilding;
             }
         }
 
         private void MoveToProductionBuilding()
         {
-            mover.MoveTo(productionBuilding.transform.position);
+            mover.MoveTo(unit.assignedBuilding.transform.position);
             if (mover.IsDestinationReached())
             {
-                Debug.Log("Reached production building " + productionBuilding.name);
-                SetGathererType(productionBuilding.GetGathererType());
+                Debug.Log("Reached production building " + unit.assignedBuilding.name);
+                SetGathererType(unit.assignedBuilding.GetGathererType());
             }
         }
 
@@ -209,10 +207,13 @@ namespace Production
         private void ReturnResource()
         {
             gatherCoroutine = null; //clear gatherCoroutine
-            mover.MoveTo(productionBuilding.transform.position);
+            mover.MoveTo(unit.assignedBuilding.transform.position);
             if (mover.IsDestinationReached())
             {
-                productionBuilding.DepositResources(gatheredAmount);
+                if (unit.assignedBuilding is ProductionBuilding productionBuilding)
+                {
+                    productionBuilding.DepositResources(gatheredAmount);
+                }
                 gatheredAmount = 0;
                 currentState = GathererState.SearchingForResource;
             }
