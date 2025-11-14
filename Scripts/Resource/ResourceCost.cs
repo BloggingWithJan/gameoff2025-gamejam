@@ -5,7 +5,8 @@ public enum ResourceType
 {
     Wood,
     Stone,
-    Coins,
+    Food,
+    Population,
 }
 
 [Serializable]

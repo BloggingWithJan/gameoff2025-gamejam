@@ -256,7 +256,7 @@ namespace UI.Managers
                 
                 foreach (var cost in buildingData.costs)
                 {
-                    string message = $"Spent {cost.amount} {cost.resource}";
+                    string message = $"- {cost.amount} {cost.resource}";
                     FloatingTextController.Instance.ShowFloatingText(message, Color.white);
                 }
                 
@@ -334,7 +334,7 @@ namespace UI.Managers
 
                 foreach (var refund in refunds)
                 {
-                    string message = $"Refunded {refund.amount} {refund.resource}";
+                    string message = $"+ {refund.amount} {refund.resource}";
                     FloatingTextController.Instance.ShowFloatingText(message, Color.green);
                 }
             }

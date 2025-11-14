@@ -9,25 +9,21 @@ namespace Resource
     {
         public static ResourceManager Instance { get; private set; }
 
-        [Header("UI References")]
-        [SerializeField]
+        [Header("UI References")] [SerializeField]
         private TMP_Text woodText;
 
-        [SerializeField]
-        private TMP_Text stoneText;
+        [SerializeField] private TMP_Text stoneText;
+        [SerializeField] private TMP_Text foodText;
+        [SerializeField] private TMP_Text populationText;
 
-        [SerializeField]
-        private TMP_Text coinText;
+        [Header("Values")] [SerializeField] private int wood;
+        [SerializeField] private int stone;
+        [SerializeField] private int food;
+        [SerializeField] private int currentPopulation;
+        [SerializeField] private int maxPopulation;
 
-        [Header("Values")]
-        [SerializeField]
-        private int wood;
-
-        [SerializeField]
-        private int stone;
-
-        [SerializeField]
-        private int coin;
+        public int CurrentPopulation => currentPopulation;
+        public int MaxPopulation => maxPopulation;
 
         private Dictionary<ResourceType, int> _resources;
         private Dictionary<ResourceType, TMP_Text> _uiTexts;
@@ -42,19 +38,18 @@ namespace Resource
 
             Instance = this;
 
-            // Initialize dictionaries for cleaner access
             _resources = new Dictionary<ResourceType, int>
             {
                 { ResourceType.Wood, wood },
                 { ResourceType.Stone, stone },
-                { ResourceType.Coins, coin },
+                { ResourceType.Food, food },
             };
 
             _uiTexts = new Dictionary<ResourceType, TMP_Text>
             {
                 { ResourceType.Wood, woodText },
                 { ResourceType.Stone, stoneText },
-                { ResourceType.Coins, coinText },
+                { ResourceType.Food, foodText },
             };
         }
 
@@ -75,27 +70,32 @@ namespace Resource
         {
             if (!_resources.ContainsKey(type))
                 return;
+
             _resources[type] += amount;
             UpdateUIText(type);
         }
 
-        public bool HasSufficientResources(BuildingData buildingData)
+        public void SetPopulation(int value)
         {
-            foreach (var cost in buildingData.costs)
-            {
-                if (!_resources.ContainsKey(cost.resource))
-                {
-                    Debug.LogError($"Resource type {cost.resource} not implemented");
-                    return false;
-                }
-
-                if (_resources[cost.resource] < cost.amount)
-                    return false;
-            }
-
-            return true;
+            currentPopulation = Mathf.Clamp(value, 0, maxPopulation);
+            UpdatePopulationUI();
         }
 
+        public void AddPopulation(int value)
+        {
+            SetPopulation(currentPopulation + value);
+        }
+
+        public void SetMaxPopulation(int value)
+        {
+            maxPopulation = Mathf.Max(0, value);
+
+            if (currentPopulation > maxPopulation)
+                currentPopulation = maxPopulation;
+
+            UpdatePopulationUI();
+        }
+        
         public bool HasSufficientResources(ResourceCost cost)
         {
             if (!_resources.ContainsKey(cost.resource))
@@ -110,10 +110,32 @@ namespace Resource
             return true;
         }
 
+        public bool HasSufficientResources(BuildingData buildingData)
+        {
+            foreach (var cost in buildingData.costs)
+            {
+                if (!_resources.ContainsKey(cost.resource))
+                {
+                    Debug.LogError($"Resource type {cost.resource} not implemented");
+                    return false;
+                }
+
+                if (_resources[cost.resource] < cost.amount) return false;
+            }
+
+            return true;
+        }
+
         public void DeductResources(BuildingData buildingData)
         {
             foreach (var cost in buildingData.costs)
             {
+                if (cost.resource == ResourceType.Population)
+                {
+                    SetPopulation(currentPopulation - cost.amount);
+                    continue;
+                }
+
                 if (!_resources.ContainsKey(cost.resource))
                 {
                     Debug.LogError($"Resource type {cost.resource} not implemented");
@@ -124,7 +146,7 @@ namespace Resource
                 UpdateUIText(cost.resource);
             }
         }
-        
+
         public List<ResourceCost> RefundResourcesPartially(BuildingData buildingData, float refundPercentage = 0.5f)
         {
             var refundedResources = new List<ResourceCost>();
@@ -134,22 +156,26 @@ namespace Resource
 
             foreach (var cost in buildingData.costs)
             {
+                int refundAmount = Mathf.FloorToInt(cost.amount * refundPercentage);
+                if (refundAmount <= 0)
+                    continue;
+
+                if (cost.resource == ResourceType.Population)
+                {
+                    AddPopulation(refundAmount);
+                    refundedResources.Add(new ResourceCost(ResourceType.Population, refundAmount));
+                    continue;
+                }
+
                 if (!_resources.ContainsKey(cost.resource))
                 {
                     Debug.LogError($"Resource type {cost.resource} not implemented for refund.");
                     continue;
                 }
 
-                // Calculate partial refund (floor)
-                int refundAmount = Mathf.FloorToInt(cost.amount * refundPercentage);
-
-                if (refundAmount > 0)
-                {
-                    _resources[cost.resource] += refundAmount;
-                    UpdateUIText(cost.resource);
-
-                    refundedResources.Add(new ResourceCost(cost.resource, refundAmount));
-                }
+                _resources[cost.resource] += refundAmount;
+                UpdateUIText(cost.resource);
+                refundedResources.Add(new ResourceCost(cost.resource, refundAmount));
             }
 
             return refundedResources;
@@ -160,6 +186,8 @@ namespace Resource
         {
             foreach (var type in _resources.Keys)
                 UpdateUIText(type);
+
+            UpdatePopulationUI();
         }
 
         private void UpdateUIText(ResourceType type)
@@ -167,10 +195,14 @@ namespace Resource
             if (_uiTexts.TryGetValue(type, out TMP_Text text))
                 text.text = _resources[type].ToString();
 
-            // Sync to serialized fields for live Inspector updates
             wood = _resources[ResourceType.Wood];
             stone = _resources[ResourceType.Stone];
-            coin = _resources[ResourceType.Coins];
+            food = _resources[ResourceType.Food];
+        }
+
+        private void UpdatePopulationUI()
+        {
+            populationText.text = $"{currentPopulation} / {maxPopulation}";
         }
 
         [ContextMenu("Sync From Inspector")]
@@ -178,7 +210,9 @@ namespace Resource
         {
             _resources[ResourceType.Wood] = wood;
             _resources[ResourceType.Stone] = stone;
-            _resources[ResourceType.Coins] = coin;
+            _resources[ResourceType.Food] = food;
+
+            currentPopulation = Mathf.Clamp(currentPopulation, 0, maxPopulation);
             UpdateUI();
         }
     }
