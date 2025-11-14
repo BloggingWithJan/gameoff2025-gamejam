@@ -13,7 +13,6 @@ namespace Controller.UI
 
         [Header("Floating Text Settings")]
         [SerializeField] private float verticalOffset = 20f; // distance between stacked texts
-        [SerializeField] private float randomOffsetX = 10f;  // optional small horizontal spread
 
         private int _activeTextCount = 0;
 
@@ -37,7 +36,6 @@ namespace Controller.UI
             // Offset each new text vertically to avoid overlap
             Vector2 spawnPos = mousePos;
             spawnPos.y += _activeTextCount * verticalOffset;
-            spawnPos.x += Random.Range(-randomOffsetX, randomOffsetX); // small horizontal randomness
 
             GameObject ft = Instantiate(floatingTextPrefab, uiCanvas.transform);
             ft.transform.position = spawnPos;

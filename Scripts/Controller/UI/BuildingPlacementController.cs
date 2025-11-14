@@ -3,6 +3,7 @@ using Controller.UI;
 using Data;
 using Resource;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
@@ -14,14 +15,14 @@ namespace UI.Managers
         public LayerMask groundMask;
         public GameObject buildPlacingControls;
         public GameObject buildingsParentGameObject;
-        
+
         private GameObject _currentPrefab;
         private GameObject _previewInstance;
         private bool _isPlacing;
 
         //if a building gets moved
         private GameObject _currentBuilding;
-        private bool _ismoving;
+        private bool _isBeingRelocated;
 
         private Renderer[] _previewRenderers;
         private LineRenderer _previewOutline;
@@ -46,11 +47,11 @@ namespace UI.Managers
         {
             if (!_isPlacing) return;
 
-            if (Mouse.current == null || !TryGetGroundHit(out RaycastHit hit)) {
+            if (Mouse.current == null || !TryGetGroundHit(out RaycastHit hit))
+            {
                 Debug.LogError("No ground hit");
                 return;
             }
-                
 
             _previewInstance.transform.position = hit.point;
 
@@ -107,24 +108,39 @@ namespace UI.Managers
             }
         }
 
-        private (bool valid, List<Collider> blockers) IsValidPlacement(Vector3 position)
+        private (bool isValid, List<Collider> blockers) IsValidPlacement(Vector3 position)
         {
-            List<Collider> blocking = new();
-            if (!_previewInstance) return (true, blocking);
-            BoxCollider box = _previewInstance.GetComponent<BoxCollider>();
-            if (!box) return (true, blocking);
+            var blockers = new List<Collider>();
+
+            if (!_previewInstance) 
+                return (false, blockers);
+
+            if (!_previewInstance.TryGetComponent<BoxCollider>(out var box)) 
+                return (false, blockers);
+
+            // Temporarily disable collider to avoid self-overlap
             box.enabled = false;
+
+            // Compute the world-space center and half-extents
             Vector3 worldCenter = position + _previewInstance.transform.rotation * box.center;
             Vector3 halfExtents = Vector3.Scale(box.size * 0.5f, _previewInstance.transform.lossyScale);
+
+            // Check overlaps
             Collider[] overlaps = Physics.OverlapBox(worldCenter, halfExtents, _previewInstance.transform.rotation);
+
+            // Re-enable the collider
             box.enabled = true;
-            foreach (Collider c in overlaps)
+
+            // Filter out irrelevant colliders
+            foreach (var c in overlaps)
             {
-                if (c.isTrigger || c.CompareTag("Ground") || c.gameObject == _previewInstance) continue;
-                blocking.Add(c);
+                if (c.isTrigger || c.CompareTag("Ground") || c.gameObject == _previewInstance) 
+                    continue;
+
+                blockers.Add(c);
             }
 
-            return (blocking.Count == 0, blocking);
+            return (blockers.Count == 0, blockers);
         }
 
         private void UpdateBlockingOutlines(List<Collider> newBlockers)
@@ -178,7 +194,7 @@ namespace UI.Managers
         {
             if (_isPlacing) CancelPlacement();
 
-            _ismoving = true;
+            _isBeingRelocated = true;
             _currentBuilding = building;
 
             StartPlacement(building);
@@ -186,16 +202,25 @@ namespace UI.Managers
 
         public void StartPlacement(GameObject prefab)
         {
-            if (_isPlacing) CancelPlacement();
+            if (_isPlacing) 
+                CancelPlacement();
+            
             _currentPrefab = prefab;
             _previewInstance = Instantiate(prefab, buildingsParentGameObject.transform);
+            
+            //disable obstacle so that units dont get pushed around
+            if (_previewInstance.TryGetComponent<NavMeshObstacle>(out NavMeshObstacle obstacle))
+            {
+                obstacle.enabled = false;
+            }
 
-            if (_ismoving)
+            if (_isBeingRelocated)
             {
                 _currentBuilding.SetActive(false); //hide original
             }
 
             SetPreviewMaterial(_previewInstance);
+            
             _previewRenderers = _previewInstance.GetComponentsInChildren<Renderer>();
             _previewOutline = _previewInstance.AddComponent<LineRenderer>();
             _previewOutline.loop = false;
@@ -210,7 +235,7 @@ namespace UI.Managers
 
         private void PlaceBuilding(Vector3 position)
         {
-            if (_ismoving)
+            if (_isBeingRelocated)
             {
                 // move original building to new position
                 _currentBuilding.transform.position = position;
@@ -228,13 +253,21 @@ namespace UI.Managers
                 }
 
                 ResourceManager.Instance.DeductResources(buildingData);
-                Instantiate(_currentPrefab, position, _previewInstance.transform.rotation, buildingsParentGameObject.transform);
+                
+                foreach (var cost in buildingData.costs)
+                {
+                    string message = $"Spent {cost.amount} {cost.resource}";
+                    FloatingTextController.Instance.ShowFloatingText(message, Color.white);
+                }
+                
+                Instantiate(_currentPrefab, position, _previewInstance.transform.rotation,
+                    buildingsParentGameObject.transform);
             }
 
             Destroy(_previewInstance);
             ClearBlockerOutlines();
             _isPlacing = false;
-            _ismoving = false;
+            _isBeingRelocated = false;
             buildPlacingControls.SetActive(false);
         }
 
@@ -243,13 +276,13 @@ namespace UI.Managers
             ClearBlockerOutlines();
             if (_previewInstance) Destroy(_previewInstance);
 
-            if (_ismoving)
+            if (_isBeingRelocated)
             {
                 _currentBuilding.SetActive(true);
             }
 
             _isPlacing = false;
-            _ismoving = false;
+            _isBeingRelocated = false;
             buildPlacingControls.SetActive(false);
         }
 
@@ -297,13 +330,13 @@ namespace UI.Managers
 
             if (buildingData != null)
             {
-               List<ResourceCost> refunds = ResourceManager.Instance.RefundResourcesPartially(buildingData);
-               
-               foreach (var refund in refunds)
-               {
-                   string message = $"Refunded {refund.amount} {refund.resource}";
-                   FloatingTextController.Instance.ShowFloatingText(message, Color.green);
-               }
+                List<ResourceCost> refunds = ResourceManager.Instance.RefundResourcesPartially(buildingData);
+
+                foreach (var refund in refunds)
+                {
+                    string message = $"Refunded {refund.amount} {refund.resource}";
+                    FloatingTextController.Instance.ShowFloatingText(message, Color.green);
+                }
             }
 
             Destroy(building);
