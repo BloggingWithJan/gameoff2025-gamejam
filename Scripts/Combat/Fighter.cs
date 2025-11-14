@@ -9,6 +9,9 @@ namespace GameJam.Combat
         [SerializeField]
         Weapon weapon = null;
 
+        [SerializeField]
+        float aggroRange = 5f;
+
         Health target;
         Health fighter;
         private Unit unit;
@@ -29,38 +32,15 @@ namespace GameJam.Combat
         void Update()
         {
             timeSinceLastAttack += Time.deltaTime;
-            if (target == null)
-            {
-                // Debug.Log("no target");
-                actionScheduler.CancelIfCurrentActionIs(this);
-                return;
-            }
-            if (target.IsDead())
-            {
-                actionScheduler.CancelIfCurrentActionIs(this);
-                return;
-            }
-            if (fighter.IsDead())
-                return;
-
-            if (!GetIsInRange())
-            {
-                GetComponent<Mover>().MoveTo(target.transform.position);
-            }
-            else
-            {
-                GetComponent<Mover>().Cancel();
-                AttackBehaviour();
-            }
         }
 
-        private bool GetIsInRange()
+        public bool GetIsInRange()
         {
             return Vector3.Distance(transform.position, target.transform.position)
                 < weapon.GetRange();
         }
 
-        private void AttackBehaviour()
+        public void AttackBehaviour()
         {
             transform.LookAt(target.transform);
             if (timeSinceLastAttack > weapon.GetTimeBetweenAttacks())
@@ -108,6 +88,53 @@ namespace GameJam.Combat
                 return true;
             }
             return false;
+        }
+
+        public Health ScanForTargetInRange()
+        {
+            GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+            Health nearestTarget = null;
+            float shortestDistance = Mathf.Infinity;
+            Vector3 currentPosition = transform.position;
+
+            foreach (GameObject enemy in enemies)
+            {
+                Health enemyHealth = enemy.GetComponent<Health>();
+                if (enemyHealth == null || enemyHealth.IsDead())
+                    continue;
+
+                float distanceToEnemy = Vector3.Distance(currentPosition, enemy.transform.position);
+                if (distanceToEnemy <= aggroRange && distanceToEnemy < shortestDistance)
+                {
+                    shortestDistance = distanceToEnemy;
+                    nearestTarget = enemyHealth;
+                }
+            }
+            return nearestTarget;
+        }
+
+        public void SetCurrentTarget(Health newTarget)
+        {
+            target = newTarget;
+        }
+
+        public Health GetCurrentTarget()
+        {
+            return target;
+        }
+
+        public void MoveToCurrentTargetPosition()
+        {
+            if (target != null)
+            {
+                GetComponent<Mover>().MoveTo(target.transform.position);
+            }
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, aggroRange);
         }
     }
 }

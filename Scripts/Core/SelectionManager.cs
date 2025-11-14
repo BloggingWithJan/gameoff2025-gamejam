@@ -4,7 +4,7 @@ using System.Linq;
 using Controller.UI;
 using Data;
 using GameJam.Core;
-using Military;
+using GameJam.Military;
 using Production;
 using UnityEngine;
 using UnityEngine.InputSystem;

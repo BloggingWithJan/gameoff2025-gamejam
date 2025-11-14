@@ -1,9 +1,8 @@
+using GameJam.Combat;
 using GameJam.Core;
 using GameJam.Movement;
-using Military;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.InputSystem.XR.Haptics;
 
 namespace GameJam.Military
 {
@@ -13,17 +12,19 @@ namespace GameJam.Military
         {
             Idle,
             MoveToMilitaryBuilding,
+            Patrol,
             AutomaticCombat,
         }
 
         public SoldierState currentState;
 
-        private MilitaryBuilding militaryBuilding;
         private SoldierType currentSoldierType;
+        private bool isEquipped = false; // Tracks if soldier has reached building and been equipped
 
         private Health health;
         private Mover mover;
         private Unit unit;
+        private Fighter fighter;
         private NavMeshAgent navMeshAgent;
 
         void Start()
@@ -31,6 +32,7 @@ namespace GameJam.Military
             health = GetComponent<Health>();
             mover = GetComponent<Mover>();
             unit = GetComponent<Unit>();
+            fighter = GetComponent<Fighter>();
             navMeshAgent = GetComponent<NavMeshAgent>();
         }
 
@@ -46,6 +48,9 @@ namespace GameJam.Military
                 case SoldierState.MoveToMilitaryBuilding:
                     MoveToMilitaryBuilding();
                     break;
+                case SoldierState.Patrol:
+                    AutomaticPatrol();
+                    break;
                 case SoldierState.AutomaticCombat:
                     AutomaticCombat();
                     break;
@@ -55,32 +60,82 @@ namespace GameJam.Military
         public void Serve(MilitaryBuilding building)
         {
             GetComponent<ActionScheduler>().StartAction(this);
-            if (militaryBuilding == building)
+
+            // Reset equipped state when serving a new building
+            isEquipped = false;
+
+            if (unit.assignedBuilding == building)
             {
                 currentState = SoldierState.MoveToMilitaryBuilding;
                 return;
             }
 
-            if (building.RequestSoldierSlot(this))
+            if (building.RequestUnitSlot(unit))
             {
-                if (militaryBuilding != null)
+                if (unit.assignedBuilding != null)
                 {
-                    militaryBuilding.ReleaseSoldierSlot(this);
+                    unit.assignedBuilding.ReleaseUnitSlot(unit);
                 }
-                militaryBuilding = building;
+                unit.assignedBuilding = building;
                 currentState = SoldierState.MoveToMilitaryBuilding;
             }
         }
 
-        private void AutomaticCombat() { }
+        public void Patrol()
+        {
+            if (!isEquipped)
+                return;
+
+            GetComponent<ActionScheduler>().StartAction(this);
+            currentState = SoldierState.Patrol;
+        }
+
+        public void AttackTarget(Health target)
+        {
+            if (!isEquipped)
+                return;
+
+            GetComponent<ActionScheduler>().StartAction(this);
+            fighter.SetCurrentTarget(target);
+            currentState = SoldierState.AutomaticCombat;
+        }
+
+        private void AutomaticPatrol()
+        {
+            Health targetInRange = fighter.ScanForTargetInRange();
+            if (targetInRange != null)
+            {
+                fighter.SetCurrentTarget(targetInRange);
+                currentState = SoldierState.AutomaticCombat;
+                return;
+            }
+        }
+
+        private void AutomaticCombat()
+        {
+            if (!fighter.GetIsInRange())
+            {
+                fighter.MoveToCurrentTargetPosition();
+            }
+            else
+            {
+                fighter.AttackBehaviour();
+            }
+
+            if (fighter.GetCurrentTarget() == null || fighter.GetCurrentTarget().IsDead())
+            {
+                currentState = SoldierState.Patrol;
+            }
+        }
 
         private void MoveToMilitaryBuilding()
         {
-            mover.MoveTo(militaryBuilding.transform.position);
+            mover.MoveTo(unit.assignedBuilding.transform.position);
             if (mover.IsDestinationReached())
             {
-                Debug.Log("Reached military building " + militaryBuilding.name);
-                SetSoldierType(militaryBuilding.GetSoldierType());
+                SetSoldierType(unit.assignedBuilding.GetSoldierType());
+                isEquipped = true; // Mark as equipped after reaching building
+                currentState = SoldierState.Patrol;
             }
         }
 
@@ -104,6 +159,7 @@ namespace GameJam.Military
 
         public void Cancel()
         {
+            fighter.Cancel();
             navMeshAgent.isStopped = true;
             currentState = SoldierState.Idle;
         }

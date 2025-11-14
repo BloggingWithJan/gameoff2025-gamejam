@@ -2,8 +2,6 @@ using GameJam.Combat;
 using GameJam.Core;
 using GameJam.Military;
 using GameJam.Movement;
-using GameJam.Production;
-using Military;
 using Production;
 using UnityEngine;
 
@@ -23,6 +21,9 @@ namespace GameJam.Controller
         private Fighter fighter;
         private Mover mover;
         private Soldier soldier;
+        private Unit unit;
+
+        private float timeSinceCurrentActionIsNull = 0f;
 
         public SkinnedMeshRenderer headSlotRenderer;
         public SkinnedMeshRenderer bodySlotRenderer;
@@ -35,6 +36,7 @@ namespace GameJam.Controller
             actionScheduler = GetComponent<ActionScheduler>();
             mover = GetComponent<Mover>();
             soldier = GetComponent<Soldier>();
+            unit = GetComponent<Unit>();
             if (homeBuilding != null && gatherer != null)
             {
                 gatherer.Gather(homeBuilding);
@@ -46,18 +48,18 @@ namespace GameJam.Controller
             if (health.IsDead())
                 return;
 
-            //gathering should be interrupted by combat if an enemy comes close
-            // if (actionScheduler.GetCurrentAction() is Gatherer && FindNearestEnemy() != null)
-            // {
-            //     AutoCombatBehavior();
-            //     return;
-            // }
-
             //if no current action is taken place, start automatic behaviors
             if (actionScheduler.GetCurrentAction() is null)
             {
+                timeSinceCurrentActionIsNull += Time.deltaTime;
                 if (AutoCombatBehavior())
                     return;
+                if (AutoGathererBehavior())
+                    return;
+            }
+            else
+            {
+                timeSinceCurrentActionIsNull = 0f;
             }
         }
 
@@ -73,7 +75,6 @@ namespace GameJam.Controller
                 ProductionBuilding building = target.GetComponent<ProductionBuilding>();
                 if (gatherer != null)
                 {
-                    Debug.Log("Gathering from production building " + building.name);
                     gatherer.Gather(building);
                 }
             }
@@ -82,23 +83,37 @@ namespace GameJam.Controller
                 MilitaryBuilding building = target.GetComponent<MilitaryBuilding>();
                 if (soldier != null)
                 {
-                    Debug.Log("Serving military building " + building.name);
                     soldier.Serve(building);
                 }
             }
             if (target.tag == "Enemy")
             {
-                Debug.Log("Attacking enemy " + target.name);
-                GetComponent<Fighter>().Attack(target);
+                Health targetHealth = target.GetComponent<Health>();
+                if (soldier != null && targetHealth != null)
+                {
+                    soldier.AttackTarget(targetHealth);
+                }
             }
+        }
+
+        private bool AutoGathererBehavior()
+        {
+            if (
+                unit.assignedBuilding is ProductionBuilding productionBuilding
+                && timeSinceCurrentActionIsNull > 4f
+            )
+            {
+                gatherer.Gather(productionBuilding);
+                return true;
+            }
+            return false;
         }
 
         private bool AutoCombatBehavior()
         {
-            GameObject newTarget = FindNearestEnemy();
-            if (newTarget != null)
+            if (unit.assignedBuilding is MilitaryBuilding)
             {
-                fighter.Attack(newTarget);
+                soldier.Patrol();
                 return true;
             }
             return false;
