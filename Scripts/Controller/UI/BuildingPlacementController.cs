@@ -13,7 +13,7 @@ namespace UI.Managers
     {
         public LayerMask groundMask;
         public GameObject buildPlacingControls;
-        public GameObject buildingsParent;
+        public GameObject buildingsParentGameObject;
         
         private GameObject _currentPrefab;
         private GameObject _previewInstance;
@@ -188,7 +188,7 @@ namespace UI.Managers
         {
             if (_isPlacing) CancelPlacement();
             _currentPrefab = prefab;
-            _previewInstance = Instantiate(prefab, buildingsParent.transform);
+            _previewInstance = Instantiate(prefab, buildingsParentGameObject.transform);
 
             if (_ismoving)
             {
@@ -228,7 +228,7 @@ namespace UI.Managers
                 }
 
                 ResourceManager.Instance.DeductResources(buildingData);
-                Instantiate(_currentPrefab, position, _previewInstance.transform.rotation, buildingsParent.transform);
+                Instantiate(_currentPrefab, position, _previewInstance.transform.rotation, buildingsParentGameObject.transform);
             }
 
             Destroy(_previewInstance);
@@ -297,7 +297,13 @@ namespace UI.Managers
 
             if (buildingData != null)
             {
-                ResourceManager.Instance.RefundResourcesPartially(buildingData);
+               List<ResourceCost> refunds = ResourceManager.Instance.RefundResourcesPartially(buildingData);
+               
+               foreach (var refund in refunds)
+               {
+                   string message = $"Refunded {refund.amount} {refund.resource}";
+                   FloatingTextController.Instance.ShowFloatingText(message, Color.green);
+               }
             }
 
             Destroy(building);

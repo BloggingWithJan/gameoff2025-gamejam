@@ -16,6 +16,7 @@ namespace UI
         public void SetText(string message, Color color)
         {
             text.text = message;
+            text.color = color;
             elapsed = 0f;
         }
 

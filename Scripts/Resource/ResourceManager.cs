@@ -125,8 +125,13 @@ namespace Resource
             }
         }
         
-        public void RefundResourcesPartially(BuildingData buildingData)
+        public List<ResourceCost> RefundResourcesPartially(BuildingData buildingData, float refundPercentage = 0.5f)
         {
+            var refundedResources = new List<ResourceCost>();
+
+            if (buildingData == null || buildingData.costs == null)
+                return refundedResources;
+
             foreach (var cost in buildingData.costs)
             {
                 if (!_resources.ContainsKey(cost.resource))
@@ -135,16 +140,19 @@ namespace Resource
                     continue;
                 }
 
-                // Calculate 50% of the cost. Integer division (cost.amount / 2) automatically
-                // floors the result, ensuring we don't refund more than half.
-                int refundAmount = cost.amount / 2;
+                // Calculate partial refund (floor)
+                int refundAmount = Mathf.FloorToInt(cost.amount * refundPercentage);
 
                 if (refundAmount > 0)
                 {
                     _resources[cost.resource] += refundAmount;
                     UpdateUIText(cost.resource);
+
+                    refundedResources.Add(new ResourceCost(cost.resource, refundAmount));
                 }
             }
+
+            return refundedResources;
         }
 
         [ContextMenu("Update Resource UI")]

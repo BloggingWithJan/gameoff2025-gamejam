@@ -156,7 +156,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 50}
+  m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &209873
 MonoBehaviour:
@@ -782,15 +782,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.HorizontalLayoutGroup
   m_Padding:
-    m_Left: 15
-    m_Right: 15
-    m_Top: 15
-    m_Bottom: 15
+    m_Left: 5
+    m_Right: 5
+    m_Top: 5
+    m_Bottom: 5
   m_ChildAlignment: 0
-  m_Spacing: 5
+  m_Spacing: 15
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
-  m_ChildControlWidth: 0
+  m_ChildControlWidth: 1
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
@@ -2574,7 +2574,7 @@ GameObject:
   - component: {fileID: 360810274}
   - component: {fileID: 360810273}
   - component: {fileID: 360810272}
-  m_Layer: 6
+  m_Layer: 3
   m_Name: Plane
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -3037,9 +3037,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BuildingInfoPanel
   buildingNameText: {fileID: 700184411}
   descriptionText: {fileID: 538503380}
-  moveButton: {fileID: 0}
-  deleteButton: {fileID: 0}
-  buildingPlacementController: {fileID: 0}
+  moveButton: {fileID: 1186080756}
+  deleteButton: {fileID: 209873}
+  buildingPlacementController: {fileID: 1313745636}
   offset: {x: 0, y: 1, z: 0}
 --- !u!224 &465665684
 RectTransform:
@@ -4944,8 +4944,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 21
+  m_fontSizeBase: 21
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -7485,7 +7485,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Delete
+  m_text: Dismantle
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -7512,8 +7512,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 21
+  m_fontSizeBase: 21
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -8099,7 +8099,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 50}
+  m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1186080756
 MonoBehaviour:
@@ -8962,7 +8962,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   buildPlacingControls: {fileID: 593588663}
-  buildingsParent: {fileID: 0}
+  buildingsParentGameObject: {fileID: 1261847107}
 --- !u!1 &1349319808
 GameObject:
   m_ObjectHideFlags: 0
@@ -13357,6 +13357,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   uiCanvas: {fileID: 933525681}
   floatingTextPrefab: {fileID: 3098295114631911446, guid: 991ed77578b57864bb3eacbebba9f7e0, type: 3}
+  verticalOffset: 20
+  randomOffsetX: 10
 --- !u!1 &1976240125
 GameObject:
   m_ObjectHideFlags: 0
