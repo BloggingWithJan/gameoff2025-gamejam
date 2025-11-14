@@ -1,9 +1,7 @@
-using System;
-using Controller.UI;
-using Data;
+using GameJam.Core;
 using UnityEngine;
 
-namespace GameJam.Core
+namespace Core
 {
     public class BaseSelectable : MonoBehaviour, ISelectable
     {
@@ -51,28 +49,6 @@ namespace GameJam.Core
                 return;
             isSelected = true;
             Highlight();
-            ShowInfoPanel();
-        }
-
-        private void HideInfoPanel()
-        {
-            BuildingInfoPanel.Instance.HidePanel();
-            UnitInfoPanel.Instance.HidePanel();
-        }
-
-        private void ShowInfoPanel()
-        {
-            //hide all first so we dont have multiple panels open
-            HideInfoPanel();
-
-            if (gameObject.TryGetComponent<BuildingData>(out var buildingData))
-            {
-                BuildingInfoPanel.Instance.ShowPanel(buildingData);
-            }
-            else if (gameObject.TryGetComponent<Health>(out var unitData))
-            {
-                UnitInfoPanel.Instance.ShowPanel(unitData);
-            }
         }
 
         public void OnDeselect()
@@ -81,7 +57,6 @@ namespace GameJam.Core
                 return;
             isSelected = false;
             UnHighlight();
-            HideInfoPanel();
         }
 
         public void OnHover()

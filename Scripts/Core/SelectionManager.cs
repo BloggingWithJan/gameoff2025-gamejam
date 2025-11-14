@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Controller.UI;
+using Data;
 using GameJam.Core;
 using Military;
 using Production;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
 
 namespace Core
 {
@@ -27,7 +28,7 @@ namespace Core
 
         private Vector2 dragStart;
         private bool isDragging;
-        
+
         private readonly HashSet<string> ignoredTags = new()
         {
             "Building"
@@ -57,11 +58,13 @@ namespace Core
         void Update()
         {
             HandleBoxSelection();
+            
             if (!isDragging) // Only handle click selection when not dragging
             {
                 HandleClickSelection();
                 UpdateHoverFeedback();
             }
+
             HandleRightClick();
         }
 
@@ -76,17 +79,13 @@ namespace Core
                     GameObject target = hit.collider.gameObject;
 
                     if (target.GetComponent<ProductionBuilding>() != null)
-                    {
                         interaction = true;
-                    }
+
                     if (target.GetComponent<MilitaryBuilding>() != null)
-                    {
                         interaction = true;
-                    }
+
                     if (target.tag == "Enemy")
-                    {
                         interaction = true;
-                    }
 
                     // Iterate over a copy of the list to safely remove destroyed items
                     foreach (var entity in selectedEntities.ToList())
@@ -118,24 +117,18 @@ namespace Core
 
             // Find what we're hovering over
             if (Physics.Raycast(ray, out RaycastHit hit))
-            {
                 newHoveredEntity = hit.collider.GetComponent<ISelectable>();
-            }
 
             // If hover target changed
             if (newHoveredEntity != _currentHoveredEntity)
             {
                 // Clear previous hover (but only if not selected)
                 if (_currentHoveredEntity != null && !_currentHoveredEntity.IsSelected)
-                {
                     _currentHoveredEntity.OnUnhover();
-                }
 
                 // Apply new hover
                 if (newHoveredEntity != null && !newHoveredEntity.IsSelected)
-                {
                     newHoveredEntity.OnHover();
-                }
 
                 _currentHoveredEntity = newHoveredEntity;
             }
@@ -152,13 +145,14 @@ namespace Core
                     if (selectable != null)
                     {
                         foreach (var entity in selectedEntities)
-                        {
                             entity.OnDeselect();
-                        }
+
                         selectedEntities.Clear();
 
                         selectable.OnSelect();
                         selectedEntities.Add(selectable);
+
+                        UpdateSelectionUI();
                     }
                 }
             }
@@ -185,9 +179,7 @@ namespace Core
                 }
 
                 if (isDragging)
-                {
                     selectionBoxUI.UpdateSelection(mousePos);
-                }
             }
 
             // End dragging
@@ -199,13 +191,50 @@ namespace Core
             }
         }
 
+        private void UpdateSelectionUI()
+        {
+            BuildingInfoPanel.Instance.HidePanel();
+            UnitInfoPanel.Instance.HidePanel();
+            ArmyInfoPanel.Instance.HidePanel();
+
+            if (selectedEntities.Count == 0)
+                return;
+
+            if (selectedEntities.Count > 1)
+            {
+                var units = selectedEntities
+                    .Select(e => (e as MonoBehaviour)?.GetComponent<Health>())
+                    .Where(h => h != null)
+                    .ToList();
+
+                if (units.Count > 0) {
+                    ArmyInfoPanel.Instance.ShowPanel(selectedEntities.Count);
+                }
+
+                return;
+            }
+
+            MonoBehaviour mb = selectedEntities[0] as MonoBehaviour;
+
+            if (mb.TryGetComponent(out BuildingData buildingData))
+            {
+                BuildingInfoPanel.Instance.ShowPanel(buildingData);
+                return;
+            }
+
+            if (mb.TryGetComponent(out Health unitData))
+            {
+                UnitInfoPanel.Instance.ShowPanel(unitData);
+                return;
+            }
+        }
+
         private void PerformBoxSelection()
         {
             // Clear previous selection
             foreach (var entity in selectedEntities)
-            {
                 entity.OnDeselect();
-            }
+
             selectedEntities.Clear();
 
             // Get screen rect from selection box
@@ -241,6 +270,8 @@ namespace Core
                     selectedEntities.Add(selectable);
                 }
             }
+
+            UpdateSelectionUI();
         }
     }
 }
