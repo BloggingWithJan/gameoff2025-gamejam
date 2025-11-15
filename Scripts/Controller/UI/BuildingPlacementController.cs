@@ -28,7 +28,7 @@ namespace UI.Managers
         private LineRenderer _previewOutline;
         private readonly Dictionary<Collider, LineRenderer> _blockedOutlines = new();
         private Vector2? _lastMousePos;
-        private float _rotationSpeed = 0.3f;
+        private float _rotationSpeed = 90f;
         private float _maxRaycastDistance = 500f;
 
         private bool TryGetGroundHit(out RaycastHit hit)
@@ -289,7 +289,7 @@ namespace UI.Managers
         private void RotatePreview()
         {
             if (!_previewInstance) return;
-            _previewInstance.transform.Rotate(Vector3.up, 90f * Time.deltaTime);
+            _previewInstance.transform.Rotate(Vector3.up, _rotationSpeed * Time.deltaTime);
         }
 
         private void ClearBlockerOutlines()
