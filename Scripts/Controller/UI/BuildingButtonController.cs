@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace UI.Managers
+namespace Controller.UI
 {
     public class BuildingButtonController : MonoBehaviour
     {

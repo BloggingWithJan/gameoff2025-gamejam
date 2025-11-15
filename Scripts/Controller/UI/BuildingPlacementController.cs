@@ -12,6 +12,7 @@ namespace UI.Managers
 {
     public class BuildingPlacementController : MonoBehaviour
     {
+        public InputActionAsset InputActionAsset;
         public LayerMask groundMask;
         public GameObject buildPlacingControls;
         public GameObject buildingsParentGameObject;
@@ -45,7 +46,8 @@ namespace UI.Managers
 
         void Update()
         {
-            if (!_isPlacing) return;
+            if (!_isPlacing)
+                return;
 
             if (Mouse.current == null || !TryGetGroundHit(out RaycastHit hit))
             {
@@ -112,11 +114,15 @@ namespace UI.Managers
         {
             var blockers = new List<Collider>();
 
-            if (!_previewInstance) 
+            if (!_previewInstance) {
+                Debug.LogError("No preview instance found");
                 return (false, blockers);
+            }
 
-            if (!_previewInstance.TryGetComponent<BoxCollider>(out var box)) 
+            if (!_previewInstance.TryGetComponent<BoxCollider>(out var box)) {
+                Debug.LogError("No box collider found");
                 return (false, blockers);
+            }
 
             // Temporarily disable collider to avoid self-overlap
             box.enabled = false;
@@ -134,7 +140,7 @@ namespace UI.Managers
             // Filter out irrelevant colliders
             foreach (var c in overlaps)
             {
-                if (c.isTrigger || c.CompareTag("Ground") || c.gameObject == _previewInstance) 
+                if (c.isTrigger || c.CompareTag("Ground") || c.gameObject == _previewInstance)
                     continue;
 
                 blockers.Add(c);
@@ -202,12 +208,12 @@ namespace UI.Managers
 
         public void StartPlacement(GameObject prefab)
         {
-            if (_isPlacing) 
+            if (_isPlacing)
                 CancelPlacement();
-            
+
             _currentPrefab = prefab;
             _previewInstance = Instantiate(prefab, buildingsParentGameObject.transform);
-            
+
             //disable obstacle so that units dont get pushed around
             if (_previewInstance.TryGetComponent<NavMeshObstacle>(out NavMeshObstacle obstacle))
             {
@@ -220,7 +226,7 @@ namespace UI.Managers
             }
 
             SetPreviewMaterial(_previewInstance);
-            
+
             _previewRenderers = _previewInstance.GetComponentsInChildren<Renderer>();
             _previewOutline = _previewInstance.AddComponent<LineRenderer>();
             _previewOutline.loop = false;
@@ -231,6 +237,20 @@ namespace UI.Managers
             _isPlacing = true;
 
             buildPlacingControls.SetActive(true);
+
+            DisableActionAssets();
+        }
+
+        private void DisableActionAssets()
+        {
+            var map = InputActionAsset.FindActionMap("Player");
+            map.FindAction("Point").Disable();
+        }
+
+        private void ReenableActionAssets()
+        {
+            var map = InputActionAsset.FindActionMap("Player");
+            map.FindAction("Point").Enable();
         }
 
         private void PlaceBuilding(Vector3 position)
@@ -253,19 +273,20 @@ namespace UI.Managers
                 }
 
                 ResourceManager.Instance.DeductResources(buildingData);
-                
+
                 foreach (var cost in buildingData.costs)
                 {
                     string message = $"- {cost.amount} {cost.resource}";
                     FloatingTextController.Instance.ShowFloatingText(message, Color.white);
                 }
-                
+
                 Instantiate(_currentPrefab, position, _previewInstance.transform.rotation,
                     buildingsParentGameObject.transform);
             }
 
             Destroy(_previewInstance);
             ClearBlockerOutlines();
+            ReenableActionAssets();
             _isPlacing = false;
             _isBeingRelocated = false;
             buildPlacingControls.SetActive(false);
@@ -281,6 +302,7 @@ namespace UI.Managers
                 _currentBuilding.SetActive(true);
             }
 
+            ReenableActionAssets();
             _isPlacing = false;
             _isBeingRelocated = false;
             buildPlacingControls.SetActive(false);
