@@ -79,7 +79,7 @@ namespace Controller.UI
             // statusText.text = ...
 
             followTarget = unit.transform;
-            UpdatePosition(); // set position before enabling
+            UpdatePosition();
             gameObject.SetActive(true);
         }
 

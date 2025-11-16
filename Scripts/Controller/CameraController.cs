@@ -5,12 +5,12 @@ namespace Controller
 {
     public class CameraController : MonoBehaviour
     {
-        [Header("Settings")] public float moveSpeed = 30f;
+        [Header("Settings")] public float moveSpeed = 50f;
         public float rotationSpeed = 15f;
         public float tiltSpeed = 15f;
         public float zoomSpeed = 150f;
         public float minZoom = 3f;
-        public float maxZoom = 30f;
+        public float maxZoom = 60f;
         public InputActionAsset cameraActionsAsset;
 
         private InputAction _moveAction;

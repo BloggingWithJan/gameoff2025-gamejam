@@ -1,5 +1,7 @@
 using System.Collections;
+using Core;
 using Data;
+using GameJam.Combat;
 using GameJam.Core;
 using GameJam.Movement;
 using GameJam.Production;
@@ -9,7 +11,7 @@ using UnityEngine.AI;
 
 namespace Production
 {
-    public class Gatherer : MonoBehaviour, IAction
+    public class Gatherer : MonoBehaviour, IAction, IUnitData
     {
         public enum GathererState
         {
@@ -20,7 +22,7 @@ namespace Production
             GatheringResource,
             ReturningResource,
         }
-
+        
         public GathererState currentState;
 
         private GathererType currentGathererType;
@@ -263,6 +265,16 @@ namespace Production
             unit.SpawnWeapon(newGathererType.GetToolPrefab());
 
             currentState = GathererState.SearchingForResource;
+        }
+
+        //TODO 
+        public UnitData GetUnitData()
+        {
+            UnitData unitData = new UnitData();
+            unitData.UnitName = unit.name;
+            unitData.Status = currentState.ToString();
+            
+            return unitData;
         }
     }
 }

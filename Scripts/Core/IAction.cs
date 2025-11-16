@@ -1,4 +1,4 @@
-namespace GameJam.Core
+namespace Core
 {
     public interface IAction
     {
