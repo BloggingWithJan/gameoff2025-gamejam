@@ -1,11 +1,11 @@
-using System.Collections.Generic;
 using Data;
+using UI.Managers;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-namespace UI.Managers
+namespace Controller.UI
 {
     public class BuildMenuController : MonoBehaviour
     {
@@ -14,101 +14,40 @@ namespace UI.Managers
         [FormerlySerializedAs("placerManager")] public BuildingPlacementController placementController;
         [FormerlySerializedAs("tooltipManager")] public BuildingTooltipController tooltipController;
 
-        [Header("Buttons")] public Button quarryButton;
-        public Button baseButton;
-        public Button towerButton;
-        public Button rockButton;
-        public Button treeButton;
-        public Button lumberjackLodgeButton;
-        public Button foodLodgeButton;
+        public BuildEntry[] buildEntries;
+        
+        [System.Serializable]
+        public struct BuildEntry
+        {
+            public Button button;
+            public GameObject prefab;
+        }
 
-        [Header("Prefabs")] public GameObject quarryPrefab;
-        public GameObject basePrefab;
-        public GameObject towerPrefab;
-        public GameObject rockPrefab;
-        public GameObject treePrefab;
-        public GameObject lumberjackLodgePrefab;
-        public GameObject foodLodgePrefab;
 
         private void Awake()
         {
-            // Setup Quarry
-            quarryButton.onClick.AddListener(() => placementController.StartPlacement(quarryPrefab));
-            if (quarryPrefab.TryGetComponent<BuildingData>(out BuildingData quarryData))
+            foreach (var entry in buildEntries)
             {
-                AddTooltipEvents(quarryButton, quarryData);
-            }
-            else
-            {
-                Debug.LogError($"Can't find BuildingData component on GameObject {gameObject.name}");
-            }
-            
-            // Setup Lumberjack Lodge
-            lumberjackLodgeButton.onClick.AddListener(() => placementController.StartPlacement(lumberjackLodgePrefab));
-            if (lumberjackLodgePrefab.TryGetComponent<BuildingData>(out BuildingData lumberjackLodgeData))
-            {
-                AddTooltipEvents(lumberjackLodgeButton, lumberjackLodgeData);
-            }
-            else
-            {
-                Debug.LogError($"Can't find BuildingData component on GameObject {gameObject.name}");
-            }
-            
-            // Setup Food Lodge
-            foodLodgeButton.onClick.AddListener(() => placementController.StartPlacement(foodLodgePrefab));
-            if (foodLodgePrefab.TryGetComponent<BuildingData>(out BuildingData foodLodgeData))
-            {
-                AddTooltipEvents(foodLodgeButton, foodLodgeData);
-            }
-            else
-            {
-                Debug.LogError($"Can't find BuildingData component on GameObject {gameObject.name}");
-            }
+                if (entry.button == null || entry.prefab == null)
+                {
+                    Debug.LogError("Build entry is missing a button or prefab.");
+                    continue;
+                }
 
-            // Setup Base
-            baseButton.onClick.AddListener(() => placementController.StartPlacement(basePrefab));
-            if (basePrefab.TryGetComponent<BuildingData>(out BuildingData baseData))
-            {
-                AddTooltipEvents(baseButton, baseData);
-            }
-            else
-            {
-                Debug.LogError($"Can't find BuildingData component on GameObject {gameObject.name}");
-            }
-            
-            // Setup Tower
-            towerButton.onClick.AddListener(() => placementController.StartPlacement(towerPrefab));
-            if (towerPrefab.TryGetComponent<BuildingData>(out BuildingData towerData))
-            {
-                AddTooltipEvents(towerButton, towerData);
-            }
-            else
-            {
-                Debug.LogError($"Can't find BuildingData component on GameObject {gameObject.name}");
-            }
+                entry.button.onClick.AddListener(() =>
+                    placementController.StartPlacement(entry.prefab));
 
-            // Setup Rock
-            rockButton.onClick.AddListener(() => placementController.StartPlacement(rockPrefab));
-            if (rockPrefab.TryGetComponent<BuildingData>(out BuildingData rockData))
-            {
-                AddTooltipEvents(rockButton, rockData);
-            }
-            else
-            {
-                Debug.LogError($"Can't find BuildingData component on GameObject {gameObject.name}");
-            }
-
-            // Setup Tree
-            treeButton.onClick.AddListener(() => placementController.StartPlacement(treePrefab));
-            if (treePrefab.TryGetComponent<BuildingData>(out BuildingData treeData))
-            {
-                AddTooltipEvents(treeButton, treeData);
-            }
-            else
-            {
-                Debug.LogError($"Can't find BuildingData component on GameObject {gameObject.name}");
+                if (entry.prefab.TryGetComponent<BuildingData>(out var data))
+                {
+                    AddTooltipEvents(entry.button, data);
+                }
+                else
+                {
+                    Debug.LogError($"BuildingData missing on prefab {entry.prefab.name}");
+                }
             }
         }
+
 
         private void AddTooltipEvents(Button button, BuildingData data)
         {

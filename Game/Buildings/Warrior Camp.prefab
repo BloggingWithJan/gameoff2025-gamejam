@@ -43,9 +43,11 @@ GameObject:
   - component: {fileID: 6562994372592645871}
   - component: {fileID: -6638215651306302929}
   - component: {fileID: 1875573051750063727}
+  - component: {fileID: 2511279663432730342}
+  - component: {fileID: 9060049595750979734}
   m_Layer: 0
   m_Name: Warrior Camp
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -104,8 +106,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5720ca2e6f99ab1408d5cad068b132c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MilitaryBuilding
-  spawnPoint: {fileID: 1872386588036202500}
-  maxSoldierSlots: 10
+  buildingName: 
+  description: 
+  buildingType: 0
+  maxUnitSlots: 3
   soldierType: {fileID: 11400000, guid: 8f27ff05d8297614296e726094c1404c, type: 2}
 --- !u!208 &1875573051750063727
 NavMeshObstacle:
@@ -123,6 +127,40 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0.75, z: -0.3}
   m_TimeToStationary: 0.5
+--- !u!114 &2511279663432730342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7688493857108700738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdc07ed7143304749aba12fd54c54031, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Data.BuildingData
+  buildingName: Warrior Camp
+  description: Convert Units to Warriors
+  costs:
+  - resource: 0
+    amount: 10
+  - resource: 1
+    amount: 25
+  refunds: []
+--- !u!114 &9060049595750979734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7688493857108700738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42cfb5c8c4bcc4548bc346d82cabca98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Core.BaseSelectable
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 0.1
 --- !u!1001 &733316144112483525
 PrefabInstance:
   m_ObjectHideFlags: 0

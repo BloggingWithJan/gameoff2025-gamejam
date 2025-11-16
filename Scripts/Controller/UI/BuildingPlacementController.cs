@@ -32,6 +32,9 @@ namespace UI.Managers
         private float _rotationSpeed = 90f;
         private float _maxRaycastDistance = 500f;
 
+        // distance used when sampling the NavMesh to determine if placement point is on a navmesh
+        [SerializeField] private float navMeshSampleDistance = 0.5f;
+
         private bool TryGetGroundHit(out RaycastHit hit)
         {
             if (Camera.main == null)
@@ -58,16 +61,16 @@ namespace UI.Managers
             _previewInstance.transform.position = hit.point;
 
             bool isOverUI = IsPointerOverUI();
-            var (isValid, blockers) = IsValidPlacement(hit.point);
+            var (noBlockers, onNavMesh, blockers) = IsValidPlacement(hit.point);
 
-            UpdateVisuals(isOverUI, isValid, blockers);
+            UpdateVisuals(noBlockers && !isOverUI && onNavMesh, blockers);
 
-            HandleInput(hit, isOverUI, isValid);
+            HandleInput(hit, isOverUI, noBlockers, onNavMesh);
         }
 
-        private void UpdateVisuals(bool isOverUI, bool isValid, List<Collider> blockers)
+        private void UpdateVisuals(bool canPlace, List<Collider> blockers)
         {
-            Color previewColor = (isOverUI || !isValid) ? Color.red : Color.green;
+            Color previewColor = canPlace ? Color.green : Color.red;
             SetPreviewColor(previewColor);
 
             if (_previewInstance.TryGetComponent<BoxCollider>(out var boxCollider))
@@ -78,7 +81,7 @@ namespace UI.Managers
             UpdateBlockingOutlines(blockers);
         }
 
-        private void HandleInput(RaycastHit hit, bool overUI, bool valid)
+        private void HandleInput(RaycastHit hit, bool overUI, bool noBlockers, bool onNavMesh)
         {
             if (Mouse.current.rightButton.wasPressedThisFrame)
             {
@@ -100,9 +103,16 @@ namespace UI.Managers
                     return;
                 }
 
-                if (!valid)
+                if (!noBlockers)
                 {
                     FloatingTextController.Instance.ShowFloatingText("Placement blocked!", Color.red);
+                    return;
+                }
+                
+                if (!onNavMesh)
+                {
+                    FloatingTextController.Instance.ShowFloatingText("This location is not buildable.",
+                        Color.red);
                     return;
                 }
 
@@ -110,34 +120,23 @@ namespace UI.Managers
             }
         }
 
-        private (bool isValid, List<Collider> blockers) IsValidPlacement(Vector3 position)
+        private (bool noBlockers, bool onNavMesh, List<Collider> blockers) IsValidPlacement(Vector3 position)
         {
             var blockers = new List<Collider>();
 
-            if (!_previewInstance) {
-                Debug.LogError("No preview instance found");
-                return (false, blockers);
-            }
+            if (!_previewInstance.TryGetComponent<BoxCollider>(out var box))
+                return (false, false, blockers);
 
-            if (!_previewInstance.TryGetComponent<BoxCollider>(out var box)) {
-                Debug.LogError("No box collider found");
-                return (false, blockers);
-            }
-
-            // Temporarily disable collider to avoid self-overlap
+            // Disable collider temporarily
             box.enabled = false;
 
-            // Compute the world-space center and half-extents
             Vector3 worldCenter = position + _previewInstance.transform.rotation * box.center;
             Vector3 halfExtents = Vector3.Scale(box.size * 0.5f, _previewInstance.transform.lossyScale);
 
-            // Check overlaps
             Collider[] overlaps = Physics.OverlapBox(worldCenter, halfExtents, _previewInstance.transform.rotation);
 
-            // Re-enable the collider
             box.enabled = true;
 
-            // Filter out irrelevant colliders
             foreach (var c in overlaps)
             {
                 if (c.isTrigger || c.CompareTag("Ground") || c.gameObject == _previewInstance)
@@ -146,7 +145,11 @@ namespace UI.Managers
                 blockers.Add(c);
             }
 
-            return (blockers.Count == 0, blockers);
+            bool noBlockers = blockers.Count == 0;
+
+            bool fullyOnNavMesh = IsFullyOnNavMesh(box, 1f);
+
+            return (noBlockers, fullyOnNavMesh, blockers);
         }
 
         private void UpdateBlockingOutlines(List<Collider> newBlockers)
@@ -244,13 +247,13 @@ namespace UI.Managers
         private void DisableActionAssets()
         {
             var map = InputActionAsset.FindActionMap("Player");
-            map.FindAction("Point").Disable();
+            map.FindAction("Click").Disable();
         }
 
         private void ReenableActionAssets()
         {
             var map = InputActionAsset.FindActionMap("Player");
-            map.FindAction("Point").Enable();
+            map.FindAction("Click").Enable();
         }
 
         private void PlaceBuilding(Vector3 position)
@@ -341,8 +344,32 @@ namespace UI.Managers
             }
         }
 
-        private bool IsPointerOverUI() => EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+        private bool IsFullyOnNavMesh(BoxCollider box, float maxDistance)
+        {
+            // Get all 4 bottom corners in world space
+            Vector3 half = Vector3.Scale(box.size * 0.5f, box.transform.lossyScale);
 
+            Vector3[] localOffsets =
+            {
+                new Vector3(-half.x, 0, -half.z),
+                new Vector3(half.x, 0, -half.z),
+                new Vector3(half.x, 0, half.z),
+                new Vector3(-half.x, 0, half.z)
+            };
+
+            foreach (var offset in localOffsets)
+            {
+                Vector3 worldPoint = box.transform.TransformPoint(box.center + offset);
+
+                // Every corner must be on NavMesh
+                if (!NavMesh.SamplePosition(worldPoint, out _, maxDistance, NavMesh.AllAreas))
+                    return false;
+            }
+
+            return true;
+        }
+
+        private bool IsPointerOverUI() => EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
 
         public void DeleteBuilding(GameObject building)
         {

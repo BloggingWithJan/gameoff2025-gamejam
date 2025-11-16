@@ -20,11 +20,9 @@ namespace Core
         private InputAction _rightClickAction;
         private ISelectable _currentHoveredEntity;
 
-        [SerializeField]
-        private SelectionBoxUI selectionBoxUI;
+        [SerializeField] private SelectionBoxUI selectionBoxUI;
 
-        [SerializeField]
-        private Camera mainCamera;
+        [SerializeField] private Camera mainCamera;
 
         private Vector2 dragStart;
         private bool isDragging;
@@ -57,8 +55,14 @@ namespace Core
 
         void Update()
         {
+            //set to false because otherwise the selection box gets shown after clickAction gets enabled again
+            if (!_clickAction.enabled)
+            {
+                isDragging = false;
+            }
+
             HandleBoxSelection();
-            
+
             if (!isDragging) // Only handle click selection when not dragging
             {
                 HandleClickSelection();
@@ -207,7 +211,8 @@ namespace Core
                     .Where(h => h != null)
                     .ToList();
 
-                if (units.Count > 0) {
+                if (units.Count > 0)
+                {
                     ArmyInfoPanel.Instance.ShowPanel(selectedEntities.Count);
                 }
 
@@ -257,7 +262,7 @@ namespace Core
                 //skip if tag is in ignored list
                 if (ignoredTags.Contains(selectableMono.tag))
                     continue;
-                
+
                 // Convert world position to screen position
                 Vector3 screenPos = mainCamera.WorldToScreenPoint(
                     selectableMono.transform.position
@@ -271,7 +276,7 @@ namespace Core
                 }
             }
 
-            UpdateSelectionUI();
+            UpdateSelectionUI(); 
         }
     }
 }
