@@ -114,18 +114,21 @@ namespace GameJam.Military
 
         private void AutomaticCombat()
         {
+            if (fighter.GetCurrentTarget() == null || fighter.GetCurrentTarget().IsDead())
+            {
+                navMeshAgent.isStopped = false;
+                currentState = SoldierState.Patrol;
+            }
+
             if (!fighter.GetIsInRange())
             {
+                navMeshAgent.isStopped = false;
                 fighter.MoveToCurrentTargetPosition();
             }
             else
             {
+                navMeshAgent.isStopped = true;
                 fighter.AttackBehaviour();
-            }
-
-            if (fighter.GetCurrentTarget() == null || fighter.GetCurrentTarget().IsDead())
-            {
-                currentState = SoldierState.Patrol;
             }
         }
 

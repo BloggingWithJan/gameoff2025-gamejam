@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98c15f3a794d4cb4aa312f0a8f058535, type: 3}
+  m_Name: Ranged Spear
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Military.SoldierType
+  typeName: Ranged Spear
+  weaponPrefab: {fileID: 11400000, guid: 4f1b2d0be1578cc4fb7b53b5a2193e15, type: 2}
+  headMesh: {fileID: 5507760748409398153, guid: aef97f022a1b7544fa9e6c04edf4d8b3, type: 3}
+  bodyMesh: {fileID: -8995563128620110768, guid: aef97f022a1b7544fa9e6c04edf4d8b3, type: 3}

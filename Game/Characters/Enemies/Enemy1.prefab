@@ -119,6 +119,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e4df42724f0aaff4eb3ef140408f0c84, type: 3}
       insertIndex: -1
       addedObject: {fileID: -298775329659813773}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e4df42724f0aaff4eb3ef140408f0c84, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -1107587094125321109}
   m_SourcePrefab: {fileID: 100100000, guid: e4df42724f0aaff4eb3ef140408f0c84, type: 3}
 --- !u!4 &1606123297583857613 stripped
 Transform:
@@ -182,7 +185,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b69f1de59fbde6d4f9d7e096398d0773, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Movement.Mover
-  destinationThreshold: 1
 --- !u!114 &6260485660785917972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220,7 +222,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f45e85486e3170a459ca8f5cb1fea04d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Combat.Fighter
-  weapon: {fileID: 11400000, guid: c31254afa6b839247b4a89f59efa5e81, type: 2}
+  aggroRange: 5
 --- !u!136 &7632758723904902774
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -241,9 +243,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.3
-  m_Height: 0.8
+  m_Height: 1.0489006
   m_Direction: 1
-  m_Center: {x: 0, y: 0.35, z: 0}
+  m_Center: {x: 0, y: 0.31734836, z: 0}
 --- !u!95 &1569287414521982738
 Animator:
   serializedVersion: 7
@@ -282,3 +284,31 @@ MonoBehaviour:
   leftHandTransform: {fileID: 6301246670230873267}
   headSlotRenderer: {fileID: 0}
   bodySlotRenderer: {fileID: 0}
+  assignedBuilding: {fileID: 0}
+--- !u!54 &-1107587094125321109
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7056993406292533829}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

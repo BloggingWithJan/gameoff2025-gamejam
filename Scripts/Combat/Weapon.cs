@@ -1,3 +1,4 @@
+using GameJam.Core;
 using UnityEngine;
 
 namespace GameJam.Combat
@@ -22,6 +23,9 @@ namespace GameJam.Combat
 
         [SerializeField]
         bool isRightHanded = true;
+
+        [SerializeField]
+        Projectile projectile = null;
 
         GameObject instantiatedWeapon = null;
 
@@ -53,6 +57,11 @@ namespace GameJam.Combat
             return isRightHanded ? rightHand : leftHand;
         }
 
+        public bool HasProjectile()
+        {
+            return projectile != null;
+        }
+
         public float GetDamage()
         {
             return weaponDamage;
@@ -66,6 +75,17 @@ namespace GameJam.Combat
         public float GetTimeBetweenAttacks()
         {
             return timeBetweenAttacks;
+        }
+
+        public void LaunchProjectile(Transform rightHand, Transform leftHand, Health target)
+        {
+            Debug.Log("Launching projectile at " + target.name);
+            Projectile projectileInstance = Instantiate(
+                projectile,
+                GetTransform(rightHand, leftHand).position,
+                Quaternion.identity
+            );
+            projectileInstance.SetTarget(target, weaponDamage);
         }
 
         public void Unequip()

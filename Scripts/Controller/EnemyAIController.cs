@@ -1,3 +1,11 @@
+//-----------------------------------------------------------------------
+//Anforderungen
+//Enemys werden irgendwo in der Welt gespawnt
+//Enemys müssen beim Start sofort ein ZIel suchen (also ein Target)
+//Alle Enemeys sollten das gleiche Ziel haben (z.B. die Basis der Player)
+//sobald sich military units in Reichweite befinden, sollten Enemys diese angreifen
+//
+//-----------------------------------------------------------------------
 using GameJam.Combat;
 using GameJam.Core;
 using UnityEngine;

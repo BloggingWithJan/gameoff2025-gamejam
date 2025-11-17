@@ -47,10 +47,25 @@ namespace GameJam.Core
             weapon.Spawn(rightHandTransform, leftHandTransform, animator);
         }
 
+        public Weapon GetWeapon()
+        {
+            return weapon;
+        }
+
         public void ChangeMeshes(Mesh newHeadMesh, Mesh newBodyMesh)
         {
             headSlotRenderer.sharedMesh = newHeadMesh;
             bodySlotRenderer.sharedMesh = newBodyMesh;
+        }
+
+        public Transform GetRightHandTransform()
+        {
+            return rightHandTransform;
+        }
+
+        public Transform GetLeftHandTransform()
+        {
+            return leftHandTransform;
         }
     }
 }

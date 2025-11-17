@@ -8,9 +8,6 @@ namespace GameJam.Combat
     public class Fighter : MonoBehaviour, IAction
     {
         [SerializeField]
-        Weapon weapon = null;
-
-        [SerializeField]
         float aggroRange = 5f;
 
         Health target;
@@ -24,7 +21,6 @@ namespace GameJam.Combat
         void Start()
         {
             unit = GetComponent<Unit>();
-            unit.SpawnWeapon(weapon);
             fighter = GetComponent<Health>();
             actionScheduler = GetComponent<ActionScheduler>();
         }
@@ -38,13 +34,13 @@ namespace GameJam.Combat
         public bool GetIsInRange()
         {
             return Vector3.Distance(transform.position, target.transform.position)
-                < weapon.GetRange();
+                < unit.GetWeapon().GetRange();
         }
 
         public void AttackBehaviour()
         {
             transform.LookAt(target.transform);
-            if (timeSinceLastAttack > weapon.GetTimeBetweenAttacks())
+            if (timeSinceLastAttack > unit.GetWeapon().GetTimeBetweenAttacks())
             {
                 GetComponent<Animator>().ResetTrigger("stopAttack");
                 GetComponent<Animator>().SetTrigger("attack");
@@ -56,7 +52,19 @@ namespace GameJam.Combat
         {
             if (target == null)
                 return;
-            target.TakeDamage(weapon.GetDamage());
+            target.TakeDamage(unit.GetWeapon().GetDamage());
+        }
+
+        void Shoot()
+        {
+            if (target == null)
+                return;
+            unit.GetWeapon()
+                .LaunchProjectile(
+                    unit.GetRightHandTransform(),
+                    unit.GetLeftHandTransform(),
+                    target
+                );
         }
 
         public bool CanAttack(GameObject combatTarget)
