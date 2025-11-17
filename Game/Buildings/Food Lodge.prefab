@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8167226434668735254}
   - component: {fileID: -6354623331139084160}
   - component: {fileID: 3090709813147918398}
+  - component: {fileID: 2570848454598614501}
   m_Layer: 0
   m_Name: Food Lodge
   m_TagString: Building
@@ -71,7 +72,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43e6011ea0d46ad479f3989ef5028db6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Production.ProductionBuilding
-  maxGathererSlots: 3
+  buildingName: 
+  description: 
+  buildingType: 0
+  maxUnitSlots: 3
   gathererType: {fileID: 11400000, guid: 2f219bc075b04134489939ba9eba86d9, type: 2}
 --- !u!114 &8167226434668735254
 MonoBehaviour:
@@ -121,6 +125,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Core.BaseSelectable
   outlineColor: {r: 1, g: 1, b: 1, a: 1}
   outlineWidth: 0.1
+--- !u!114 &2570848454598614501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3082435477526856401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b57dd7f5a0947640b8e7ad2bdfe3e04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Core.Health
+  maxHealth: 100
 --- !u!1001 &3082723097691640403
 PrefabInstance:
   m_ObjectHideFlags: 0

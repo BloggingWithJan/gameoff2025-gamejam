@@ -66,7 +66,6 @@ namespace GameJam.Combat
 
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("Projectile hit " + other.name);
             if (other.GetComponent<Health>() != target)
             {
                 return;

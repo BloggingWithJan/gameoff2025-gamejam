@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: -4302358994391839684}
   - component: {fileID: 1763223578643939324}
   - component: {fileID: 6645624838316978366}
+  - component: {fileID: 7133044656631237395}
   m_Layer: 7
   m_Name: Quarry
   m_TagString: Building
@@ -90,7 +91,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43e6011ea0d46ad479f3989ef5028db6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProductionBuilding
-  maxGathererSlots: 3
+  buildingName: 
+  description: 
+  buildingType: 0
+  maxUnitSlots: 3
   gathererType: {fileID: 11400000, guid: 7178724753e3135469fbf76bdae183b7, type: 2}
 --- !u!208 &1763223578643939324
 NavMeshObstacle:
@@ -122,6 +126,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Core.BaseSelectable
   outlineColor: {r: 1, g: 1, b: 1, a: 1}
   outlineWidth: 0.1
+--- !u!114 &7133044656631237395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2742072698946110283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b57dd7f5a0947640b8e7ad2bdfe3e04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Core.Health
+  maxHealth: 100
 --- !u!1 &6085929440036152400
 GameObject:
   m_ObjectHideFlags: 0

@@ -122,6 +122,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e4df42724f0aaff4eb3ef140408f0c84, type: 3}
       insertIndex: -1
       addedObject: {fileID: -1107587094125321109}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e4df42724f0aaff4eb3ef140408f0c84, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -8666796125422456293}
   m_SourcePrefab: {fileID: 100100000, guid: e4df42724f0aaff4eb3ef140408f0c84, type: 3}
 --- !u!4 &1606123297583857613 stripped
 Transform:
@@ -148,7 +151,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.2
-  m_Speed: 3.5
+  m_Speed: 3
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -172,7 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b57dd7f5a0947640b8e7ad2bdfe3e04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Core.Health
-  maxHealth: 10
+  maxHealth: 50
 --- !u!114 &1363840702981827950
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,3 +315,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-8666796125422456293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7056993406292533829}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08029fd4bb3f103428e030c2f1688352, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyBasic
+  weapon: {fileID: 11400000, guid: f7983e4d77c22234ea22f6466de42b01, type: 2}
+  playerBase: {fileID: 0}
+  detectionRadius: 15
+  baseDetectionRadius: 5
+  prioritizeDefenders: 1
+  updateTargetInterval: 0.5
+  currentState: 0

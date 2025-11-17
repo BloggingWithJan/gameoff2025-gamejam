@@ -102,6 +102,7 @@ GameObject:
   - component: {fileID: 7420247021934626742}
   - component: {fileID: 589268079720934535}
   - component: {fileID: -2438183714459354511}
+  - component: {fileID: -1793225296859788338}
   m_Layer: 0
   m_Name: tower
   m_TagString: Building
@@ -196,3 +197,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Core.BaseSelectable
   outlineColor: {r: 1, g: 1, b: 1, a: 1}
   outlineWidth: 0.1
+--- !u!114 &-1793225296859788338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1808645244560942380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b57dd7f5a0947640b8e7ad2bdfe3e04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Core.Health
+  maxHealth: 100

@@ -26,9 +26,9 @@ namespace GameJam.Core
         public void TakeDamage(float amount)
         {
             currentHealth = Mathf.Max(currentHealth - amount, 0);
-            Debug.Log(
-                $"{gameObject.name} took {amount} damage. Current health: {currentHealth}/{maxHealth}"
-            );
+            // Debug.Log(
+            //     $"{gameObject.name} took {amount} damage. Current health: {currentHealth}/{maxHealth}"
+            // );
             OnTakeDamage?.Invoke(amount);
             if (currentHealth == 0)
             {
@@ -40,9 +40,9 @@ namespace GameJam.Core
         {
             currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
             OnHeal?.Invoke(amount);
-            Debug.Log(
-                $"{gameObject.name} healed {amount} health. Current health: {currentHealth}/{maxHealth}"
-            );
+            // Debug.Log(
+            //     $"{gameObject.name} healed {amount} health. Current health: {currentHealth}/{maxHealth}"
+            // );
         }
 
         private void Die()

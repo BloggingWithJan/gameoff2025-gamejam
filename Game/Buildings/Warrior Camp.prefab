@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 1875573051750063727}
   - component: {fileID: 2511279663432730342}
   - component: {fileID: 9060049595750979734}
+  - component: {fileID: 1798450691492305933}
   m_Layer: 0
   m_Name: Warrior Camp
   m_TagString: Building
@@ -161,6 +162,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Core.BaseSelectable
   outlineColor: {r: 1, g: 1, b: 1, a: 1}
   outlineWidth: 0.1
+--- !u!114 &1798450691492305933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7688493857108700738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b57dd7f5a0947640b8e7ad2bdfe3e04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Core.Health
+  maxHealth: 100
 --- !u!1001 &733316144112483525
 PrefabInstance:
   m_ObjectHideFlags: 0

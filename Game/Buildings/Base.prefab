@@ -14,9 +14,10 @@ GameObject:
   - component: {fileID: -4277468224442115610}
   - component: {fileID: 5232068000923233468}
   - component: {fileID: 7441203986064729300}
+  - component: {fileID: -4853587301404271137}
   m_Layer: 7
   m_Name: Base
-  m_TagString: Building
+  m_TagString: PlayerBase
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -50,7 +51,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43e6011ea0d46ad479f3989ef5028db6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorkCamp
-  maxGathererSlots: 3
+  buildingName: 
+  description: 
+  buildingType: 0
+  maxUnitSlots: 3
   gathererType: {fileID: 0}
 --- !u!65 &296334395256761310
 BoxCollider:
@@ -123,6 +127,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Core.BaseSelectable
   outlineColor: {r: 1, g: 1, b: 1, a: 1}
   outlineWidth: 0.1
+--- !u!114 &-4853587301404271137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 838543337544683574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b57dd7f5a0947640b8e7ad2bdfe3e04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Core.Health
+  maxHealth: 100
 --- !u!1001 &3153203298466110055
 PrefabInstance:
   m_ObjectHideFlags: 0
