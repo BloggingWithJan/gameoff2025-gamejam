@@ -26350,6 +26350,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: QuarryWorkerBuilding
       objectReference: {fileID: 0}
+    - target: {fileID: 7133044656631237395, guid: 20fd5b894ef7ee54187d23a9546a6086, type: 3}
+      propertyPath: destroyOnDeath
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

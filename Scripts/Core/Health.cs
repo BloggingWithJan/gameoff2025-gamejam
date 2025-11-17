@@ -5,6 +5,8 @@ namespace GameJam.Core
 {
     public class Health : MonoBehaviour
     {
+        [SerializeField]
+        bool destroyOnDeath = false;
         public float maxHealth;
         public float currentHealth { get; private set; }
 
@@ -18,9 +20,18 @@ namespace GameJam.Core
             return isDead;
         }
 
+        private Animator animator = null;
+        private ActionScheduler actionScheduler = null;
+
         void Awake()
         {
             currentHealth = maxHealth;
+        }
+
+        void Start()
+        {
+            animator = GetComponent<Animator>();
+            actionScheduler = GetComponent<ActionScheduler>();
         }
 
         public void TakeDamage(float amount)
@@ -50,10 +61,21 @@ namespace GameJam.Core
             if (isDead)
                 return;
 
-            Debug.Log($"{gameObject.name} has died.");
+            // Debug.Log($"{gameObject.name} has died.");
             isDead = true;
-            GetComponent<Animator>()?.SetTrigger("die");
-            GetComponent<ActionScheduler>()?.CancelCurrentAction();
+
+            if (animator != null)
+            {
+                animator.SetTrigger("die");
+            }
+            if (actionScheduler != null)
+            {
+                actionScheduler.CancelCurrentAction();
+            }
+            if (destroyOnDeath)
+            {
+                Destroy(gameObject, 1f);
+            }
         }
     }
 }

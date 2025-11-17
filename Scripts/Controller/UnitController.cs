@@ -70,6 +70,9 @@ namespace GameJam.Controller
 
         public void InteractWith(GameObject target)
         {
+            if (health.IsDead())
+                return;
+
             if (target.GetComponent<ProductionBuilding>() != null)
             {
                 ProductionBuilding building = target.GetComponent<ProductionBuilding>();
