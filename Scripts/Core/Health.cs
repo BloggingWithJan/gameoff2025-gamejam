@@ -5,13 +5,12 @@ namespace GameJam.Core
 {
     public class Health : MonoBehaviour
     {
-        [SerializeField]
-        bool destroyOnDeath = false;
         public float maxHealth;
         public float currentHealth { get; private set; }
 
         public event Action<float> OnTakeDamage;
         public event Action<float> OnHeal;
+        public event Action OnDeath;
 
         bool isDead = false;
 
@@ -63,6 +62,7 @@ namespace GameJam.Core
 
             // Debug.Log($"{gameObject.name} has died.");
             isDead = true;
+            OnDeath?.Invoke();
 
             if (animator != null)
             {
@@ -71,10 +71,6 @@ namespace GameJam.Core
             if (actionScheduler != null)
             {
                 actionScheduler.CancelCurrentAction();
-            }
-            if (destroyOnDeath)
-            {
-                Destroy(gameObject, 1f);
             }
         }
     }

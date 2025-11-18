@@ -25,7 +25,40 @@ namespace GameJam.Core
         [SerializeField]
         private int maxUnitSlots = 3;
 
+        [SerializeField]
+        ParticleSystem damagedEffect;
+
+        [SerializeField]
+        AudioClip destroySound;
+
+        private AudioSource audioSource;
+
         private List<Unit> assignedUnits = new List<Unit>();
+
+        void Start()
+        {
+            audioSource = GetComponent<AudioSource>();
+            Health health = GetComponent<Health>();
+            if (health != null)
+            {
+                health.OnTakeDamage += HandleTakeDamage;
+                health.OnDeath += HandleDeath;
+            }
+        }
+
+        private void HandleTakeDamage(float damageAmount)
+        {
+            if (damagedEffect != null)
+            {
+                damagedEffect.Play();
+            }
+        }
+
+        private void HandleDeath()
+        {
+            audioSource.PlayOneShot(destroySound);
+            Destroy(gameObject, .5f);
+        }
 
         public bool RequestUnitSlot(Unit unit)
         {
