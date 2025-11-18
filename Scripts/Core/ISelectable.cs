@@ -9,5 +9,6 @@ namespace GameJam.Core
         void OnDeselect();
         void OnHover();
         void OnUnhover();
+        bool IsDead();
     }
 }

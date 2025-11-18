@@ -20,17 +20,16 @@ namespace Core
         private InputAction _rightClickAction;
         private ISelectable _currentHoveredEntity;
 
-        [SerializeField] private SelectionBoxUI selectionBoxUI;
+        [SerializeField]
+        private SelectionBoxUI selectionBoxUI;
 
-        [SerializeField] private Camera mainCamera;
+        [SerializeField]
+        private Camera mainCamera;
 
         private Vector2 dragStart;
         private bool isDragging;
 
-        private readonly HashSet<string> ignoredTags = new()
-        {
-            "Building"
-        };
+        private readonly HashSet<string> ignoredTags = new() { "Building" };
 
         private void OnEnable()
         {
@@ -101,7 +100,9 @@ namespace Core
                             continue;
                         }
 
-                        IUnitCommandable commandable = (entity as MonoBehaviour)?.GetComponent<IUnitCommandable>();
+                        IUnitCommandable commandable = (
+                            entity as MonoBehaviour
+                        )?.GetComponent<IUnitCommandable>();
                         if (commandable != null)
                         {
                             if (interaction)
@@ -131,7 +132,11 @@ namespace Core
                     _currentHoveredEntity.OnUnhover();
 
                 // Apply new hover
-                if (newHoveredEntity != null && !newHoveredEntity.IsSelected)
+                if (
+                    newHoveredEntity != null
+                    && !newHoveredEntity.IsSelected
+                    && !newHoveredEntity.IsDead()
+                )
                     newHoveredEntity.OnHover();
 
                 _currentHoveredEntity = newHoveredEntity;
@@ -146,7 +151,7 @@ namespace Core
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
                     ISelectable selectable = hit.collider.GetComponent<ISelectable>();
-                    if (selectable != null)
+                    if (selectable != null && !selectable.IsDead())
                     {
                         foreach (var entity in selectedEntities)
                             entity.OnDeselect();
@@ -263,6 +268,9 @@ namespace Core
                 if (ignoredTags.Contains(selectableMono.tag))
                     continue;
 
+                if (selectable.IsDead())
+                    continue;
+
                 // Convert world position to screen position
                 Vector3 screenPos = mainCamera.WorldToScreenPoint(
                     selectableMono.transform.position
@@ -276,7 +284,7 @@ namespace Core
                 }
             }
 
-            UpdateSelectionUI(); 
+            UpdateSelectionUI();
         }
     }
 }

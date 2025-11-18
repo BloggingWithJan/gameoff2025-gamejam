@@ -10,12 +10,14 @@ namespace GameJam.Movement
         private NavMeshAgent agent;
         private Animator animator;
         private ActionScheduler actionScheduler;
+        private Health health;
 
         void Start()
         {
             agent = GetComponent<NavMeshAgent>();
             animator = GetComponent<Animator>();
             actionScheduler = GetComponent<ActionScheduler>();
+            health = GetComponent<Health>();
         }
 
         // Update is called once per frame
@@ -45,6 +47,14 @@ namespace GameJam.Movement
         {
             agent.destination = destination;
             agent.isStopped = false;
+        }
+
+        public void MoveToWithRandomOffset(Vector3 destination, float offsetRadius)
+        {
+            Vector3 randomOffset = Random.insideUnitSphere * offsetRadius; // 1.5f is the radius of the offset
+            randomOffset.y = 0; // Keep the offset on the horizontal plane
+            Vector3 adjustedDestination = destination + randomOffset;
+            MoveTo(adjustedDestination);
         }
 
         public bool IsDestinationReached()

@@ -5,9 +5,11 @@ namespace Core
 {
     public class BaseSelectable : MonoBehaviour, ISelectable
     {
-        [SerializeField] private Color outlineColor = Color.white;
+        [SerializeField]
+        private Color outlineColor = Color.white;
 
-        [SerializeField] private float outlineWidth = .1f;
+        [SerializeField]
+        private float outlineWidth = .1f;
 
         private Shader outlineShader;
 
@@ -139,6 +141,12 @@ namespace Core
                     }
                 }
             }
+        }
+
+        public bool IsDead()
+        {
+            var health = GetComponent<Health>();
+            return health != null && health.IsDead();
         }
     }
 }

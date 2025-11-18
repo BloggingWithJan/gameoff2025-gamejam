@@ -65,6 +65,8 @@ namespace GameJam.Controller
 
         public void MoveTo(Vector3 destination)
         {
+            if (health.IsDead())
+                return;
             GetComponent<Mover>().StartMoveAction(destination);
         }
 

@@ -27,6 +27,7 @@ namespace GameJam.Military
         private Unit unit;
         private Fighter fighter;
         private NavMeshAgent navMeshAgent;
+        private ActionScheduler actionScheduler;
 
         void Start()
         {
@@ -35,6 +36,7 @@ namespace GameJam.Military
             unit = GetComponent<Unit>();
             fighter = GetComponent<Fighter>();
             navMeshAgent = GetComponent<NavMeshAgent>();
+            actionScheduler = GetComponent<ActionScheduler>();
         }
 
         void Update()
@@ -139,6 +141,7 @@ namespace GameJam.Military
                 SetSoldierType(unit.assignedBuilding.GetSoldierType());
                 isEquipped = true; // Mark as equipped after reaching building
                 currentState = SoldierState.Patrol;
+                mover.MoveToWithRandomOffset(unit.assignedBuilding.transform.position, 4f);
             }
         }
 

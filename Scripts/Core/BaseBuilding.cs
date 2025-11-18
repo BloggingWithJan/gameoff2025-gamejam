@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using GameJam.Military;
 using GameJam.Production;
@@ -12,6 +13,8 @@ namespace GameJam.Core
             Military,
             Production,
         }
+
+        public event Action OnBuildingDestroyed;
 
         [SerializeField]
         private string buildingName;
@@ -56,6 +59,7 @@ namespace GameJam.Core
 
         private void HandleDeath()
         {
+            OnBuildingDestroyed?.Invoke();
             audioSource.PlayOneShot(destroySound);
             Destroy(gameObject, .5f);
         }

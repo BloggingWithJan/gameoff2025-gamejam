@@ -74,7 +74,9 @@ namespace GameJam.Combat
 
         public void Cancel()
         {
-            // navAgent.isStopped = true;
+            fighter.Cancel();
+            navMeshAgent.isStopped = true;
+            currentState = EnemyState.Idle;
         }
 
         void Update()

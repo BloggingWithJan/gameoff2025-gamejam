@@ -22,7 +22,7 @@ namespace Production
             GatheringResource,
             ReturningResource,
         }
-        
+
         public GathererState currentState;
 
         private GathererType currentGathererType;
@@ -91,8 +91,11 @@ namespace Production
                 if (unit.assignedBuilding != null)
                 {
                     unit.assignedBuilding.ReleaseUnitSlot(unit);
+                    unit.assignedBuilding.OnBuildingDestroyed -= HandleAssignedBuildingDestroyed;
                 }
                 unit.assignedBuilding = building;
+                unit.assignedBuilding.OnBuildingDestroyed += HandleAssignedBuildingDestroyed;
+
                 currentState = GathererState.MoveToProductionBuilding;
             }
         }
@@ -267,14 +270,20 @@ namespace Production
             currentState = GathererState.SearchingForResource;
         }
 
-        //TODO 
+        //TODO
         public UnitData GetUnitData()
         {
             UnitData unitData = new UnitData();
             unitData.UnitName = unit.name;
             unitData.Status = currentState.ToString();
-            
+
             return unitData;
+        }
+
+        private void HandleAssignedBuildingDestroyed()
+        {
+            actionScheduler.CancelIfCurrentActionIs(this);
+            unit.assignedBuilding = null;
         }
     }
 }

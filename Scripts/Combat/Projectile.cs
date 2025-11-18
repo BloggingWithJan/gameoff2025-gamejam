@@ -45,6 +45,11 @@ namespace GameJam.Combat
             {
                 Destroy(gameObject);
             }
+
+            if (target.IsDead())
+            {
+                Destroy(gameObject);
+            }
         }
 
         private Vector3 GetAimLocation()

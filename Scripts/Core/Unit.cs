@@ -20,6 +20,7 @@ namespace GameJam.Core
 
         private Weapon weapon = null;
         private Animator animator;
+        private Health health;
         private NavMeshAgent navMeshAgent;
 
         public BaseBuilding assignedBuilding;
@@ -28,11 +29,13 @@ namespace GameJam.Core
         {
             animator = GetComponent<Animator>();
             navMeshAgent = GetComponent<NavMeshAgent>();
+            health = GetComponent<Health>();
             //navMeshAgent tuning so there are less collisions between multiple workers
-            navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
+            navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.MedQualityObstacleAvoidance;
             navMeshAgent.avoidancePriority = Random.Range(30, 60);
             // navMeshAgent.avoidancePriority = 99; // lowest priority
             // navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
+            health.OnDeath += OnDeath;
         }
 
         public void SpawnWeapon(Weapon weaponPrefab)
@@ -66,6 +69,14 @@ namespace GameJam.Core
         public Transform GetLeftHandTransform()
         {
             return leftHandTransform;
+        }
+
+        private void OnDeath()
+        {
+            if (assignedBuilding != null)
+            {
+                assignedBuilding.ReleaseUnitSlot(this);
+            }
         }
     }
 }
