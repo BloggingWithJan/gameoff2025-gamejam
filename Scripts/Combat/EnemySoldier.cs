@@ -245,7 +245,7 @@ namespace GameJam.Combat
 
                 // Check if it's a building (has Health but no Fighter - or specific Building component)
                 Health buildingHealth = col.GetComponent<Health>();
-                bool isBuilding = col.GetComponent<BuildingData>() != null;
+                bool isBuilding = col.GetComponent<BaseBuilding>() != null;
                 // bool isBuilding = col.GetComponent<GameJam.Production.BaseBuilding>() != null;
 
                 if (isBuilding && buildingHealth != null && !buildingHealth.IsDead())
