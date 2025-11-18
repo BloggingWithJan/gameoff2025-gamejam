@@ -106,6 +106,7 @@ GameObject:
   - component: {fileID: 2952623838825879808}
   - component: {fileID: 5958602132782953651}
   - component: {fileID: 2420753425421609797}
+  - component: {fileID: 4553437704676425643}
   m_Layer: 0
   m_Name: tower
   m_TagString: Building
@@ -358,6 +359,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4553437704676425643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1808645244560942380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f7452ef30274e408aea1dd1183a9b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Military.CombatBuilding
+  weapon: {fileID: 11400000, guid: 4ddab6423faae08408b99727309b0f49, type: 2}
+  currentState: 0
 --- !u!1001 &4967412337699982398
 PrefabInstance:
   m_ObjectHideFlags: 0

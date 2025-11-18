@@ -108,7 +108,6 @@ namespace GameJam.Military
             {
                 fighter.SetCurrentTarget(targetInRange);
                 currentState = SoldierState.AutomaticCombat;
-                return;
             }
         }
 
