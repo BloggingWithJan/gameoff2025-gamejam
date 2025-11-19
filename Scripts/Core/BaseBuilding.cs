@@ -34,6 +34,9 @@ namespace GameJam.Core
         [SerializeField]
         AudioClip destroySound;
 
+        [SerializeField]
+        Transform spawnPoint;
+
         private AudioSource audioSource;
 
         private List<Unit> assignedUnits = new List<Unit>();
@@ -95,6 +98,11 @@ namespace GameJam.Core
                     $"Tried to release unit {unit.name} that wasn't assigned to {gameObject.name}"
                 );
             }
+        }
+
+        public Vector3 GetSpawnPoint()
+        {
+            return spawnPoint.position;
         }
 
         public abstract SoldierType GetSoldierType();

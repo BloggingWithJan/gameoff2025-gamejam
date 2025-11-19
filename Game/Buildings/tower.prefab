@@ -130,6 +130,7 @@ Transform:
   - {fileID: 7206311221700212910}
   - {fileID: 8492794109841705990}
   - {fileID: 2075391430860381274}
+  - {fileID: 7154217304257872623}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &8491733573141201251
@@ -261,6 +262,7 @@ MonoBehaviour:
   maxUnitSlots: 3
   damagedEffect: {fileID: 8492794109823355206}
   destroySound: {fileID: 8300000, guid: 2faafd66b55fc344fb366f481c90502c, type: 3}
+  spawnPoint: {fileID: 7154217304257872623}
   soldierType: {fileID: 0}
 --- !u!82 &2420753425421609797
 AudioSource:
@@ -373,6 +375,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Military.CombatBuilding
   weapon: {fileID: 11400000, guid: 4ddab6423faae08408b99727309b0f49, type: 2}
   currentState: 0
+--- !u!1 &3892459743670377696
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7154217304257872623}
+  m_Layer: 0
+  m_Name: SpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7154217304257872623
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3892459743670377696}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 2.82}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6058495685926247511}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &4967412337699982398
 PrefabInstance:
   m_ObjectHideFlags: 0

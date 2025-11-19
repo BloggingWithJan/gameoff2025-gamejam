@@ -102,7 +102,8 @@ namespace Production
 
         private void MoveToProductionBuilding()
         {
-            mover.MoveTo(unit.assignedBuilding.transform.position);
+            Vector3 destination = unit.assignedBuilding.GetSpawnPoint();
+            mover.MoveToFormationSlot(destination, mover.GetSingleFormationPosition(destination));
             if (mover.IsDestinationReached())
             {
                 Debug.Log("Reached production building " + unit.assignedBuilding.name);
@@ -212,7 +213,8 @@ namespace Production
         private void ReturnResource()
         {
             gatherCoroutine = null; //clear gatherCoroutine
-            mover.MoveTo(unit.assignedBuilding.transform.position);
+            Vector3 destination = unit.assignedBuilding.GetSpawnPoint();
+            mover.MoveToFormationSlot(destination, mover.GetSingleFormationPosition(destination));
             if (mover.IsDestinationReached())
             {
                 if (unit.assignedBuilding is ProductionBuilding productionBuilding)

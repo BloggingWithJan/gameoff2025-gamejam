@@ -135,7 +135,8 @@ namespace GameJam.Military
 
         private void MoveToMilitaryBuilding()
         {
-            mover.MoveTo(unit.assignedBuilding.transform.position);
+            Vector3 destination = unit.assignedBuilding.GetSpawnPoint();
+            mover.MoveToFormationSlot(destination, mover.GetSingleFormationPosition(destination));
             if (mover.IsDestinationReached())
             {
                 SetSoldierType(unit.assignedBuilding.GetSoldierType());

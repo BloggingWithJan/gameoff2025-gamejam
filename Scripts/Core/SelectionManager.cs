@@ -5,6 +5,7 @@ using Controller.UI;
 using Data;
 using GameJam.Core;
 using GameJam.Military;
+using GameJam.Movement;
 using Production;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -74,8 +75,9 @@ namespace Core
         private void HandleRightClick()
         {
             Boolean interaction = false;
-            if (_rightClickAction.WasPerformedThisFrame())
+            if (_rightClickAction.WasPressedThisFrame())
             {
+                Debug.Log("Right click detected in SelectionManager");
                 Ray ray = Camera.main.ScreenPointToRay(_pointAction.ReadValue<Vector2>());
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
@@ -90,27 +92,28 @@ namespace Core
                     if (target.tag == "Enemy")
                         interaction = true;
 
-                    // Iterate over a copy of the list to safely remove destroyed items
-                    foreach (var entity in selectedEntities.ToList())
+                    CleanUpDestroyedSelections();
+                    if (interaction)
                     {
-                        // Skip and clean up destroyed objects
-                        if (entity == null || (entity as UnityEngine.Object) == null)
-                        {
-                            selectedEntities.Remove(entity);
-                            continue;
-                        }
-
-                        IUnitCommandable commandable = (
-                            entity as MonoBehaviour
-                        )?.GetComponent<IUnitCommandable>();
-                        if (commandable != null)
-                        {
-                            if (interaction)
-                                commandable.InteractWith(target);
-                            else
-                                commandable.MoveTo(hit.point);
-                        }
+                        IssueInteractionCommand(hit.point, target);
                     }
+                    else
+                    {
+                        IssueMovementCommand(hit.point);
+                    }
+                }
+            }
+        }
+
+        private void CleanUpDestroyedSelections()
+        {
+            // Iterate over a copy of the list to safely remove destroyed items
+            foreach (var entity in selectedEntities.ToList())
+            {
+                // Skip and clean up destroyed objects
+                if (entity == null || (entity as UnityEngine.Object) == null)
+                {
+                    selectedEntities.Remove(entity);
                 }
             }
         }
@@ -285,6 +288,47 @@ namespace Core
             }
 
             UpdateSelectionUI();
+        }
+
+        public void IssueMovementCommand(Vector3 clickedPosition)
+        {
+            if (selectedEntities.Count == 1)
+            {
+                // Single unit - move to clicked position with small offset
+                Vector3 offset = UnityEngine.Random.insideUnitSphere * 0.5f;
+                offset.y = 0;
+                IUnitCommandable commandable = (
+                    selectedEntities[0] as MonoBehaviour
+                )?.GetComponent<IUnitCommandable>();
+                commandable?.MoveTo(clickedPosition, clickedPosition + offset);
+            }
+            else
+            {
+                // Multiple units - use formation
+                Vector3[] slots = FormationHelper.GetFormationPositions(
+                    clickedPosition,
+                    selectedEntities.Count
+                );
+
+                for (int i = 0; i < selectedEntities.Count; i++)
+                {
+                    IUnitCommandable commandable = (
+                        selectedEntities[i] as MonoBehaviour
+                    )?.GetComponent<IUnitCommandable>();
+                    commandable?.MoveTo(clickedPosition, slots[i]);
+                }
+            }
+        }
+
+        public void IssueInteractionCommand(Vector3 clickedPosition, GameObject target)
+        {
+            foreach (var entity in selectedEntities)
+            {
+                IUnitCommandable commandable = (
+                    entity as MonoBehaviour
+                )?.GetComponent<IUnitCommandable>();
+                commandable?.InteractWith(target);
+            }
         }
     }
 }

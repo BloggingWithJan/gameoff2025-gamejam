@@ -63,18 +63,18 @@ namespace GameJam.Controller
             }
         }
 
-        public void MoveTo(Vector3 destination)
+        public void MoveTo(Vector3 destination, Vector3 formationPosition)
         {
             if (health.IsDead())
                 return;
-            GetComponent<Mover>().StartMoveAction(destination);
+            GetComponent<Mover>().StartMoveAction(destination, formationPosition);
         }
 
         public void InteractWith(GameObject target)
         {
             if (health.IsDead())
                 return;
-
+                
             if (target.GetComponent<ProductionBuilding>() != null)
             {
                 ProductionBuilding building = target.GetComponent<ProductionBuilding>();

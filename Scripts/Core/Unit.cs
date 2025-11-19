@@ -31,8 +31,9 @@ namespace GameJam.Core
             navMeshAgent = GetComponent<NavMeshAgent>();
             health = GetComponent<Health>();
             //navMeshAgent tuning so there are less collisions between multiple workers
-            navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.MedQualityObstacleAvoidance;
+            navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.LowQualityObstacleAvoidance;
             navMeshAgent.avoidancePriority = Random.Range(30, 60);
+            navMeshAgent.stoppingDistance = 0.5f;
             // navMeshAgent.avoidancePriority = 99; // lowest priority
             // navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
             health.OnDeath += OnDeath;
