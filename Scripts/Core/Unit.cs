@@ -22,6 +22,7 @@ namespace GameJam.Core
         private Animator animator;
         private Health health;
         private NavMeshAgent navMeshAgent;
+        private CapsuleCollider capsuleCollider;
 
         public BaseBuilding assignedBuilding;
 
@@ -30,6 +31,7 @@ namespace GameJam.Core
             animator = GetComponent<Animator>();
             navMeshAgent = GetComponent<NavMeshAgent>();
             health = GetComponent<Health>();
+            capsuleCollider = GetComponent<CapsuleCollider>();
             //navMeshAgent tuning so there are less collisions between multiple workers
             navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.LowQualityObstacleAvoidance;
             navMeshAgent.avoidancePriority = Random.Range(30, 60);
@@ -78,6 +80,11 @@ namespace GameJam.Core
             {
                 assignedBuilding.ReleaseUnitSlot(this);
             }
+            if (capsuleCollider != null)
+            {
+                capsuleCollider.enabled = false;
+            }
+            Destroy(gameObject, 2f);
         }
     }
 }

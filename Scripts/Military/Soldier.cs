@@ -17,6 +17,8 @@ namespace GameJam.Military
             AutomaticCombat,
         }
 
+        [SerializeField]
+        float aggroRange = 10f;
         public SoldierState currentState;
 
         private SoldierType currentSoldierType;
@@ -110,6 +112,14 @@ namespace GameJam.Military
             {
                 fighter.SetCurrentTarget(targetInRange);
                 currentState = SoldierState.AutomaticCombat;
+                return;
+            }
+            Health nearestAggroTarget = FindNearestEnemyInAggroRange();
+            if (nearestAggroTarget != null)
+            {
+                fighter.SetCurrentTarget(nearestAggroTarget);
+                currentState = SoldierState.AutomaticCombat;
+                return;
             }
         }
 
@@ -169,6 +179,29 @@ namespace GameJam.Military
             fighter.Cancel();
             navMeshAgent.isStopped = true;
             currentState = SoldierState.Idle;
+        }
+
+        private Health FindNearestEnemyInAggroRange()
+        {
+            GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+            Health nearestTarget = null;
+            float shortestDistance = Mathf.Infinity;
+            Vector3 currentPosition = transform.position;
+
+            foreach (GameObject enemy in enemies)
+            {
+                Health enemyHealth = enemy.GetComponent<Health>();
+                if (enemyHealth == null || enemyHealth.IsDead())
+                    continue;
+
+                float distanceToEnemy = Vector3.Distance(currentPosition, enemy.transform.position);
+                if (distanceToEnemy <= aggroRange && distanceToEnemy < shortestDistance)
+                {
+                    shortestDistance = distanceToEnemy;
+                    nearestTarget = enemyHealth;
+                }
+            }
+            return nearestTarget;
         }
     }
 }
