@@ -96,6 +96,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 226b9806ac97fd249a5e977defa4e85d, type: 3}
       insertIndex: -1
       addedObject: {fileID: -5451632704652695003}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 226b9806ac97fd249a5e977defa4e85d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -6835065949976283575}
   m_SourcePrefab: {fileID: 100100000, guid: 226b9806ac97fd249a5e977defa4e85d, type: 3}
 --- !u!4 &2709022715901944260 stripped
 Transform:
@@ -132,6 +135,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b69f1de59fbde6d4f9d7e096398d0773, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Movement.Mover
+  arrivalThreshold: 0.5
 --- !u!114 &2629560500798065726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -275,7 +279,6 @@ MonoBehaviour:
   playerBase: {fileID: 0}
   detectionRadius: 15
   baseDetectionRadius: 5
-  prioritizeDefenders: 1
   updateTargetInterval: 0.5
   currentState: 0
 --- !u!195 &-5451632704652695003
@@ -300,6 +303,20 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &-6835065949976283575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5925896475944778828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42cfb5c8c4bcc4548bc346d82cabca98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Core.BaseSelectable
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 0.1
 --- !u!4 &6446572867648562934 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 226b9806ac97fd249a5e977defa4e85d, type: 3}

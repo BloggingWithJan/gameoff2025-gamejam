@@ -104,9 +104,9 @@ GameObject:
   - component: {fileID: -2438183714459354511}
   - component: {fileID: -1793225296859788338}
   - component: {fileID: 2952623838825879808}
-  - component: {fileID: 5958602132782953651}
   - component: {fileID: 2420753425421609797}
   - component: {fileID: 4553437704676425643}
+  - component: {fileID: -7794338015796984714}
   m_Layer: 0
   m_Name: tower
   m_TagString: Building
@@ -244,26 +244,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &5958602132782953651
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1808645244560942380}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5720ca2e6f99ab1408d5cad068b132c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Military.MilitaryBuilding
-  buildingName: Tower
-  description: Tower
-  buildingType: 0
-  maxUnitSlots: 3
-  damagedEffect: {fileID: 8492794109823355206}
-  destroySound: {fileID: 8300000, guid: 2faafd66b55fc344fb366f481c90502c, type: 3}
-  spawnPoint: {fileID: 7154217304257872623}
-  soldierType: {fileID: 0}
 --- !u!82 &2420753425421609797
 AudioSource:
   m_ObjectHideFlags: 0
@@ -375,6 +355,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Military.CombatBuilding
   weapon: {fileID: 11400000, guid: 4ddab6423faae08408b99727309b0f49, type: 2}
   currentState: 0
+--- !u!114 &-7794338015796984714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1808645244560942380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b44b859829480448bf478d34dff57f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Core.SimpleBuilding
+  buildingName: Tower
+  description: Tower
+  buildingType: 0
+  maxUnitSlots: 3
+  damagedEffect: {fileID: 8492794109823355206}
+  destroySound: {fileID: 8300000, guid: 2faafd66b55fc344fb366f481c90502c, type: 3}
+  spawnPoint: {fileID: 7154217304257872623}
 --- !u!1 &3892459743670377696
 GameObject:
   m_ObjectHideFlags: 0

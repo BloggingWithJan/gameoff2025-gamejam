@@ -30,6 +30,11 @@ namespace Core
         private Vector2 dragStart;
         private bool isDragging;
 
+        private float clickPressTime;
+
+        private const float MIN_HOLD_FOR_DRAG = 0.15f;
+        private const float MIN_DRAG_DISTANCE = 10f;
+
         private readonly HashSet<string> ignoredTags = new() { "Building" };
 
         private void OnEnable()
@@ -69,6 +74,9 @@ namespace Core
                 UpdateHoverFeedback();
             }
 
+            TidyUpSelectedEntities();
+            UpdateSelectionUI();
+            SetCursorType();
             HandleRightClick();
         }
 
@@ -148,7 +156,7 @@ namespace Core
 
         private void HandleClickSelection()
         {
-            if (_clickAction.WasPerformedThisFrame())
+            if (_clickAction.WasPressedThisFrame())
             {
                 Ray ray = Camera.main.ScreenPointToRay(_pointAction.ReadValue<Vector2>());
                 if (Physics.Raycast(ray, out RaycastHit hit))
@@ -163,8 +171,14 @@ namespace Core
 
                         selectable.OnSelect();
                         selectedEntities.Add(selectable);
+                    }
+                    else
+                    {
+                        // Clicked on empty space - clear selection
+                        foreach (var entity in selectedEntities)
+                            entity.OnDeselect();
 
-                        UpdateSelectionUI();
+                        selectedEntities.Clear();
                     }
                 }
             }
@@ -178,16 +192,28 @@ namespace Core
             if (_clickAction.WasPressedThisFrame())
             {
                 dragStart = mousePos;
+                clickPressTime = Time.time; // Store when click started
             }
 
             // During drag
             if (_clickAction.IsPressed())
             {
+                // Calculate how long the button has been held
+                float holdDuration = Time.time - clickPressTime;
+
+                // Calculate drag distance
+                float dragDistance = Vector2.Distance(dragStart, mousePos);
+
                 if (!isDragging)
                 {
-                    // Start box selection
-                    isDragging = true;
-                    selectionBoxUI.StartSelection(dragStart);
+                    // Only start box selection if:
+                    // 1. Held for minimum time (e.g., 0.15 seconds) OR
+                    // 2. Dragged minimum distance (e.g., 10 pixels)
+                    if (holdDuration > MIN_HOLD_FOR_DRAG || dragDistance > MIN_DRAG_DISTANCE)
+                    {
+                        isDragging = true;
+                        selectionBoxUI.StartSelection(dragStart);
+                    }
                 }
 
                 if (isDragging)
@@ -274,6 +300,10 @@ namespace Core
                 if (selectable.IsDead())
                     continue;
 
+                //box selection only for units
+                if (selectableMono.GetComponent<Unit>() == null)
+                    continue;
+
                 // Convert world position to screen position
                 Vector3 screenPos = mainCamera.WorldToScreenPoint(
                     selectableMono.transform.position
@@ -286,8 +316,6 @@ namespace Core
                     selectedEntities.Add(selectable);
                 }
             }
-
-            UpdateSelectionUI();
         }
 
         public void IssueMovementCommand(Vector3 clickedPosition)
@@ -328,6 +356,107 @@ namespace Core
                     entity as MonoBehaviour
                 )?.GetComponent<IUnitCommandable>();
                 commandable?.InteractWith(target);
+            }
+        }
+
+        private void SetCursorType()
+        {
+            if (selectedEntities.Count > 0)
+            {
+                MonoBehaviour mbSelected = selectedEntities[0] as MonoBehaviour;
+                Unit mbUnit = mbSelected.GetComponent<Unit>();
+
+                if (_currentHoveredEntity != null)
+                {
+                    MonoBehaviour mb = _currentHoveredEntity as MonoBehaviour;
+                    MilitaryBuilding militaryBuilding = mb.GetComponent<MilitaryBuilding>();
+                    ProductionBuilding productionBuilding = mb.GetComponent<ProductionBuilding>();
+                    SimpleBuilding simpleBuilding = mb.GetComponent<SimpleBuilding>();
+
+                    if (militaryBuilding != null && mbUnit != null)
+                    {
+                        if (militaryBuilding.HasAvailableUnitSlots())
+                        {
+                            CursorHelper.Instance.SetCursor(
+                                CursorHelper.CursorType.InteractWithBuilding
+                            );
+                            return;
+                        }
+                        else
+                        {
+                            CursorHelper.Instance.SetCursor(
+                                CursorHelper.CursorType.NoInteractionPossible
+                            );
+                            return;
+                        }
+                    }
+                    if (productionBuilding != null && mbUnit != null)
+                    {
+                        if (productionBuilding.HasAvailableUnitSlots())
+                        {
+                            CursorHelper.Instance.SetCursor(
+                                CursorHelper.CursorType.InteractWithBuilding
+                            );
+                            return;
+                        }
+                        else
+                        {
+                            CursorHelper.Instance.SetCursor(
+                                CursorHelper.CursorType.NoInteractionPossible
+                            );
+                            return;
+                        }
+                    }
+                    if (simpleBuilding != null && mbUnit != null)
+                    {
+                        CursorHelper.Instance.SetCursor(
+                            CursorHelper.CursorType.NoInteractionPossible
+                        );
+                        return;
+                    }
+                    if (mb.tag == "Enemy" && mbUnit != null)
+                    {
+                        CursorHelper.Instance.SetCursor(CursorHelper.CursorType.Attack);
+                        return;
+                    }
+                    CursorHelper.Instance.SetCursor(CursorHelper.CursorType.Pointer);
+                    return;
+                }
+
+                if (_currentHoveredEntity == null)
+                {
+                    if (mbUnit != null)
+                    {
+                        CursorHelper.Instance.SetCursor(CursorHelper.CursorType.Move);
+                        return;
+                    }
+                    else
+                    {
+                        CursorHelper.Instance.SetCursor(CursorHelper.CursorType.Pointer);
+                        return;
+                    }
+                }
+            }
+
+            if (_currentHoveredEntity != null)
+            {
+                CursorHelper.Instance.SetCursor(CursorHelper.CursorType.Pointer);
+                return;
+            }
+
+            CursorHelper.Instance.SetCursor(CursorHelper.CursorType.Default);
+        }
+
+        private void TidyUpSelectedEntities()
+        {
+            // Iterate over a copy of the list to safely remove destroyed items
+            foreach (var entity in selectedEntities.ToList())
+            {
+                // Skip and clean up destroyed objects
+                if (entity == null || (entity as UnityEngine.Object) == null || entity.IsDead())
+                {
+                    selectedEntities.Remove(entity);
+                }
             }
         }
     }

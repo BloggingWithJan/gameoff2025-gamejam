@@ -33,9 +33,6 @@ namespace GameJam.Combat
 
         [Header("Behavior")]
         [SerializeField]
-        private bool prioritizeDefenders = true;
-
-        [SerializeField]
         private float updateTargetInterval = 0.5f; // Check for new targets every 0.5s
 
         public EnemyState currentState;

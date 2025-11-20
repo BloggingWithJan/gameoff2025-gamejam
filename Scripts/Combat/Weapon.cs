@@ -79,7 +79,6 @@ namespace GameJam.Combat
 
         public void LaunchProjectile(Transform rightHand, Transform leftHand, Health target)
         {
-            Debug.Log("Launching projectile at " + target.name);
             Projectile projectileInstance = Instantiate(
                 projectile,
                 GetTransform(rightHand, leftHand).position,

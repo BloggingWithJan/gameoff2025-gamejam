@@ -100,6 +100,11 @@ namespace GameJam.Core
             }
         }
 
+        public bool HasAvailableUnitSlots()
+        {
+            return assignedUnits.Count < maxUnitSlots;
+        }
+
         public Vector3 GetSpawnPoint()
         {
             return spawnPoint.position;
