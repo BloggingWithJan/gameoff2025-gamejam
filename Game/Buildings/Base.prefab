@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1185334241636002993}
-  - component: {fileID: -2530275125541182038}
   - component: {fileID: 296334395256761310}
   - component: {fileID: -4277468224442115610}
   - component: {fileID: 5232068000923233468}
@@ -17,6 +16,7 @@ GameObject:
   - component: {fileID: -4853587301404271137}
   - component: {fileID: -7885893102980697257}
   - component: {fileID: 3365677880770490523}
+  - component: {fileID: 2811742661670390799}
   m_Layer: 7
   m_Name: Base
   m_TagString: PlayerBase
@@ -44,26 +44,6 @@ Transform:
   - {fileID: 3547734806697259741}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-2530275125541182038
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 838543337544683574}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43e6011ea0d46ad479f3989ef5028db6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WorkCamp
-  buildingName: 
-  description: 
-  buildingType: 0
-  maxUnitSlots: 3
-  damagedEffect: {fileID: 1201962980479163916}
-  destroySound: {fileID: 8300000, guid: 2faafd66b55fc344fb366f481c90502c, type: 3}
-  spawnPoint: {fileID: 3547734806697259741}
-  gathererType: {fileID: 0}
 --- !u!65 &296334395256761310
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -272,6 +252,28 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2811742661670390799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 838543337544683574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10f4eb023016a054a999693ba9eae545, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameJam.Core.PlayerBaseBuilding
+  buildingName: 
+  description: 
+  buildingType: 0
+  maxUnitSlots: 3
+  damagedEffect: {fileID: 1201962980479163916}
+  destroySound: {fileID: 8300000, guid: 2faafd66b55fc344fb366f481c90502c, type: 3}
+  spawnPoint: {fileID: 3547734806697259741}
+  unitPrefab: {fileID: 1741436728937980818, guid: a9ba21339c8cbeb4fb247c50f6315b08, type: 3}
+  spawnInterval: 5
+  initialDelay: 5
 --- !u!1 &6871486899518649970
 GameObject:
   m_ObjectHideFlags: 0

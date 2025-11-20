@@ -9,18 +9,34 @@ namespace Resource
     {
         public static ResourceManager Instance { get; private set; }
 
-        [Header("UI References")] [SerializeField]
+        [Header("UI References")]
+        [SerializeField]
         private TMP_Text woodText;
 
-        [SerializeField] private TMP_Text stoneText;
-        [SerializeField] private TMP_Text foodText;
-        [SerializeField] private TMP_Text populationText;
+        [SerializeField]
+        private TMP_Text stoneText;
 
-        [Header("Values")] [SerializeField] private int wood;
-        [SerializeField] private int stone;
-        [SerializeField] private int food;
-        [SerializeField] private int currentPopulation;
-        [SerializeField] private int maxPopulation;
+        [SerializeField]
+        private TMP_Text foodText;
+
+        [SerializeField]
+        private TMP_Text populationText;
+
+        [Header("Values")]
+        [SerializeField]
+        private int wood;
+
+        [SerializeField]
+        private int stone;
+
+        [SerializeField]
+        private int food;
+
+        [SerializeField]
+        private int currentPopulation;
+
+        [SerializeField]
+        private int maxPopulation;
 
         public int CurrentPopulation => currentPopulation;
         public int MaxPopulation => maxPopulation;
@@ -95,7 +111,19 @@ namespace Resource
 
             UpdatePopulationUI();
         }
-        
+
+        public void AddMaxPopulation(int value)
+        {
+            SetMaxPopulation(maxPopulation + value);
+            UpdatePopulationUI();
+        }
+
+        public void DeductPopulation(int value)
+        {
+            SetMaxPopulation(maxPopulation - value);
+            UpdatePopulationUI();
+        }
+
         public bool HasSufficientResources(ResourceCost cost)
         {
             if (!_resources.ContainsKey(cost.resource))
@@ -120,7 +148,8 @@ namespace Resource
                     return false;
                 }
 
-                if (_resources[cost.resource] < cost.amount) return false;
+                if (_resources[cost.resource] < cost.amount)
+                    return false;
             }
 
             return true;
@@ -147,7 +176,10 @@ namespace Resource
             }
         }
 
-        public List<ResourceCost> RefundResourcesPartially(BuildingData buildingData, float refundPercentage = 0.5f)
+        public List<ResourceCost> RefundResourcesPartially(
+            BuildingData buildingData,
+            float refundPercentage = 0.5f
+        )
         {
             var refundedResources = new List<ResourceCost>();
 
