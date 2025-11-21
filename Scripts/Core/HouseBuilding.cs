@@ -1,6 +1,6 @@
 using GameJam.Military;
 using GameJam.Production;
-using Resource;
+using GameJam.Resource;
 using UnityEngine;
 
 namespace GameJam.Core
@@ -30,7 +30,7 @@ namespace GameJam.Core
 
         void OnDestroy()
         {
-            ResourceManager.Instance.DeductPopulation(populationIncrease);
+            ResourceManager.Instance.DeductMaxPopulation(populationIncrease);
         }
     }
 }

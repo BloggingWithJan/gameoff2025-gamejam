@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Controller.UI;
 using Data;
-using Resource;
+using GameJam.Resource;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;

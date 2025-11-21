@@ -3,7 +3,7 @@ using Data;
 using TMPro;
 using UnityEngine;
 
-namespace Resource
+namespace GameJam.Resource
 {
     public class ResourceManager : MonoBehaviour
     {
@@ -118,10 +118,21 @@ namespace Resource
             UpdatePopulationUI();
         }
 
-        public void DeductPopulation(int value)
+        public void DeductMaxPopulation(int value)
         {
             SetMaxPopulation(maxPopulation - value);
             UpdatePopulationUI();
+        }
+
+        public void DeductPopulation(int value)
+        {
+            SetPopulation(currentPopulation - value);
+            UpdatePopulationUI();
+        }
+
+        public bool MaxPopulationReached()
+        {
+            return currentPopulation >= maxPopulation;
         }
 
         public bool HasSufficientResources(ResourceCost cost)

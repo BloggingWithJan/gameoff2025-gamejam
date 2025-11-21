@@ -2,6 +2,7 @@ using System.Collections;
 using GameJam.Military;
 using GameJam.Movement;
 using GameJam.Production;
+using GameJam.Resource;
 using UnityEngine;
 
 namespace GameJam.Core
@@ -42,13 +43,14 @@ namespace GameJam.Core
             while (true)
             {
                 // PAUSE CHECK: The key to pausing/resuming
-                while (!isCoroutineRunning)
+                while (Resource.ResourceManager.Instance.MaxPopulationReached())
                 {
                     yield return null; // Wait one frame before checking the 'isPaused' condition again
                 }
-                Debug.Log("Spawning unit from PlayerBaseBuilding.");
                 GameObject unit = Instantiate(unitPrefab, GetSpawnPoint(), Quaternion.identity);
                 Mover mover = unit.GetComponent<Mover>();
+
+                yield return null; // Wait a frame to ensure the unit is fully initialized
                 if (mover != null)
                 {
                     mover.MoveToWithRandomOffset(GetSpawnPoint(), 5f);
@@ -84,6 +86,3 @@ namespace GameJam.Core
         }
     }
 }
-
-
-// coroutine die jede x sekunden typ spawnt und population verringert

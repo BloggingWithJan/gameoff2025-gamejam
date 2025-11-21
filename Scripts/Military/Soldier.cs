@@ -152,7 +152,7 @@ namespace GameJam.Military
                 SetSoldierType(unit.assignedBuilding.GetSoldierType());
                 isEquipped = true; // Mark as equipped after reaching building
                 currentState = SoldierState.Patrol;
-                mover.MoveToWithRandomOffset(unit.assignedBuilding.transform.position, 4f);
+                mover.MoveToWithRandomOffset(destination, 4f);
             }
         }
 

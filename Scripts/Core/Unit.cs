@@ -1,4 +1,5 @@
 using GameJam.Combat;
+using GameJam.Resource;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -39,6 +40,12 @@ namespace GameJam.Core
             // navMeshAgent.avoidancePriority = 99; // lowest priority
             // navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
             health.OnDeath += OnDeath;
+
+            //add population only for player units
+            if (gameObject.tag != "Enemy")
+            {
+                ResourceManager.Instance.AddPopulation(1);
+            }
         }
 
         public void SpawnWeapon(Weapon weaponPrefab)
@@ -84,6 +91,12 @@ namespace GameJam.Core
             {
                 capsuleCollider.enabled = false;
             }
+            //decrease population only for player units
+            if (gameObject.tag != "Enemy")
+            {
+                ResourceManager.Instance.DeductPopulation(1);
+            }
+
             Destroy(gameObject, 2f);
         }
     }

@@ -31882,7 +31882,7 @@ MonoBehaviour:
   wood: 50
   stone: 0
   food: 50
-  currentPopulation: 7
+  currentPopulation: 0
   maxPopulation: 10
 --- !u!4 &2037634369
 Transform:

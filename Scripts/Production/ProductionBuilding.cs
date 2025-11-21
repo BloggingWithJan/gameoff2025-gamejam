@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using GameJam.Core;
 using GameJam.Military;
 using GameJam.Production;
-using Resource;
+using GameJam.Resource;
 using UnityEngine;
 
 namespace Production
@@ -18,6 +18,8 @@ namespace Production
                 ResourceManager.Instance.AddResource(ResourceType.Stone, amount);
             else if (gathererType.GetResourceTag() == "Wood")
                 ResourceManager.Instance.AddResource(ResourceType.Wood, amount);
+            else if (gathererType.GetResourceTag() == "Food")
+                ResourceManager.Instance.AddResource(ResourceType.Food, amount);
         }
 
         public override GathererType GetGathererType()
