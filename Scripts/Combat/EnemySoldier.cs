@@ -44,7 +44,7 @@ namespace GameJam.Combat
         private Unit unit;
         private float lastTargetUpdateTime = 0f;
 
-        void Start()
+        void Awake()
         {
             health = GetComponent<Health>();
             fighter = GetComponent<Fighter>();
@@ -309,6 +309,11 @@ namespace GameJam.Combat
             //     Gizmos.color = Color.red;
             //     Gizmos.DrawLine(transform.position, fighter.GetCurrentTarget().transform.position);
             // }
+        }
+
+        public void SetPlayerBase(Transform baseTransform)
+        {
+            playerBase = baseTransform;
         }
     }
 }

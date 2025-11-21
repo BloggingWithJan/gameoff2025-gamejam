@@ -27,7 +27,7 @@ namespace GameJam.Core
 
         public BaseBuilding assignedBuilding;
 
-        void Start()
+        void Awake()
         {
             animator = GetComponent<Animator>();
             navMeshAgent = GetComponent<NavMeshAgent>();
@@ -40,7 +40,10 @@ namespace GameJam.Core
             // navMeshAgent.avoidancePriority = 99; // lowest priority
             // navMeshAgent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
             health.OnDeath += OnDeath;
+        }
 
+        void Start()
+        {
             //add population only for player units
             if (gameObject.tag != "Enemy")
             {
