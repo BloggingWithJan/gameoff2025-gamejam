@@ -8,12 +8,6 @@ namespace GameJam.Core
 {
     public abstract class BaseBuilding : MonoBehaviour
     {
-        public enum BuildingType
-        {
-            Military,
-            Production,
-        }
-
         public event Action OnBuildingDestroyed;
 
         [SerializeField]
@@ -21,9 +15,6 @@ namespace GameJam.Core
 
         [SerializeField]
         private string description;
-
-        [SerializeField]
-        private BuildingType buildingType;
 
         [SerializeField]
         private int maxUnitSlots = 3;
@@ -36,6 +27,12 @@ namespace GameJam.Core
 
         [SerializeField]
         Transform spawnPoint;
+
+        [Header("Costs")]
+        public List<ResourceCost> costs;
+
+        [Header("Refund")]
+        public List<ResourceCost> refunds;
 
         private AudioSource audioSource;
 
