@@ -8,6 +8,7 @@ using GameJam.Military;
 using GameJam.Movement;
 using Production;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace Core
@@ -174,6 +175,10 @@ namespace Core
         {
             if (_clickAction.WasPressedThisFrame())
             {
+                // If pointer is over UI, don't clear selection
+                if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+                    return;
+                
                 Ray ray = Camera.main.ScreenPointToRay(_pointAction.ReadValue<Vector2>());
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
