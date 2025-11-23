@@ -147,7 +147,7 @@ namespace UI.Managers
 
             bool noBlockers = blockers.Count == 0;
 
-            bool fullyOnNavMesh = IsFullyOnNavMesh(box, 1f);
+            bool fullyOnNavMesh = IsFullyOnNavMesh(box);
 
             return (noBlockers, fullyOnNavMesh, blockers);
         }
@@ -344,8 +344,11 @@ namespace UI.Managers
             }
         }
 
-        private bool IsFullyOnNavMesh(BoxCollider box, float maxDistance)
+        private bool IsFullyOnNavMesh(BoxCollider box)
         {
+            
+            float maxDistance = box.size.y * 0.5f * _previewInstance.transform.lossyScale.y + 0.1f;
+
             // Get all 4 bottom corners in world space
             Vector3 half = Vector3.Scale(box.size * 0.5f, box.transform.lossyScale);
 
