@@ -1,4 +1,5 @@
 using Data;
+using GameJam.Core;
 using UI.Managers;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -11,18 +12,20 @@ namespace Controller.UI
     {
         public GameObject buildingPanel;
 
-        [FormerlySerializedAs("placerManager")] public BuildingPlacementController placementController;
-        [FormerlySerializedAs("tooltipManager")] public BuildingTooltipController tooltipController;
+        [FormerlySerializedAs("placerManager")]
+        public BuildingPlacementController placementController;
+
+        [FormerlySerializedAs("tooltipManager")]
+        public BuildingTooltipController tooltipController;
 
         public BuildEntry[] buildEntries;
-        
+
         [System.Serializable]
         public struct BuildEntry
         {
             public Button button;
             public GameObject prefab;
         }
-
 
         private void Awake()
         {
@@ -35,9 +38,10 @@ namespace Controller.UI
                 }
 
                 entry.button.onClick.AddListener(() =>
-                    placementController.StartPlacement(entry.prefab));
+                    placementController.StartPlacement(entry.prefab)
+                );
 
-                if (entry.prefab.TryGetComponent<BuildingData>(out var data))
+                if (entry.prefab.TryGetComponent<BaseBuilding>(out var data))
                 {
                     AddTooltipEvents(entry.button, data);
                 }
@@ -48,8 +52,7 @@ namespace Controller.UI
             }
         }
 
-
-        private void AddTooltipEvents(Button button, BuildingData data)
+        private void AddTooltipEvents(Button button, BaseBuilding data)
         {
             EventTrigger trigger = button.gameObject.GetComponent<EventTrigger>();
             if (trigger == null)
@@ -58,19 +61,21 @@ namespace Controller.UI
             // PointerEnter
             EventTrigger.Entry entryEnter = new EventTrigger.Entry
             {
-                eventID = EventTriggerType.PointerEnter
+                eventID = EventTriggerType.PointerEnter,
             };
-            entryEnter.callback.AddListener((_) =>
-            {
-                tooltipController.SetTooltip(data.buildingName, data.description, data.costs);
-                tooltipController.ShowTooltip();
-            });
+            entryEnter.callback.AddListener(
+                (_) =>
+                {
+                    tooltipController.SetTooltip(data.buildingName, data.description, data.costs);
+                    tooltipController.ShowTooltip();
+                }
+            );
             trigger.triggers.Add(entryEnter);
 
             // PointerExit
             EventTrigger.Entry entryExit = new EventTrigger.Entry
             {
-                eventID = EventTriggerType.PointerExit
+                eventID = EventTriggerType.PointerExit,
             };
             entryExit.callback.AddListener((_) => tooltipController.HideTooltip());
             trigger.triggers.Add(entryExit);

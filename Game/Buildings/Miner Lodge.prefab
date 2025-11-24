@@ -255,13 +255,15 @@ MonoBehaviour:
   damagedEffect: {fileID: 997284796056045307}
   destroySound: {fileID: 8300000, guid: 2faafd66b55fc344fb366f481c90502c, type: 3}
   spawnPoint: {fileID: 6473274684899123629}
+  isMovable: 1
+  isDismantable: 1
   costs:
   - resource: 0
     amount: 50
   refunds:
   - resource: 0
     amount: 10
-  gathererType: {fileID: 0}
+  gathererType: {fileID: 11400000, guid: 7178724753e3135469fbf76bdae183b7, type: 2}
 --- !u!1 &8673610937311044863
 GameObject:
   m_ObjectHideFlags: 0

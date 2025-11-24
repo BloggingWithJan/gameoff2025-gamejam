@@ -11,13 +11,13 @@ namespace GameJam.Core
         public event Action OnBuildingDestroyed;
 
         [SerializeField]
-        private string buildingName;
+        public string buildingName;
 
         [SerializeField]
-        private string description;
+        public string description;
 
         [SerializeField]
-        private int maxUnitSlots = 3;
+        public int maxUnitSlots = 3;
 
         [SerializeField]
         ParticleSystem damagedEffect;
@@ -27,6 +27,12 @@ namespace GameJam.Core
 
         [SerializeField]
         Transform spawnPoint;
+
+        [SerializeField]
+        public bool isMovable = true;
+
+        [SerializeField]
+        public bool isDismantable = true;
 
         [Header("Costs")]
         public List<ResourceCost> costs;

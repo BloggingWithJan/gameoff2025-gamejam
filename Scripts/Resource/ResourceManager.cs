@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Data;
+using GameJam.Core;
 using TMPro;
 using UnityEngine;
 
@@ -149,7 +150,7 @@ namespace GameJam.Resource
             return true;
         }
 
-        public bool HasSufficientResources(BuildingData buildingData)
+        public bool HasSufficientResources(BaseBuilding buildingData)
         {
             foreach (var cost in buildingData.costs)
             {
@@ -166,7 +167,7 @@ namespace GameJam.Resource
             return true;
         }
 
-        public void DeductResources(BuildingData buildingData)
+        public void DeductResources(BaseBuilding buildingData)
         {
             foreach (var cost in buildingData.costs)
             {
@@ -188,7 +189,7 @@ namespace GameJam.Resource
         }
 
         public List<ResourceCost> RefundResourcesPartially(
-            BuildingData buildingData,
+            BaseBuilding buildingData,
             float refundPercentage = 0.5f
         )
         {
