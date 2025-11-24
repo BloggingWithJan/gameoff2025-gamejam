@@ -1,8 +1,9 @@
 using Data;
+using GameJam.Core;
 using TMPro;
+using UI.Managers;
 using UnityEngine;
 using UnityEngine.UI;
-using UI.Managers;
 
 namespace Controller.UI
 {
@@ -10,17 +11,25 @@ namespace Controller.UI
     {
         public static BuildingInfoPanel Instance { get; private set; }
 
-        [Header("UI References")] [SerializeField]
+        [Header("UI References")]
+        [SerializeField]
         private TMP_Text buildingNameText;
 
-        [SerializeField] private TMP_Text descriptionText;
-        [SerializeField] private Button moveButton;
-        [SerializeField] private Button deleteButton;
+        [SerializeField]
+        private TMP_Text descriptionText;
 
-        [Header("Controller Reference")] [SerializeField]
+        [SerializeField]
+        private Button moveButton;
+
+        [SerializeField]
+        private Button deleteButton;
+
+        [Header("Controller Reference")]
+        [SerializeField]
         private BuildingPlacementController buildingPlacementController;
 
-        [Header("Follow Settings")] [SerializeField]
+        [Header("Follow Settings")]
+        [SerializeField]
         private Vector3 offset = new Vector3(0, 1f, 0);
 
         private Transform followTarget;
@@ -64,9 +73,10 @@ namespace Controller.UI
             rect.position = screenPos;
         }
 
-        public void ShowPanel(BuildingData building)
+        public void ShowPanel(BaseBuilding building)
         {
-            if (building == null) return;
+            if (building == null)
+                return;
 
             currentBuilding = building.gameObject;
             followTarget = building.transform;

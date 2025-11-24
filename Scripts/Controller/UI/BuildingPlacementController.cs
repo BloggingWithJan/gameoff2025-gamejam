@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Controller.UI;
 using Data;
+using GameJam.Core;
 using GameJam.Resource;
 using UnityEngine;
 using UnityEngine.AI;
@@ -33,7 +34,8 @@ namespace UI.Managers
         private float _maxRaycastDistance = 500f;
 
         // distance used when sampling the NavMesh to determine if placement point is on a navmesh
-        [SerializeField] private float navMeshSampleDistance = 0.5f;
+        [SerializeField]
+        private float navMeshSampleDistance = 0.5f;
 
         private bool TryGetGroundHit(out RaycastHit hit)
         {
@@ -99,20 +101,28 @@ namespace UI.Managers
             {
                 if (overUI)
                 {
-                    FloatingTextController.Instance.ShowFloatingText("Cannot place over UI!", Color.red);
+                    FloatingTextController.Instance.ShowFloatingText(
+                        "Cannot place over UI!",
+                        Color.red
+                    );
                     return;
                 }
 
                 if (!noBlockers)
                 {
-                    FloatingTextController.Instance.ShowFloatingText("Placement blocked!", Color.red);
+                    FloatingTextController.Instance.ShowFloatingText(
+                        "Placement blocked!",
+                        Color.red
+                    );
                     return;
                 }
-                
+
                 if (!onNavMesh)
                 {
-                    FloatingTextController.Instance.ShowFloatingText("This location is not buildable.",
-                        Color.red);
+                    FloatingTextController.Instance.ShowFloatingText(
+                        "This location is not buildable.",
+                        Color.red
+                    );
                     return;
                 }
 
@@ -120,7 +130,9 @@ namespace UI.Managers
             }
         }
 
-        private (bool noBlockers, bool onNavMesh, List<Collider> blockers) IsValidPlacement(Vector3 position)
+        private (bool noBlockers, bool onNavMesh, List<Collider> blockers) IsValidPlacement(
+            Vector3 position
+        )
         {
             var blockers = new List<Collider>();
 
@@ -131,9 +143,16 @@ namespace UI.Managers
             box.enabled = false;
 
             Vector3 worldCenter = position + _previewInstance.transform.rotation * box.center;
-            Vector3 halfExtents = Vector3.Scale(box.size * 0.5f, _previewInstance.transform.lossyScale);
+            Vector3 halfExtents = Vector3.Scale(
+                box.size * 0.5f,
+                _previewInstance.transform.lossyScale
+            );
 
-            Collider[] overlaps = Physics.OverlapBox(worldCenter, halfExtents, _previewInstance.transform.rotation);
+            Collider[] overlaps = Physics.OverlapBox(
+                worldCenter,
+                halfExtents,
+                _previewInstance.transform.rotation
+            );
 
             box.enabled = true;
 
@@ -159,14 +178,16 @@ namespace UI.Managers
             {
                 if (!newSet.Contains(old))
                 {
-                    if (_blockedOutlines[old]) Destroy(_blockedOutlines[old].gameObject);
+                    if (_blockedOutlines[old])
+                        Destroy(_blockedOutlines[old].gameObject);
                     _blockedOutlines.Remove(old);
                 }
             }
 
             foreach (var c in newBlockers)
             {
-                if (!_blockedOutlines.ContainsKey(c)) _blockedOutlines[c] = CreateOutlineRenderer(c, Color.red);
+                if (!_blockedOutlines.ContainsKey(c))
+                    _blockedOutlines[c] = CreateOutlineRenderer(c, Color.red);
             }
         }
 
@@ -180,19 +201,33 @@ namespace UI.Managers
             lr.loop = false;
             lr.useWorldSpace = true;
             go.transform.SetParent(col.transform, false);
-            if (col is BoxCollider box) DrawOutlineForBoxCollider(box, lr, color, 0.02f);
+            if (col is BoxCollider box)
+                DrawOutlineForBoxCollider(box, lr, color, 0.02f);
             return lr;
         }
 
-        private void DrawOutlineForBoxCollider(BoxCollider box, LineRenderer lr, Color color, float yOffset = 0f)
+        private void DrawOutlineForBoxCollider(
+            BoxCollider box,
+            LineRenderer lr,
+            Color color,
+            float yOffset = 0f
+        )
         {
             Vector3 half = Vector3.Scale(box.size * 0.5f, box.transform.lossyScale);
             Vector3 adjustedCenter = new Vector3(box.center.x, yOffset, box.center.z);
             Vector3[] corners = new Vector3[5];
-            corners[0] = box.transform.TransformPoint(adjustedCenter + new Vector3(-half.x, 0f, -half.z));
-            corners[1] = box.transform.TransformPoint(adjustedCenter + new Vector3(half.x, 0f, -half.z));
-            corners[2] = box.transform.TransformPoint(adjustedCenter + new Vector3(half.x, 0f, half.z));
-            corners[3] = box.transform.TransformPoint(adjustedCenter + new Vector3(-half.x, 0f, half.z));
+            corners[0] = box.transform.TransformPoint(
+                adjustedCenter + new Vector3(-half.x, 0f, -half.z)
+            );
+            corners[1] = box.transform.TransformPoint(
+                adjustedCenter + new Vector3(half.x, 0f, -half.z)
+            );
+            corners[2] = box.transform.TransformPoint(
+                adjustedCenter + new Vector3(half.x, 0f, half.z)
+            );
+            corners[3] = box.transform.TransformPoint(
+                adjustedCenter + new Vector3(-half.x, 0f, half.z)
+            );
             corners[4] = corners[0];
             lr.positionCount = corners.Length;
             lr.startColor = lr.endColor = color;
@@ -201,7 +236,8 @@ namespace UI.Managers
 
         public void RepositionBuilding(GameObject building)
         {
-            if (_isPlacing) CancelPlacement();
+            if (_isPlacing)
+                CancelPlacement();
 
             _isBeingRelocated = true;
             _currentBuilding = building;
@@ -268,10 +304,13 @@ namespace UI.Managers
             else
             {
                 // normal placement (pay resources)
-                var buildingData = _currentPrefab.GetComponent<BuildingData>();
+                var buildingData = _currentPrefab.GetComponent<BaseBuilding>();
                 if (!ResourceManager.Instance.HasSufficientResources(buildingData))
                 {
-                    FloatingTextController.Instance.ShowFloatingText("Not enough resources!", Color.red);
+                    FloatingTextController.Instance.ShowFloatingText(
+                        "Not enough resources!",
+                        Color.red
+                    );
                     return;
                 }
 
@@ -283,8 +322,12 @@ namespace UI.Managers
                     FloatingTextController.Instance.ShowFloatingText(message, Color.white);
                 }
 
-                Instantiate(_currentPrefab, position, _previewInstance.transform.rotation,
-                    buildingsParentGameObject.transform);
+                Instantiate(
+                    _currentPrefab,
+                    position,
+                    _previewInstance.transform.rotation,
+                    buildingsParentGameObject.transform
+                );
             }
 
             Destroy(_previewInstance);
@@ -298,7 +341,8 @@ namespace UI.Managers
         private void CancelPlacement()
         {
             ClearBlockerOutlines();
-            if (_previewInstance) Destroy(_previewInstance);
+            if (_previewInstance)
+                Destroy(_previewInstance);
 
             if (_isBeingRelocated)
             {
@@ -313,7 +357,8 @@ namespace UI.Managers
 
         private void RotatePreview()
         {
-            if (!_previewInstance) return;
+            if (!_previewInstance)
+                return;
             _previewInstance.transform.Rotate(Vector3.up, _rotationSpeed * Time.deltaTime);
         }
 
@@ -346,7 +391,6 @@ namespace UI.Managers
 
         private bool IsFullyOnNavMesh(BoxCollider box)
         {
-            
             float maxDistance = box.size.y * 0.5f * _previewInstance.transform.lossyScale.y + 0.1f;
 
             // Get all 4 bottom corners in world space
@@ -357,7 +401,7 @@ namespace UI.Managers
                 new Vector3(-half.x, 0, -half.z),
                 new Vector3(half.x, 0, -half.z),
                 new Vector3(half.x, 0, half.z),
-                new Vector3(-half.x, 0, half.z)
+                new Vector3(-half.x, 0, half.z),
             };
 
             foreach (var offset in localOffsets)
@@ -372,17 +416,21 @@ namespace UI.Managers
             return true;
         }
 
-        private bool IsPointerOverUI() => EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+        private bool IsPointerOverUI() =>
+            EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
 
         public void DeleteBuilding(GameObject building)
         {
-            if (building == null) return;
+            if (building == null)
+                return;
 
-            building.TryGetComponent(out BuildingData buildingData);
+            building.TryGetComponent(out BaseBuilding buildingData);
 
             if (buildingData != null)
             {
-                List<ResourceCost> refunds = ResourceManager.Instance.RefundResourcesPartially(buildingData);
+                List<ResourceCost> refunds = ResourceManager.Instance.RefundResourcesPartially(
+                    buildingData
+                );
 
                 foreach (var refund in refunds)
                 {

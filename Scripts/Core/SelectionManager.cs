@@ -22,9 +22,11 @@ namespace Core
         private InputAction _rightClickAction;
         private ISelectable _currentHoveredEntity;
 
-        [SerializeField] private SelectionBoxUI selectionBoxUI;
+        [SerializeField]
+        private SelectionBoxUI selectionBoxUI;
 
-        [SerializeField] private Camera mainCamera;
+        [SerializeField]
+        private Camera mainCamera;
 
         private Vector2 dragStart;
         private bool isDragging;
@@ -97,7 +99,9 @@ namespace Core
                         if (!prod.HasAvailableUnitSlots())
                         {
                             FloatingTextController.Instance.ShowFloatingText(
-                                "Unit limit reached. Build another structure.", Color.red);
+                                "Unit limit reached. Build another structure.",
+                                Color.red
+                            );
                             return; // stop the right-click action here
                         }
                     }
@@ -109,7 +113,9 @@ namespace Core
                         if (!mil.HasAvailableUnitSlots())
                         {
                             FloatingTextController.Instance.ShowFloatingText(
-                                "Unit limit reached. Build another structure.", Color.red);
+                                "Unit limit reached. Build another structure.",
+                                Color.red
+                            );
                             return; // stop the right-click action here
                         }
                     }
@@ -178,7 +184,7 @@ namespace Core
                 // If pointer is over UI, don't clear selection
                 if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
                     return;
-                
+
                 Ray ray = Camera.main.ScreenPointToRay(_pointAction.ReadValue<Vector2>());
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
@@ -276,7 +282,7 @@ namespace Core
 
             MonoBehaviour mb = selectedEntities[0] as MonoBehaviour;
 
-            if (mb.TryGetComponent(out BuildingData buildingData))
+            if (mb.TryGetComponent(out BaseBuilding buildingData))
             {
                 BuildingInfoPanel.Instance.ShowPanel(buildingData);
                 return;
