@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 6969748131474631484}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.897, y: 0, z: -1.046}
+  m_LocalPosition: {x: 0.897, y: 0, z: -5.44}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -42,7 +42,6 @@ GameObject:
   - component: {fileID: 7085429694314842537}
   - component: {fileID: 6562994372592645871}
   - component: {fileID: -6638215651306302929}
-  - component: {fileID: 2511279663432730342}
   - component: {fileID: 9060049595750979734}
   - component: {fileID: 1798450691492305933}
   - component: {fileID: -7317406986221366908}
@@ -129,12 +128,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5720ca2e6f99ab1408d5cad068b132c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MilitaryBuilding
-  buildingName: 
-  description: 
+  buildingName: Spear Thrower Camp
+  description: One Spear on dead enemy i swear
   maxUnitSlots: 3
   damagedEffect: {fileID: 5512419062857157024}
   destroySound: {fileID: 8300000, guid: 2faafd66b55fc344fb366f481c90502c, type: 3}
   spawnPoint: {fileID: 1872386588036202500}
+  isMovable: 1
+  isDismantable: 1
   costs:
   - resource: 0
     amount: 50
@@ -146,28 +147,6 @@ MonoBehaviour:
   - resource: 0
     amount: 2
   soldierType: {fileID: 11400000, guid: da66c4421a29906489f64463c0839d8d, type: 2}
---- !u!114 &2511279663432730342
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7688493857108700738}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fdc07ed7143304749aba12fd54c54031, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Data.BuildingData
-  buildingName: Warrior Camp
-  description: Convert Units to Warriors
-  costs:
-  - resource: 0
-    amount: 10
-  - resource: 1
-    amount: 25
-  refunds: []
-  isMovable: 1
-  isDismantable: 1
 --- !u!114 &9060049595750979734
 MonoBehaviour:
   m_ObjectHideFlags: 0

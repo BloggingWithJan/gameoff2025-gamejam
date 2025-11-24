@@ -259,6 +259,8 @@ MonoBehaviour:
   damagedEffect: {fileID: 3735082935529601883}
   destroySound: {fileID: 8300000, guid: 2faafd66b55fc344fb366f481c90502c, type: 3}
   spawnPoint: {fileID: 5473415269573736978}
+  isMovable: 1
+  isDismantable: 1
   costs:
   - resource: 0
     amount: 50
@@ -291,7 +293,7 @@ Transform:
   m_GameObject: {fileID: 8297426890016866239}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.29903, y: 4.76932, z: -6}
+  m_LocalPosition: {x: 0, y: 0, z: -6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
