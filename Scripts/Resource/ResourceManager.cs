@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Core;
 using Data;
 using GameJam.Core;
 using TMPro;
@@ -10,34 +11,24 @@ namespace GameJam.Resource
     {
         public static ResourceManager Instance { get; private set; }
 
-        [Header("UI References")]
-        [SerializeField]
+        [Header("UI References")] [SerializeField]
         private TMP_Text woodText;
 
-        [SerializeField]
-        private TMP_Text stoneText;
+        [SerializeField] private TMP_Text stoneText;
 
-        [SerializeField]
-        private TMP_Text foodText;
+        [SerializeField] private TMP_Text foodText;
 
-        [SerializeField]
-        private TMP_Text populationText;
+        [SerializeField] private TMP_Text populationText;
 
-        [Header("Values")]
-        [SerializeField]
-        private int wood;
+        [Header("Values")] [SerializeField] private int wood;
 
-        [SerializeField]
-        private int stone;
+        [SerializeField] private int stone;
 
-        [SerializeField]
-        private int food;
+        [SerializeField] private int food;
 
-        [SerializeField]
-        private int currentPopulation;
+        [SerializeField] private int currentPopulation;
 
-        [SerializeField]
-        private int maxPopulation;
+        [SerializeField] private int maxPopulation;
 
         public int CurrentPopulation => currentPopulation;
         public int MaxPopulation => maxPopulation;
@@ -165,6 +156,24 @@ namespace GameJam.Resource
             }
 
             return true;
+        }
+
+        public void DeductResources(ResourceCost cost)
+        {
+            if (cost.resource == ResourceType.Population)
+            {
+                SetPopulation(currentPopulation - cost.amount);
+                return;
+            }
+
+            if (!_resources.ContainsKey(cost.resource))
+            {
+                Debug.LogError($"Resource type {cost.resource} not implemented");
+                return;
+            }
+
+            _resources[cost.resource] -= cost.amount;
+            UpdateUIText(cost.resource);
         }
 
         public void DeductResources(BaseBuilding buildingData)

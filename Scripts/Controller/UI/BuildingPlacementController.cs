@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Controller.UI;
+using Core;
 using Data;
 using GameJam.Core;
 using GameJam.Resource;

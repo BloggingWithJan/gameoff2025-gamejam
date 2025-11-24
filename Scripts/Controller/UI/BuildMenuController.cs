@@ -1,3 +1,4 @@
+using Core;
 using Data;
 using GameJam.Core;
 using UI.Managers;
@@ -16,7 +17,7 @@ namespace Controller.UI
         public BuildingPlacementController placementController;
 
         [FormerlySerializedAs("tooltipManager")]
-        public BuildingTooltipController tooltipController;
+        public PurchaseTooltipController tooltipController;
 
         public BuildEntry[] buildEntries;
 
@@ -43,42 +44,13 @@ namespace Controller.UI
 
                 if (entry.prefab.TryGetComponent<BaseBuilding>(out var data))
                 {
-                    AddTooltipEvents(entry.button, data);
+                    tooltipController.AddTooltipEvents(entry.button, data.buildingName, data.description, data.costs);
                 }
                 else
                 {
-                    Debug.LogError($"BuildingData missing on prefab {entry.prefab.name}");
+                    Debug.LogError($"BaseBuilding missing on prefab {entry.prefab.name}");
                 }
             }
-        }
-
-        private void AddTooltipEvents(Button button, BaseBuilding data)
-        {
-            EventTrigger trigger = button.gameObject.GetComponent<EventTrigger>();
-            if (trigger == null)
-                trigger = button.gameObject.AddComponent<EventTrigger>();
-
-            // PointerEnter
-            EventTrigger.Entry entryEnter = new EventTrigger.Entry
-            {
-                eventID = EventTriggerType.PointerEnter,
-            };
-            entryEnter.callback.AddListener(
-                (_) =>
-                {
-                    tooltipController.SetTooltip(data.buildingName, data.description, data.costs);
-                    tooltipController.ShowTooltip();
-                }
-            );
-            trigger.triggers.Add(entryEnter);
-
-            // PointerExit
-            EventTrigger.Entry entryExit = new EventTrigger.Entry
-            {
-                eventID = EventTriggerType.PointerExit,
-            };
-            entryExit.callback.AddListener((_) => tooltipController.HideTooltip());
-            trigger.triggers.Add(entryExit);
         }
 
         public void TogglePanel()
