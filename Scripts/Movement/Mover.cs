@@ -18,7 +18,7 @@ namespace GameJam.Movement
         [SerializeField]
         private float arrivalThreshold = 0.5f; // Distance threshold to consider as "
 
-        void Start()
+        void Awake()
         {
             agent = GetComponent<NavMeshAgent>();
             animator = GetComponent<Animator>();
