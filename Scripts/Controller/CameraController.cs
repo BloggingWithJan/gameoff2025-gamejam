@@ -6,8 +6,8 @@ namespace Controller
     public class CameraController : MonoBehaviour
     {
         [Header("Settings")] public float moveSpeed = 50f;
-        public float rotationSpeed = 15f;
-        public float tiltSpeed = 15f;
+        public float rotationSpeed = 0.1f;
+        public float tiltSpeed = 0.1f;
         public float zoomSpeed = 150f;
         public float minZoom = 3f;
         public float maxZoom = 60f;
@@ -92,9 +92,11 @@ namespace Controller
         {
             Vector2 delta = _mouseDeltaMove.ReadValue<Vector2>();
 
-            // Invert drag directions
-            _yaw += delta.x * rotationSpeed * Time.deltaTime; // flipped sign for horizontal
-            _pitch -= delta.y * tiltSpeed * Time.deltaTime; // keep vertical inverted
+            // Normalize for different framerates AND different mouse hardware
+            float scale = 0.015f; // tweak this once until Game View == Build speeds
+
+            _yaw += delta.x * rotationSpeed * scale;
+            _pitch -= delta.y * tiltSpeed * scale;
 
             // Clamp vertical angle to avoid flipping
             _pitch = Mathf.Clamp(_pitch, 10f, 85f);

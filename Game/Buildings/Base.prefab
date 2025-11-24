@@ -47,6 +47,7 @@ GameObject:
   - component: {fileID: 6727513607902522305}
   - component: {fileID: 8903697561950654327}
   - component: {fileID: 2662737973471051225}
+  - component: {fileID: -5112655110797954546}
   m_Layer: 0
   m_Name: Base
   m_TagString: PlayerBase
@@ -318,6 +319,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Core.BaseSelectable
   outlineColor: {r: 1, g: 1, b: 1, a: 1}
   outlineWidth: 0.1
+--- !u!114 &-5112655110797954546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2018633491444551066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdc07ed7143304749aba12fd54c54031, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Data.BuildingData
+  buildingName: Base
+  description: "Keep your base safe\u2014its destruction means defeat."
+  costs: []
+  refunds: []
+  isMovable: 0
+  isDismantable: 0
 --- !u!1001 &843489854474097728
 PrefabInstance:
   m_ObjectHideFlags: 0

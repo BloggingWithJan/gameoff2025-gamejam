@@ -20,10 +20,9 @@ namespace Controller.UI
         [Header("Controller Reference")] [SerializeField]
         private BuildingPlacementController buildingPlacementController;
 
-        [Header("Follow Settings")]
-        [SerializeField]
+        [Header("Follow Settings")] [SerializeField]
         private Vector3 offset = new Vector3(0, 1f, 0);
-        
+
         private Transform followTarget;
         private RectTransform rect;
         private GameObject currentBuilding;
@@ -75,8 +74,11 @@ namespace Controller.UI
             buildingNameText.text = building.buildingName;
             descriptionText.text = building.description;
 
+            moveButton.interactable = building.isMovable;
+            deleteButton.interactable = building.isDismantable;
+
             UpdatePosition();
-            
+
             gameObject.SetActive(true);
         }
 

@@ -8,6 +8,7 @@ using GameJam.Military;
 using GameJam.Movement;
 using Production;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace Core
@@ -21,11 +22,9 @@ namespace Core
         private InputAction _rightClickAction;
         private ISelectable _currentHoveredEntity;
 
-        [SerializeField]
-        private SelectionBoxUI selectionBoxUI;
+        [SerializeField] private SelectionBoxUI selectionBoxUI;
 
-        [SerializeField]
-        private Camera mainCamera;
+        [SerializeField] private Camera mainCamera;
 
         private Vector2 dragStart;
         private bool isDragging;
@@ -91,11 +90,29 @@ namespace Core
                 {
                     GameObject target = hit.collider.gameObject;
 
-                    if (target.GetComponent<ProductionBuilding>() != null)
+                    var prod = target.GetComponent<ProductionBuilding>();
+                    if (prod != null)
+                    {
                         interaction = true;
+                        if (!prod.HasAvailableUnitSlots())
+                        {
+                            FloatingTextController.Instance.ShowFloatingText(
+                                "Unit limit reached. Build another structure.", Color.red);
+                            return; // stop the right-click action here
+                        }
+                    }
 
-                    if (target.GetComponent<MilitaryBuilding>() != null)
+                    var mil = target.GetComponent<MilitaryBuilding>();
+                    if (mil != null)
+                    {
                         interaction = true;
+                        if (!mil.HasAvailableUnitSlots())
+                        {
+                            FloatingTextController.Instance.ShowFloatingText(
+                                "Unit limit reached. Build another structure.", Color.red);
+                            return; // stop the right-click action here
+                        }
+                    }
 
                     if (target.tag == "Enemy")
                         interaction = true;
@@ -158,6 +175,10 @@ namespace Core
         {
             if (_clickAction.WasPressedThisFrame())
             {
+                // If pointer is over UI, don't clear selection
+                if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+                    return;
+                
                 Ray ray = Camera.main.ScreenPointToRay(_pointAction.ReadValue<Vector2>());
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
@@ -390,6 +411,7 @@ namespace Core
                             return;
                         }
                     }
+
                     if (productionBuilding != null && mbUnit != null)
                     {
                         if (productionBuilding.HasAvailableUnitSlots())
@@ -407,6 +429,7 @@ namespace Core
                             return;
                         }
                     }
+
                     if (simpleBuilding != null && mbUnit != null)
                     {
                         CursorHelper.Instance.SetCursor(
@@ -414,11 +437,13 @@ namespace Core
                         );
                         return;
                     }
+
                     if (mb.tag == "Enemy" && mbUnit != null)
                     {
                         CursorHelper.Instance.SetCursor(CursorHelper.CursorType.Attack);
                         return;
                     }
+
                     CursorHelper.Instance.SetCursor(CursorHelper.CursorType.Pointer);
                     return;
                 }
