@@ -126,7 +126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MilitaryBuilding
   buildingName: Warrior Camp
-  description: get a sword and die you gial
+  description: Assigned units train here to become sword-wielding warriors.
   maxUnitSlots: 3
   damagedEffect: {fileID: 5512419062857157024}
   destroySound: {fileID: 8300000, guid: 2faafd66b55fc344fb366f481c90502c, type: 3}

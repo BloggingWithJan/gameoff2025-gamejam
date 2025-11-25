@@ -1342,7 +1342,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Production.ProductionBuilding
   buildingName: Food Lodge
-  description: Workers will search Food to produce it
+  description: Storehouse where units drop off gathered food.
   maxUnitSlots: 3
   damagedEffect: {fileID: 3554460161805244805}
   destroySound: {fileID: 8300000, guid: 2faafd66b55fc344fb366f481c90502c, type: 3}

@@ -22,7 +22,7 @@ public class JanButton : MonoBehaviour
             Debug.LogError("JanButton.Awake: button is null");
         }
 
-        purchaseTooltipController.AddTooltipEvents(button, "Worker", "Can be assigned to stuff idk", new List<ResourceCost>{cost});
+        purchaseTooltipController.AddTooltipEvents(button, "Worker", "Spawns units at the Town Hall for gathering, building, or combat.", new List<ResourceCost>{cost});
 
         button.onClick.AddListener(() =>
         {

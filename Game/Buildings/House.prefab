@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 5464389849682085027}
   - component: {fileID: 4230912812610305568}
   - component: {fileID: 4649156072430872397}
-  - component: {fileID: 2832849301498836290}
   - component: {fileID: 8350393255774217532}
   - component: {fileID: 8573058949699519784}
   m_Layer: 0
@@ -222,28 +221,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Core.BaseSelectable
   outlineColor: {r: 1, g: 1, b: 1, a: 1}
   outlineWidth: 0.1
---- !u!114 &2832849301498836290
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1524148410429810113}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fdc07ed7143304749aba12fd54c54031, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BuildingData
-  buildingName: House
-  description: Wil increase max population
-  costs:
-  - resource: 0
-    amount: 10
-  refunds:
-  - resource: 0
-    amount: 0
-  isMovable: 1
-  isDismantable: 1
 --- !u!114 &8350393255774217532
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -270,11 +247,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Core.HouseBuilding
   buildingName: House
-  description: Increases max population
+  description: Provides living space and increases maximum population.
   maxUnitSlots: 0
   damagedEffect: {fileID: 819562202925339349}
   destroySound: {fileID: 8300000, guid: 2faafd66b55fc344fb366f481c90502c, type: 3}
   spawnPoint: {fileID: 444364409763907328}
+  isMovable: 1
+  isDismantable: 1
   costs:
   - resource: 0
     amount: 20

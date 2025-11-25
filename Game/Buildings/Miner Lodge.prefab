@@ -250,7 +250,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Production.ProductionBuilding
   buildingName: Miners Lodge
-  description: Workers will mine nearby ores liek stone
+  description: Storehouse where workers drop off collected stone.
   maxUnitSlots: 3
   damagedEffect: {fileID: 997284796056045307}
   destroySound: {fileID: 8300000, guid: 2faafd66b55fc344fb366f481c90502c, type: 3}

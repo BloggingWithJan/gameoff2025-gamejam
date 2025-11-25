@@ -246,7 +246,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Core.SimpleBuilding
   buildingName: Defense Tower
-  description: makes shoot shoot against enemais
+  description: Automatically attacks nearby enemies.
   maxUnitSlots: 0
   damagedEffect: {fileID: 301241445313151451}
   destroySound: {fileID: 8300000, guid: 2faafd66b55fc344fb366f481c90502c, type: 3}

@@ -254,7 +254,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Production.ProductionBuilding
   buildingName: Lumberjack Lodge
-  description: Workers will chop nearby Trees to produce Wood
+  description: Storehouse where workers drop off collected wood.
   maxUnitSlots: 3
   damagedEffect: {fileID: 3735082935529601883}
   destroySound: {fileID: 8300000, guid: 2faafd66b55fc344fb366f481c90502c, type: 3}
