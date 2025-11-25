@@ -1,3 +1,4 @@
+using Data;
 using GameJam.Combat;
 using GameJam.Core;
 using GameJam.Military;
@@ -74,7 +75,7 @@ namespace GameJam.Controller
         {
             if (health.IsDead())
                 return;
-                
+
             if (target.GetComponent<ProductionBuilding>() != null)
             {
                 ProductionBuilding building = target.GetComponent<ProductionBuilding>();

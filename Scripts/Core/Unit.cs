@@ -1,4 +1,5 @@
 using Core;
+using Data;
 using GameJam.Combat;
 using GameJam.Resource;
 using UnityEngine;
@@ -6,7 +7,7 @@ using UnityEngine.AI;
 
 namespace GameJam.Core
 {
-    public class Unit : MonoBehaviour
+    public class Unit : MonoBehaviour, IUnitData
     {
         [SerializeField]
         Transform rightHandTransform = null;
@@ -20,6 +21,8 @@ namespace GameJam.Core
         [SerializeField]
         SkinnedMeshRenderer bodySlotRenderer;
 
+        [SerializeField]
+        string unitName = "Villager";
         private Weapon weapon = null;
         private Animator animator;
         private Health health;
@@ -85,6 +88,11 @@ namespace GameJam.Core
             return leftHandTransform;
         }
 
+        public void SetUnitName(string newName)
+        {
+            unitName = newName;
+        }
+
         private void OnDeath()
         {
             if (assignedBuilding != null)
@@ -102,6 +110,13 @@ namespace GameJam.Core
             }
 
             Destroy(gameObject, 2f);
+        }
+
+        public UnitData GetUnitData()
+        {
+            UnitData unitData = new UnitData();
+            unitData.UnitName = unitName;
+            return unitData;
         }
     }
 }

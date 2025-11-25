@@ -268,6 +268,7 @@ namespace Production
 
             unit.ChangeMeshes(newGathererType.GetHeadMesh(), newGathererType.GetBodyMesh());
             unit.SpawnWeapon(newGathererType.GetToolPrefab());
+            unit.SetUnitName(newGathererType.GetTypeName());
 
             currentState = GathererState.SearchingForResource;
         }

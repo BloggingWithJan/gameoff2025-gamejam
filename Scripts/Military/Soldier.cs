@@ -170,6 +170,7 @@ namespace GameJam.Military
             currentSoldierType = newSoldierType;
             unit.ChangeMeshes(newSoldierType.GetHeadMesh(), newSoldierType.GetBodyMesh());
             unit.SpawnWeapon(newSoldierType.GetWeaponPrefab());
+            unit.SetUnitName(newSoldierType.GetTypeName());
 
             currentState = SoldierState.AutomaticCombat;
         }

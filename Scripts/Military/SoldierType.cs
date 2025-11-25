@@ -18,6 +18,11 @@ namespace GameJam.Military
         [SerializeField]
         Mesh bodyMesh;
 
+        public string GetTypeName()
+        {
+            return typeName;
+        }
+
         public Weapon GetWeaponPrefab()
         {
             return weaponPrefab;

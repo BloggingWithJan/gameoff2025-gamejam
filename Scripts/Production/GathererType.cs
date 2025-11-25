@@ -30,6 +30,11 @@ namespace GameJam.Production
         [SerializeField]
         Mesh bodyMesh;
 
+        public string GetTypeName()
+        {
+            return typeName;
+        }
+
         public Weapon GetToolPrefab()
         {
             return toolPrefab;
