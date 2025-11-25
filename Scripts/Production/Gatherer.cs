@@ -11,7 +11,7 @@ using UnityEngine.AI;
 
 namespace Production
 {
-    public class Gatherer : MonoBehaviour, IAction, IUnitData
+    public class Gatherer : MonoBehaviour, IAction
     {
         public enum GathererState
         {
@@ -273,14 +273,14 @@ namespace Production
         }
 
         //TODO
-        public UnitData GetUnitData()
-        {
-            UnitData unitData = new UnitData();
-            unitData.UnitName = unit.name;
-            unitData.Status = currentState.ToString();
+        // public UnitData GetUnitData()
+        // {
+        //     UnitData unitData = new UnitData();
+        //     unitData.UnitName = unit.name;
+        //     unitData.Status = currentState.ToString();
 
-            return unitData;
-        }
+        //     return unitData;
+        // }
 
         private void HandleAssignedBuildingDestroyed()
         {
