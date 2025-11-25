@@ -1,8 +1,11 @@
 using System.Collections;
+using System.Collections.Generic;
+using Core;
 using GameJam.Military;
 using GameJam.Movement;
 using GameJam.Production;
 using GameJam.Resource;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace GameJam.Core
@@ -18,59 +21,31 @@ namespace GameJam.Core
         [SerializeField]
         float initialDelay = 5f;
 
-        private bool isCoroutineRunning = false;
         private Coroutine repeatingSpawnCoroutine = null;
 
         private void Start()
         {
-            StartSpawningUnits();
+            // :D
         }
 
-        void StartSpawningUnits()
+        public void SpawnUnit(ResourceCost cost)
         {
-            if (repeatingSpawnCoroutine == null)
+            if (Resource.ResourceManager.Instance.MaxPopulationReached())
+                return;
+
+            if (!ResourceManager.Instance.HasSufficientResources(cost))
             {
-                Debug.Log("Starting unit spawn coroutine.");
-                repeatingSpawnCoroutine = StartCoroutine(SpawnUnit());
-                isCoroutineRunning = true;
+                Debug.Log("Not enough resources");
+                return;
             }
-        }
 
-        IEnumerator SpawnUnit()
-        {
-            yield return new WaitForSeconds(initialDelay);
-            // This loop makes it repeat forever
-            while (true)
-            {
-                // PAUSE CHECK: The key to pausing/resuming
-                while (Resource.ResourceManager.Instance.MaxPopulationReached())
-                {
-                    yield return null; // Wait one frame before checking the 'isPaused' condition again
-                }
-                GameObject unit = Instantiate(unitPrefab, GetSpawnPoint(), Quaternion.identity);
-                Mover mover = unit.GetComponent<Mover>();
+            ResourceManager.Instance.DeductResources(cost);
 
-                yield return null; // Wait a frame to ensure the unit is fully initialized
-                if (mover != null)
-                {
-                    mover.MoveToWithRandomOffset(GetSpawnPoint(), 5f);
-                }
+            GameObject unit = Instantiate(unitPrefab, GetSpawnPoint(), Quaternion.identity);
 
-                // Wait for the specified time before repeating
-                yield return new WaitForSeconds(spawnInterval);
-            }
-        }
-
-        // 3. Pause the Coroutine
-        void PauseRepeatingAction()
-        {
-            isCoroutineRunning = false;
-        }
-
-        // 4. Resume the Coroutine
-        void ResumeRepeatingAction()
-        {
-            isCoroutineRunning = true;
+            Mover mover = unit.GetComponent<Mover>();
+            if (mover != null)
+                mover.MoveToWithRandomOffset(GetSpawnPoint(), 5f);
         }
 
         public override GathererType GetGathererType()

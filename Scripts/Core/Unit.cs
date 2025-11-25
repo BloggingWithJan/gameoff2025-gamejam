@@ -1,3 +1,4 @@
+using Core;
 using GameJam.Combat;
 using GameJam.Resource;
 using UnityEngine;

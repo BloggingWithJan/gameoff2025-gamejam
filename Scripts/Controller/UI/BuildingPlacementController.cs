@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Controller.UI;
+using Core;
 using Data;
 using GameJam.Core;
 using GameJam.Resource;
@@ -34,8 +35,7 @@ namespace UI.Managers
         private float _maxRaycastDistance = 500f;
 
         // distance used when sampling the NavMesh to determine if placement point is on a navmesh
-        [SerializeField]
-        private float navMeshSampleDistance = 0.5f;
+        [SerializeField] private float navMeshSampleDistance = 0.5f;
 
         private bool TryGetGroundHit(out RaycastHit hit)
         {
@@ -294,34 +294,40 @@ namespace UI.Managers
 
         private void PlaceBuilding(Vector3 position)
         {
+            // Determine which building data to use
+            BaseBuilding buildingData = _isBeingRelocated
+                ? _currentBuilding.GetComponent<BaseBuilding>() // relocating existing building
+                : _currentPrefab.GetComponent<BaseBuilding>(); // placing new building
+
+            float multiplier = _isBeingRelocated ? 0.25f : 1f;
+            
+            // Check resources for both cases
+            if (!ResourceManager.Instance.HasSufficientResources(buildingData, multiplier))
+            {
+                FloatingTextController.Instance.ShowFloatingText(
+                    "Not enough resources!",
+                    Color.red
+                );
+                return;
+            }
+            
+            // Deduct resources and show floating texts
+            ResourceManager.Instance.DeductResources(buildingData, multiplier);
+            foreach (var cost in buildingData.costs)
+            {
+                string message = $"- {Mathf.FloorToInt(cost.amount * multiplier)} {cost.resource}";
+                FloatingTextController.Instance.ShowFloatingText(message, Color.white);
+            }
+
+            // Perform placement logic
             if (_isBeingRelocated)
             {
-                // move original building to new position
                 _currentBuilding.transform.position = position;
                 _currentBuilding.transform.rotation = _previewInstance.transform.rotation;
                 _currentBuilding.SetActive(true);
             }
             else
             {
-                // normal placement (pay resources)
-                var buildingData = _currentPrefab.GetComponent<BaseBuilding>();
-                if (!ResourceManager.Instance.HasSufficientResources(buildingData))
-                {
-                    FloatingTextController.Instance.ShowFloatingText(
-                        "Not enough resources!",
-                        Color.red
-                    );
-                    return;
-                }
-
-                ResourceManager.Instance.DeductResources(buildingData);
-
-                foreach (var cost in buildingData.costs)
-                {
-                    string message = $"- {cost.amount} {cost.resource}";
-                    FloatingTextController.Instance.ShowFloatingText(message, Color.white);
-                }
-
                 Instantiate(
                     _currentPrefab,
                     position,
@@ -330,6 +336,7 @@ namespace UI.Managers
                 );
             }
 
+            // Cleanup
             Destroy(_previewInstance);
             ClearBlockerOutlines();
             ReenableActionAssets();

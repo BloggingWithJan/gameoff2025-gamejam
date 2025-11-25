@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using GameJam.Core;
 using GameJam.Military;
 using GameJam.Production;
 using UnityEngine;
 
-namespace GameJam.Core
+namespace Core
 {
     public abstract class BaseBuilding : MonoBehaviour
     {
