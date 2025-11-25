@@ -141,7 +141,7 @@ namespace GameJam.Resource
             return true;
         }
 
-        public bool HasSufficientResources(BaseBuilding buildingData)
+        public bool HasSufficientResources(BaseBuilding buildingData, float multiplier)
         {
             foreach (var cost in buildingData.costs)
             {
@@ -151,12 +151,14 @@ namespace GameJam.Resource
                     return false;
                 }
 
-                if (_resources[cost.resource] < cost.amount)
+                int requiredAmount = Mathf.FloorToInt(cost.amount * multiplier);
+                if (_resources[cost.resource] < requiredAmount)
                     return false;
             }
 
             return true;
         }
+
 
         public void DeductResources(ResourceCost cost)
         {
@@ -176,10 +178,12 @@ namespace GameJam.Resource
             UpdateUIText(cost.resource);
         }
 
-        public void DeductResources(BaseBuilding buildingData)
+        public void DeductResources(BaseBuilding buildingData, float multiplier)
         {
             foreach (var cost in buildingData.costs)
             {
+                int amountToDeduct = Mathf.FloorToInt(cost.amount * multiplier);
+
                 if (cost.resource == ResourceType.Population)
                 {
                     SetPopulation(currentPopulation - cost.amount);
@@ -192,7 +196,7 @@ namespace GameJam.Resource
                     continue;
                 }
 
-                _resources[cost.resource] -= cost.amount;
+                _resources[cost.resource] -= amountToDeduct;
                 UpdateUIText(cost.resource);
             }
         }
