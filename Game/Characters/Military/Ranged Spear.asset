@@ -16,3 +16,4 @@ MonoBehaviour:
   weaponPrefab: {fileID: 11400000, guid: 4f1b2d0be1578cc4fb7b53b5a2193e15, type: 2}
   headMesh: {fileID: 5507760748409398153, guid: aef97f022a1b7544fa9e6c04edf4d8b3, type: 3}
   bodyMesh: {fileID: -8995563128620110768, guid: aef97f022a1b7544fa9e6c04edf4d8b3, type: 3}
+  maxHealth: 50

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Warrior
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Military.SoldierType
   typeName: Warrior
-  weaponPrefab: {fileID: 11400000, guid: 2644e40fdb678994683220528c53c8a5, type: 2}
+  weaponPrefab: {fileID: 11400000, guid: f7983e4d77c22234ea22f6466de42b01, type: 2}
   headMesh: {fileID: 5507760748409398153, guid: aef97f022a1b7544fa9e6c04edf4d8b3, type: 3}
   bodyMesh: {fileID: -8995563128620110768, guid: aef97f022a1b7544fa9e6c04edf4d8b3, type: 3}
+  maxHealth: 100

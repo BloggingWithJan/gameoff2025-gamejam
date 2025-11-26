@@ -128,5 +128,10 @@ namespace GameJam.Core
             unitData.UnitName = unitName;
             return unitData;
         }
+
+        public void AdjustHealth(float health)
+        {
+            this.health.AdjustHealth(health);
+        }
     }
 }
