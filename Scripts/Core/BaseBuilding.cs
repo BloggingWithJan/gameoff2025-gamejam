@@ -58,6 +58,7 @@ namespace Core
 
         private void HandleTakeDamage(float damageAmount)
         {
+            Debug.Log($"{buildingName} took {damageAmount} damage.");
             if (damagedEffect != null)
             {
                 damagedEffect.Play();
@@ -66,6 +67,7 @@ namespace Core
 
         private void HandleDeath()
         {
+            Debug.Log($"{buildingName} destroyed.");
             OnBuildingDestroyed?.Invoke();
             audioSource.PlayOneShot(destroySound);
             Destroy(gameObject, .5f);

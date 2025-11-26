@@ -23,11 +23,6 @@ namespace GameJam.Core
 
         private Coroutine repeatingSpawnCoroutine = null;
 
-        private void Start()
-        {
-            // :D
-        }
-
         public void SpawnUnit(ResourceCost cost)
         {
             if (Resource.ResourceManager.Instance.MaxPopulationReached())

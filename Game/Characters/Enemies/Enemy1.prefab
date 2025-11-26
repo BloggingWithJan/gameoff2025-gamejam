@@ -313,7 +313,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4261520f4b00b64b9f76bb118f64388, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAIController
-  target: {fileID: 0}
 --- !u!114 &3880170800434452746
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -388,6 +387,7 @@ MonoBehaviour:
   leftHandTransform: {fileID: 6301246670230873267}
   headSlotRenderer: {fileID: 0}
   bodySlotRenderer: {fileID: 0}
+  unitName: Villager
   assignedBuilding: {fileID: 0}
 --- !u!54 &-1107587094125321109
 Rigidbody:
@@ -431,7 +431,7 @@ MonoBehaviour:
   weapon: {fileID: 11400000, guid: f7983e4d77c22234ea22f6466de42b01, type: 2}
   playerBase: {fileID: 0}
   detectionRadius: 15
-  baseDetectionRadius: 5
+  baseDetectionRadius: 8
   updateTargetInterval: 0.5
   currentState: 0
 --- !u!114 &8982655647027845002

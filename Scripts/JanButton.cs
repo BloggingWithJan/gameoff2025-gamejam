@@ -11,23 +11,32 @@ using UnityEngine.UI;
 public class JanButton : MonoBehaviour
 {
     public Button button;
-    public PlayerBaseBuilding playerBaseBuilding;
+
     public PurchaseTooltipController purchaseTooltipController;
 
-    private ResourceCost cost = new (ResourceType.Food, 15);
+    private ResourceCost cost = new(ResourceType.Food, 15);
+    private PlayerBaseBuilding playerBaseBuilding;
+
     public void Awake()
     {
         if (button == null)
         {
             Debug.LogError("JanButton.Awake: button is null");
         }
+        playerBaseBuilding = GameObject
+            .FindGameObjectWithTag("PlayerBase")
+            .GetComponent<PlayerBaseBuilding>();
 
-        purchaseTooltipController.AddTooltipEvents(button, "Worker", "Spawns units at the Town Hall for gathering, building, or combat.", new List<ResourceCost>{cost});
+        purchaseTooltipController.AddTooltipEvents(
+            button,
+            "Worker",
+            "Spawns units at the Town Hall for gathering, building, or combat.",
+            new List<ResourceCost> { cost }
+        );
 
         button.onClick.AddListener(() =>
         {
             playerBaseBuilding.SpawnUnit(cost);
         });
-
     }
 }

@@ -29,7 +29,7 @@ namespace GameJam.Combat
         private float detectionRadius = 15f;
 
         [SerializeField]
-        private float baseDetectionRadius = 5f; // When to attack buildings
+        private float baseDetectionRadius = 8f; // When to attack buildings
 
         [Header("Behavior")]
         [SerializeField]
@@ -140,7 +140,7 @@ namespace GameJam.Combat
             // Navigate toward base
             if (mover != null)
             {
-                mover.MoveTo(playerBase.position);
+                mover.MoveTo(playerBase.GetComponent<BaseBuilding>().GetSpawnPoint());
             }
         }
 

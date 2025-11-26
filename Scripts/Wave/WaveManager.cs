@@ -1,12 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using GameJam.Combat;
+using GameJam.Core;
 using TMPro;
 using UnityEngine;
 
 public class WaveManager : MonoBehaviour
 {
     public static WaveManager Instance { get; private set; }
+
+    public static event Action onAllWavesCompleted;
 
     [System.Serializable]
     public class EnemySpawnInfo
@@ -51,6 +55,8 @@ public class WaveManager : MonoBehaviour
     private int currentWave = 0;
     private float countdownToNextWave;
     private Coroutine waveCoroutine;
+    private List<Health> lastWaveEnemies = new List<Health>();
+    private int lastWaveEnemiesAlive = 0;
 
     private void Awake()
     {
@@ -87,11 +93,20 @@ public class WaveManager : MonoBehaviour
                 int waveIndex = currentWave - 1; // Wave 1 = index 0
                 if (waveIndex < waves.Count)
                 {
-                    yield return StartCoroutine(SpawnEnemyWave(waves[waveIndex]));
+                    bool isLastWave = (waveIndex == waves.Count - 1);
+                    yield return StartCoroutine(SpawnEnemyWave(waves[waveIndex], isLastWave));
+
+                    // If this was the last wave, stop spawning
+                    if (isLastWave)
+                    {
+                        Debug.Log("Last wave spawned! Waiting for enemies to be defeated...");
+                        yield break;
+                    }
                 }
                 else
                 {
                     Debug.LogWarning($"No wave configured for wave {currentWave}");
+                    yield break;
                 }
             }
 
@@ -106,30 +121,48 @@ public class WaveManager : MonoBehaviour
         }
     }
 
-    IEnumerator SpawnEnemyWave(Wave wave)
+    IEnumerator SpawnEnemyWave(Wave wave, bool isLastWave)
     {
         Debug.Log($"Spawning wave: {wave.waveName}");
+
+        if (isLastWave)
+        {
+            lastWaveEnemies.Clear();
+            lastWaveEnemiesAlive = 0;
+        }
 
         foreach (EnemySpawnInfo enemyInfo in wave.enemies)
         {
             for (int i = 0; i < enemyInfo.count; i++)
             {
-                SpawnEnemy(enemyInfo.enemyPrefab);
+                GameObject enemy = SpawnEnemy(enemyInfo.enemyPrefab);
+
+                if (isLastWave && enemy != null)
+                {
+                    Health health = enemy.GetComponent<Health>();
+                    if (health != null)
+                    {
+                        lastWaveEnemies.Add(health);
+                        lastWaveEnemiesAlive++;
+                        health.OnDeath += () => OnLastWaveEnemyDied(health);
+                    }
+                }
+
                 yield return new WaitForSeconds(enemyInfo.spawnInterval);
             }
         }
     }
 
-    void SpawnEnemy(GameObject enemyPrefab)
+    GameObject SpawnEnemy(GameObject enemyPrefab)
     {
         if (spawnPoints == null || spawnPoints.Length == 0)
         {
             Debug.LogError("No spawn points assigned!");
-            return;
+            return null;
         }
 
         // Choose random spawn point
-        Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+        Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)];
 
         // Spawn enemy
         GameObject enemy = Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
@@ -142,6 +175,7 @@ public class WaveManager : MonoBehaviour
         }
 
         Debug.Log($"Spawned {enemyPrefab.name} at {spawnPoint.position}");
+        return enemy;
     }
 
     void UpdateWaveUI()
@@ -163,6 +197,18 @@ public class WaveManager : MonoBehaviour
         if (countdownToNextWave > 0)
         {
             countdownToNextWave = 0; // Skip countdown
+        }
+    }
+
+    private void OnLastWaveEnemyDied(Health enemyHealth)
+    {
+        lastWaveEnemiesAlive--;
+        Debug.Log($"Last wave enemy died. Remaining: {lastWaveEnemiesAlive}");
+
+        if (lastWaveEnemiesAlive <= 0)
+        {
+            Debug.Log("All waves completed! Player wins!");
+            onAllWavesCompleted?.Invoke();
         }
     }
 }
