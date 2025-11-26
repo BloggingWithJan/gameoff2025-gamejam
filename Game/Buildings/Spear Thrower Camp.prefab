@@ -130,7 +130,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MilitaryBuilding
   buildingName: Spear Thrower Camp
   description: Assigned units train here to become spear throwers.
-  maxUnitSlots: 3
+  maxUnitSlots: 10
   damagedEffect: {fileID: 5512419062857157024}
   destroySound: {fileID: 8300000, guid: 2faafd66b55fc344fb366f481c90502c, type: 3}
   spawnPoint: {fileID: 1872386588036202500}

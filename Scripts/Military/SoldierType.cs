@@ -18,6 +18,9 @@ namespace GameJam.Military
         [SerializeField]
         Mesh bodyMesh;
 
+        [SerializeField]
+        float maxHealth;
+
         public string GetTypeName()
         {
             return typeName;
@@ -36,6 +39,11 @@ namespace GameJam.Military
         public Mesh GetBodyMesh()
         {
             return bodyMesh;
+        }
+
+        public float GetMaxHealth()
+        {
+            return maxHealth;
         }
     }
 }

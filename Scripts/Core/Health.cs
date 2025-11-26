@@ -33,6 +33,13 @@ namespace GameJam.Core
             actionScheduler = GetComponent<ActionScheduler>();
         }
 
+        public void AdjustHealth(float health)
+        {
+            float healthPercentage = currentHealth / maxHealth;
+            maxHealth = health;
+            currentHealth = maxHealth * healthPercentage;
+        }
+
         public void TakeDamage(float amount)
         {
             currentHealth = Mathf.Max(currentHealth - amount, 0);
