@@ -35,6 +35,12 @@ namespace GameJam.Core
                 return;
             }
             Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+
+        void Start()
+        {
+            SetCursor(CursorType.Default);
         }
 
         public void SetCursor(CursorType type)
