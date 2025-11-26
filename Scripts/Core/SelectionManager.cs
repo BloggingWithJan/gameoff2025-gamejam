@@ -288,7 +288,7 @@ namespace Core
                 return;
             }
 
-            if (mb.TryGetComponent(out Health unitData))
+            if (mb.TryGetComponent(out Unit unitData))
             {
                 UnitInfoPanel.Instance.ShowPanel(unitData);
                 return;

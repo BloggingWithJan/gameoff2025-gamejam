@@ -12,8 +12,6 @@ namespace Controller.UI
 
         [Header("UI References")]
         [SerializeField] private TMP_Text unitNameText;
-        [SerializeField] private TMP_Text attackText;
-        [SerializeField] private TMP_Text statusText;
 
         [Header("Fade Settings")]
         [SerializeField] private float fadeAlpha = 0.3f;
@@ -59,10 +57,6 @@ namespace Controller.UI
         public void ShowPanel(int unitCount)
         {
             unitNameText.text = $"{unitCount} Units Selected";
-
-            // these can be filled later once stats aggregation is implemented
-            attackText.text = "";
-            statusText.text = "";
 
             gameObject.SetActive(true);
         }

@@ -98,6 +98,11 @@ namespace GameJam.Core
             unitName = newName;
         }
 
+        public string GetUnitName()
+        {
+            return unitName;
+        }
+
         private void OnDeath()
         {
             if (assignedBuilding != null)

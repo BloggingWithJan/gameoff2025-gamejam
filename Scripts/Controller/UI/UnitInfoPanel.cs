@@ -12,8 +12,6 @@ namespace Controller.UI
 
         [Header("UI References")]
         [SerializeField] private TMP_Text unitNameText;
-        [SerializeField] private TMP_Text attackText;
-        [SerializeField] private TMP_Text statusText;
 
         [Header("Follow Settings")]
         [SerializeField] private Vector3 offset = new Vector3(0, 1f, 0);
@@ -69,14 +67,11 @@ namespace Controller.UI
             rect.position = screenPos;
         }
 
-        public void ShowPanel(Health unit)
+        public void ShowPanel(Unit unit)
         {
             if (unit == null) return;
 
-            unitNameText.text = unit.tag;
-            // TODO: Fill in real stats when available
-            // attackText.text = ...
-            // statusText.text = ...
+            unitNameText.text = unit.GetUnitName();
 
             followTarget = unit.transform;
             UpdatePosition();

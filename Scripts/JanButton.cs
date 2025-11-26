@@ -29,8 +29,8 @@ public class JanButton : MonoBehaviour
 
         purchaseTooltipController.AddTooltipEvents(
             button,
-            "Worker",
-            "Spawns units at the Town Hall for gathering, building, or combat.",
+            "Villager",
+            "Spawns villagers at the Town Hall for gathering, building, or combat.",
             new List<ResourceCost> { cost }
         );
 
