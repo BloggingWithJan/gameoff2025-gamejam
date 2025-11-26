@@ -4,6 +4,7 @@ using GameJam.Core;
 using GameJam.Military;
 using GameJam.Production;
 using GameJam.Resource;
+using Mono.Cecil;
 using UnityEngine;
 
 namespace Production
@@ -15,6 +16,11 @@ namespace Production
 
         public void DepositResources(int amount)
         {
+            if (ResourceManager.Instance == null)
+            {
+                Debug.LogError("ResourceManager instance is null. Cannot deposit resources.");
+                return;
+            }
             if (gathererType.GetResourceTag() == "Stone")
                 ResourceManager.Instance.AddResource(ResourceType.Stone, amount);
             else if (gathererType.GetResourceTag() == "Wood")

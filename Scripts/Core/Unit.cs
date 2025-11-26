@@ -51,6 +51,11 @@ namespace GameJam.Core
             //add population only for player units
             if (gameObject.tag != "Enemy")
             {
+                if (ResourceManager.Instance == null)
+                {
+                    Debug.LogError("ResourceManager instance is null. Cannot add population.");
+                    return;
+                }
                 ResourceManager.Instance.AddPopulation(1);
             }
         }
