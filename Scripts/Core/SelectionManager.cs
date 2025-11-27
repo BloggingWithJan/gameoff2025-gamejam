@@ -102,7 +102,7 @@ namespace Core
                                 "Unit limit reached. Build another structure.",
                                 Color.red
                             );
-                            return; // stop the right-click action here
+                            // return; // stop the right-click action here
                         }
                     }
 
@@ -116,7 +116,7 @@ namespace Core
                                 "Unit limit reached. Build another structure.",
                                 Color.red
                             );
-                            return; // stop the right-click action here
+                            // return; // stop the right-click action here
                         }
                     }
 
