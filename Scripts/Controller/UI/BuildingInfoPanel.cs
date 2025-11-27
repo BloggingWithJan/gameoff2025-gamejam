@@ -20,6 +20,9 @@ namespace Controller.UI
         private TMP_Text descriptionText;
 
         [SerializeField]
+        private TMP_Text unitSlotsText;
+
+        [SerializeField]
         private Button moveButton;
 
         [SerializeField]
@@ -84,6 +87,7 @@ namespace Controller.UI
 
             buildingNameText.text = building.buildingName;
             descriptionText.text = building.description;
+            unitSlotsText.text = building.GetUnitSlotsInfos();
 
             moveButton.interactable = building.isMovable;
             deleteButton.interactable = building.isDismantable;

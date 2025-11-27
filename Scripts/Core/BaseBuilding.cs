@@ -111,6 +111,11 @@ namespace Core
             return assignedUnits.Count < maxUnitSlots;
         }
 
+        public string GetUnitSlotsInfos()
+        {
+            return $"Assigned Units: {assignedUnits.Count}/{maxUnitSlots}";
+        }
+
         public Vector3 GetSpawnPoint()
         {
             return spawnPoint.position;
