@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using GameJam.Combat;
 using GameJam.Core;
 using TMPro;
+using Unity.Cinemachine;
 using UnityEngine;
 
 public class WaveManager : MonoBehaviour
@@ -52,11 +53,25 @@ public class WaveManager : MonoBehaviour
     [SerializeField]
     float timeBetweenWaves = 120f;
 
+    [Header("Cinematics")]
+    [SerializeField]
+    CinemachineCamera waveIntroCamera;
+
+    [SerializeField]
+    float introCameraDuration = 3f;
+
+    [SerializeField]
+    List<GameObject> uiControlsToHideDuringIntro;
+
+    [SerializeField]
+    List<GameObject> uiControlsToShowDuringIntro;
+
     private int currentWave = 0;
     private float countdownToNextWave;
     private Coroutine waveCoroutine;
     private List<Health> lastWaveEnemies = new List<Health>();
     private int lastWaveEnemiesAlive = 0;
+    private Dictionary<GameObject, bool> uiStateBeforeIntro = new Dictionary<GameObject, bool>();
 
     private void Awake()
     {
@@ -124,6 +139,7 @@ public class WaveManager : MonoBehaviour
     IEnumerator SpawnEnemyWave(Wave wave, bool isLastWave)
     {
         Debug.Log($"Spawning wave: {wave.waveName}");
+        yield return StartCoroutine(PlayCinemachineIntro());
 
         if (isLastWave)
         {
@@ -209,6 +225,70 @@ public class WaveManager : MonoBehaviour
         {
             Debug.Log("All waves completed! Player wins!");
             onAllWavesCompleted?.Invoke();
+        }
+    }
+
+    private IEnumerator PlayCinemachineIntro()
+    {
+        //das ganze soll für x sekunden laufen
+        //in der zeit wollen wir die UI eigentlich komplett ausblenden
+        //deaktivierung von input nicht so wichtig
+        if (waveIntroCamera != null)
+        {
+            SaveAndHideUI();
+            waveIntroCamera.enabled = true;
+            waveIntroCamera.Priority = 999;
+
+            yield return new WaitForSeconds(introCameraDuration);
+
+            RestoreUI();
+            waveIntroCamera.Priority = 0;
+            waveIntroCamera.enabled = false;
+        }
+    }
+
+    private void SaveAndHideUI()
+    {
+        uiStateBeforeIntro.Clear();
+
+        // Save state and hide UI elements that should be hidden
+        foreach (var uiElement in uiControlsToHideDuringIntro)
+        {
+            if (uiElement != null)
+            {
+                uiStateBeforeIntro[uiElement] = uiElement.activeSelf;
+                uiElement.SetActive(false);
+            }
+        }
+
+        // Show UI elements that should appear during intro
+        foreach (var uiElement in uiControlsToShowDuringIntro)
+        {
+            if (uiElement != null)
+            {
+                uiElement.SetActive(true);
+            }
+        }
+    }
+
+    private void RestoreUI()
+    {
+        // Restore original state of hidden UI elements
+        foreach (var kvp in uiStateBeforeIntro)
+        {
+            if (kvp.Key != null)
+            {
+                kvp.Key.SetActive(kvp.Value);
+            }
+        }
+
+        // Hide UI elements that were shown during intro
+        foreach (var uiElement in uiControlsToShowDuringIntro)
+        {
+            if (uiElement != null)
+            {
+                uiElement.SetActive(false);
+            }
         }
     }
 }
