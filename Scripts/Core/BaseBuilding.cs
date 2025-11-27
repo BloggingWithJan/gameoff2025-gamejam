@@ -11,36 +11,28 @@ namespace Core
     {
         public event Action OnBuildingDestroyed;
 
-        [SerializeField]
-        public string buildingName;
+        [SerializeField] public string buildingName;
 
-        [SerializeField]
-        public string description;
+        [SerializeField] public string description;
 
-        [SerializeField]
-        public int maxUnitSlots = 3;
+        [SerializeField] public int maxUnitSlots = 3;
 
-        [SerializeField]
-        ParticleSystem damagedEffect;
+        [SerializeField] ParticleSystem damagedEffect;
 
-        [SerializeField]
-        AudioClip destroySound;
+        [SerializeField] AudioClip destroySound;
 
-        [SerializeField]
-        Transform spawnPoint;
+        [SerializeField] Transform spawnPoint;
 
-        [SerializeField]
-        public bool isMovable = true;
+        [SerializeField] public bool isMovable = true;
 
-        [SerializeField]
-        public bool isDismantable = true;
-
-        [Header("Costs")]
-        public List<ResourceCost> costs;
-
-        [Header("Refund")]
-        public List<ResourceCost> refunds;
+        [SerializeField] public bool isDismantable = true;
         
+        [SerializeField] public bool isAssignable = true;
+
+        [Header("Costs")] public List<ResourceCost> costs;
+
+        [Header("Refund")] public List<ResourceCost> refunds;
+
         [HideInInspector] public bool IsPreview = false;
 
         private AudioSource audioSource;

@@ -290,12 +290,14 @@ MonoBehaviour:
   spawnPoint: {fileID: 5341826467218649716}
   isMovable: 0
   isDismantable: 0
+  isAssignable: 0
   costs:
   - resource: 0
     amount: 100
   refunds:
   - resource: 0
     amount: 0
+  IsPreview: 0
   unitPrefab: {fileID: 1741436728937980818, guid: a9ba21339c8cbeb4fb247c50f6315b08, type: 3}
   spawnInterval: 60
   initialDelay: 60

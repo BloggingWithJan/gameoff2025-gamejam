@@ -254,6 +254,7 @@ MonoBehaviour:
   spawnPoint: {fileID: 444364409763907328}
   isMovable: 1
   isDismantable: 1
+  isAssignable: 0
   costs:
   - resource: 0
     amount: 30
@@ -264,6 +265,7 @@ MonoBehaviour:
     amount: 3
   - resource: 1
     amount: 1
+  IsPreview: 0
   populationIncrease: 5
 --- !u!1 &3632215237100504751
 GameObject:

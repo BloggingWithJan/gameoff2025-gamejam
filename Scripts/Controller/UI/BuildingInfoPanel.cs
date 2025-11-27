@@ -21,6 +21,8 @@ namespace Controller.UI
 
         [SerializeField]
         private TMP_Text unitSlotsText;
+        [SerializeField]
+        private GameObject isAssignableDivider;
 
         [SerializeField]
         private Button moveButton;
@@ -91,6 +93,8 @@ namespace Controller.UI
 
             moveButton.interactable = building.isMovable;
             deleteButton.interactable = building.isDismantable;
+            isAssignableDivider.SetActive(building.isAssignable);
+            unitSlotsText.gameObject.SetActive(building.isAssignable);
 
             UpdatePosition();
 
