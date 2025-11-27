@@ -40,6 +40,8 @@ namespace Core
 
         [Header("Refund")]
         public List<ResourceCost> refunds;
+        
+        [HideInInspector] public bool IsPreview = false;
 
         private AudioSource audioSource;
 

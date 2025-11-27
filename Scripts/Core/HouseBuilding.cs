@@ -31,6 +31,7 @@ namespace GameJam.Core
 
         void OnDestroy()
         {
+            if (IsPreview) return;
             ResourceManager.Instance.DeductMaxPopulation(populationIncrease);
         }
     }

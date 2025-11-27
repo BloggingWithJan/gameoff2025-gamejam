@@ -136,7 +136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Controller.GhostShipController
   riseDuration: 2
-  rideDuration: 2.5
+  rideDuration: 5
   diveDuration: 2
   crashDepth: 50
   diveExplosionPrefab: {fileID: 191186, guid: 079954accd64b32419ec069129c81273, type: 3}

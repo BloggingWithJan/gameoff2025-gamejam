@@ -11,23 +11,17 @@ namespace GameJam.Resource
     {
         public static ResourceManager Instance { get; private set; }
 
-        [Header("UI References")] [SerializeField]
-        private TMP_Text woodText;
-
+        [Header("UI References")]
+        [SerializeField] private TMP_Text woodText;
         [SerializeField] private TMP_Text stoneText;
-
         [SerializeField] private TMP_Text foodText;
-
         [SerializeField] private TMP_Text populationText;
 
-        [Header("Values")] [SerializeField] private int wood;
-
+        [Header("Values")]
+        [SerializeField] private int wood;
         [SerializeField] private int stone;
-
         [SerializeField] private int food;
-
         [SerializeField] private int currentPopulation;
-
         [SerializeField] private int maxPopulation;
 
         public int CurrentPopulation => currentPopulation;
@@ -63,8 +57,10 @@ namespace GameJam.Resource
 
         private void Start()
         {
-            UpdateUI();
+            UpdateAllUI();
         }
+
+        #region Resource Management
 
         public int GetResource(ResourceType type) => _resources[type];
 
@@ -76,12 +72,82 @@ namespace GameJam.Resource
 
         public void AddResource(ResourceType type, int amount)
         {
-            if (!_resources.ContainsKey(type))
-                return;
-
+            if (!_resources.ContainsKey(type)) return;
             _resources[type] += amount;
             UpdateUIText(type);
         }
+
+        public bool HasSufficientResources(ResourceCost cost)
+        {
+            return _resources.ContainsKey(cost.resource) && _resources[cost.resource] >= cost.amount;
+        }
+
+        public bool HasSufficientResources(BaseBuilding buildingData, float multiplier)
+        {
+            foreach (var cost in buildingData.costs)
+            {
+                if (!_resources.ContainsKey(cost.resource)) return false;
+                if (_resources[cost.resource] < Mathf.FloorToInt(cost.amount * multiplier)) return false;
+            }
+            return true;
+        }
+
+        public void DeductResources(ResourceCost cost)
+        {
+            if (!_resources.ContainsKey(cost.resource)) return;
+
+            if (cost.resource == ResourceType.Population)
+                AddPopulation(-cost.amount);
+            else
+            {
+                _resources[cost.resource] -= cost.amount;
+                UpdateUIText(cost.resource);
+            }
+        }
+
+        public void DeductResources(BaseBuilding buildingData, float multiplier)
+        {
+            foreach (var cost in buildingData.costs)
+            {
+                int amount = Mathf.FloorToInt(cost.amount * multiplier);
+                if (cost.resource == ResourceType.Population)
+                    AddPopulation(-amount);
+                else if (_resources.ContainsKey(cost.resource))
+                {
+                    _resources[cost.resource] -= amount;
+                    UpdateUIText(cost.resource);
+                }
+            }
+        }
+
+        public List<ResourceCost> RefundResourcesPartially(BaseBuilding buildingData, float refundPercentage = 0.5f)
+        {
+            var refunded = new List<ResourceCost>();
+            if (buildingData?.costs == null) return refunded;
+
+            foreach (var cost in buildingData.costs)
+            {
+                int refundAmount = Mathf.FloorToInt(cost.amount * refundPercentage);
+                if (refundAmount <= 0) continue;
+
+                if (cost.resource == ResourceType.Population)
+                {
+                    AddPopulation(refundAmount);
+                    refunded.Add(new ResourceCost(ResourceType.Population, refundAmount));
+                }
+                else if (_resources.ContainsKey(cost.resource))
+                {
+                    _resources[cost.resource] += refundAmount;
+                    UpdateUIText(cost.resource);
+                    refunded.Add(new ResourceCost(cost.resource, refundAmount));
+                }
+            }
+            return refunded;
+        }
+
+        #endregion
+
+        #region Population Management
 
         public void SetPopulation(int value)
         {
@@ -107,149 +173,27 @@ namespace GameJam.Resource
         public void AddMaxPopulation(int value)
         {
             SetMaxPopulation(maxPopulation + value);
-            UpdatePopulationUI();
         }
 
         public void DeductMaxPopulation(int value)
         {
             SetMaxPopulation(maxPopulation - value);
-            UpdatePopulationUI();
         }
 
         public void DeductPopulation(int value)
         {
             SetPopulation(currentPopulation - value);
-            UpdatePopulationUI();
         }
 
-        public bool MaxPopulationReached()
-        {
-            return currentPopulation >= maxPopulation;
-        }
+        public bool MaxPopulationReached() => currentPopulation >= maxPopulation;
 
-        public bool HasSufficientResources(ResourceCost cost)
-        {
-            if (!_resources.ContainsKey(cost.resource))
-            {
-                Debug.LogError($"Resource type {cost.resource} not implemented");
-                return false;
-            }
+        #endregion
 
-            if (_resources[cost.resource] < cost.amount)
-                return false;
-
-            return true;
-        }
-
-        public bool HasSufficientResources(BaseBuilding buildingData, float multiplier)
-        {
-            foreach (var cost in buildingData.costs)
-            {
-                if (!_resources.ContainsKey(cost.resource))
-                {
-                    Debug.LogError($"Resource type {cost.resource} not implemented");
-                    return false;
-                }
-
-                int requiredAmount = Mathf.FloorToInt(cost.amount * multiplier);
-                if (_resources[cost.resource] < requiredAmount)
-                    return false;
-            }
-
-            return true;
-        }
-
-
-        public void DeductResources(ResourceCost cost)
-        {
-            if (cost.resource == ResourceType.Population)
-            {
-                SetPopulation(currentPopulation - cost.amount);
-                return;
-            }
-
-            if (!_resources.ContainsKey(cost.resource))
-            {
-                Debug.LogError($"Resource type {cost.resource} not implemented");
-                return;
-            }
-
-            _resources[cost.resource] -= cost.amount;
-            UpdateUIText(cost.resource);
-        }
-
-        public void DeductResources(BaseBuilding buildingData, float multiplier)
-        {
-            foreach (var cost in buildingData.costs)
-            {
-                int amountToDeduct = Mathf.FloorToInt(cost.amount * multiplier);
-
-                if (cost.resource == ResourceType.Population)
-                {
-                    SetPopulation(currentPopulation - cost.amount);
-                    continue;
-                }
-
-                if (!_resources.ContainsKey(cost.resource))
-                {
-                    Debug.LogError($"Resource type {cost.resource} not implemented");
-                    continue;
-                }
-
-                _resources[cost.resource] -= amountToDeduct;
-                UpdateUIText(cost.resource);
-            }
-        }
-
-        public List<ResourceCost> RefundResourcesPartially(
-            BaseBuilding buildingData,
-            float refundPercentage = 0.5f
-        )
-        {
-            var refundedResources = new List<ResourceCost>();
-
-            if (buildingData == null || buildingData.costs == null)
-                return refundedResources;
-
-            foreach (var cost in buildingData.costs)
-            {
-                int refundAmount = Mathf.FloorToInt(cost.amount * refundPercentage);
-                if (refundAmount <= 0)
-                    continue;
-
-                if (cost.resource == ResourceType.Population)
-                {
-                    AddPopulation(refundAmount);
-                    refundedResources.Add(new ResourceCost(ResourceType.Population, refundAmount));
-                    continue;
-                }
-
-                if (!_resources.ContainsKey(cost.resource))
-                {
-                    Debug.LogError($"Resource type {cost.resource} not implemented for refund.");
-                    continue;
-                }
-
-                _resources[cost.resource] += refundAmount;
-                UpdateUIText(cost.resource);
-                refundedResources.Add(new ResourceCost(cost.resource, refundAmount));
-            }
-
-            return refundedResources;
-        }
-
-        [ContextMenu("Update Resource UI")]
-        private void UpdateUI()
-        {
-            foreach (var type in _resources.Keys)
-                UpdateUIText(type);
-
-            UpdatePopulationUI();
-        }
+        #region UI Updates
 
         private void UpdateUIText(ResourceType type)
         {
-            if (_uiTexts.TryGetValue(type, out TMP_Text text))
+            if (_uiTexts.TryGetValue(type, out var text))
                 text.text = _resources[type].ToString();
 
             wood = _resources[ResourceType.Wood];
@@ -260,7 +204,18 @@ namespace GameJam.Resource
         private void UpdatePopulationUI()
         {
             populationText.text = $"{currentPopulation} / {maxPopulation}";
+            print($"{currentPopulation} / {maxPopulation}");
         }
+
+        private void UpdateAllUI()
+        {
+            foreach (var type in _resources.Keys)
+                UpdateUIText(type);
+
+            UpdatePopulationUI();
+        }
+
+        #endregion
 
         [ContextMenu("Sync From Inspector")]
         private void SyncFromInspector()
@@ -270,7 +225,7 @@ namespace GameJam.Resource
             _resources[ResourceType.Food] = food;
 
             currentPopulation = Mathf.Clamp(currentPopulation, 0, maxPopulation);
-            UpdateUI();
+            UpdateAllUI();
         }
     }
 }

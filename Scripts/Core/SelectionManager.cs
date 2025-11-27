@@ -36,7 +36,7 @@ namespace Core
         private const float MIN_HOLD_FOR_DRAG = 0.15f;
         private const float MIN_DRAG_DISTANCE = 10f;
 
-        private readonly HashSet<string> ignoredTags = new() { "Building" };
+        private readonly HashSet<string> ignoredTags = new() { "Building", "Enemy" };
 
         private void OnEnable()
         {

@@ -23,7 +23,7 @@ namespace UI.Managers
         private GameObject _previewInstance;
         private bool _isPlacing;
 
-        //if a building gets moved
+        // if a building gets moved
         private GameObject _currentBuilding;
         private bool _isBeingRelocated;
 
@@ -36,6 +36,9 @@ namespace UI.Managers
 
         // distance used when sampling the NavMesh to determine if placement point is on a navmesh
         [SerializeField] private float navMeshSampleDistance = 0.5f;
+
+        //track disabled scripts during preview
+        private readonly List<MonoBehaviour> _disabledScripts = new();
 
         private bool TryGetGroundHit(out RaycastHit hit)
         {
@@ -250,8 +253,16 @@ namespace UI.Managers
 
             _currentPrefab = prefab;
             _previewInstance = Instantiate(prefab, buildingsParentGameObject.transform);
+            
+            if (_previewInstance.TryGetComponent<BaseBuilding>(out var building))
+            {
+                building.IsPreview = true;
+            }
+            
+            // disable all scripts during placement**
+            DisableBuildingScripts(_previewInstance);
 
-            //disable obstacle so that units dont get pushed around
+            // disable obstacle so that units dont get pushed around
             if (_previewInstance.TryGetComponent<NavMeshObstacle>(out NavMeshObstacle obstacle))
             {
                 obstacle.enabled = false;
@@ -259,7 +270,7 @@ namespace UI.Managers
 
             if (_isBeingRelocated)
             {
-                _currentBuilding.SetActive(false); //hide original
+                _currentBuilding.SetActive(false); // hide original
             }
 
             SetPreviewMaterial(_previewInstance);
@@ -278,6 +289,31 @@ namespace UI.Managers
             DisableActionAssets();
         }
 
+        // **NEW: Disable all MonoBehaviours on preview**
+        private void DisableBuildingScripts(GameObject building)
+        {
+            _disabledScripts.Clear();
+            var scripts = building.GetComponentsInChildren<MonoBehaviour>(true);
+            foreach (var script in scripts)
+            {
+                if (script.enabled)
+                {
+                    script.enabled = false;
+                    _disabledScripts.Add(script);
+                }
+            }
+        }
+
+        // **NEW: Re-enable scripts after placement**
+        private void EnableBuildingScripts(GameObject building)
+        {
+            foreach (var script in building.GetComponentsInChildren<MonoBehaviour>(true))
+            {
+                if (_disabledScripts.Contains(script))
+                    script.enabled = true;
+            }
+        }
+
         private void DisableActionAssets()
         {
             var map = InputActionAsset.FindActionMap("Player");
@@ -294,12 +330,11 @@ namespace UI.Managers
         {
             // Determine which building data to use
             BaseBuilding buildingData = _isBeingRelocated
-                ? _currentBuilding.GetComponent<BaseBuilding>() // relocating existing building
-                : _currentPrefab.GetComponent<BaseBuilding>(); // placing new building
+                ? _currentBuilding.GetComponent<BaseBuilding>()
+                : _currentPrefab.GetComponent<BaseBuilding>();
 
             float multiplier = _isBeingRelocated ? 0.25f : 1f;
 
-            // Check resources for both cases
             if (!ResourceManager.Instance.HasSufficientResources(buildingData, multiplier))
             {
                 FloatingTextController.Instance.ShowFloatingText(
@@ -322,16 +357,24 @@ namespace UI.Managers
             {
                 _currentBuilding.transform.position = position;
                 _currentBuilding.transform.rotation = _previewInstance.transform.rotation;
+                EnableBuildingScripts(_currentBuilding); // **re-enable scripts**
                 _currentBuilding.SetActive(true);
             }
             else
             {
-                Instantiate(
+                GameObject placed = Instantiate(
                     _currentPrefab,
                     position,
                     _previewInstance.transform.rotation,
                     buildingsParentGameObject.transform
                 );
+                
+                if (placed.TryGetComponent<BaseBuilding>(out var placedBuilding))
+                {
+                    placedBuilding.IsPreview = false;
+                }
+                
+                EnableBuildingScripts(placed); // **re-enable scripts**
             }
 
             // Cleanup
@@ -383,7 +426,6 @@ namespace UI.Managers
                 {
                     var mat = new Material(r.material);
 
-                    // Check if material has a color property before trying to access it
                     if (mat.HasProperty("_Color"))
                     {
                         mat.color = new Color(mat.color.r, mat.color.g, mat.color.b, 0.5f);
@@ -393,13 +435,9 @@ namespace UI.Managers
                         Color tint = mat.GetColor("_TintColor");
                         mat.SetColor("_TintColor", new Color(tint.r, tint.g, tint.b, 0.5f));
                     }
-                    else
+                    else if (mat.HasProperty("_Alpha"))
                     {
-                        // For shaders without color properties, try to set alpha via shader property
-                        if (mat.HasProperty("_Alpha"))
-                        {
-                            mat.SetFloat("_Alpha", 0.5f);
-                        }
+                        mat.SetFloat("_Alpha", 0.5f);
                     }
 
                     r.material = mat;
@@ -425,10 +463,7 @@ namespace UI.Managers
                     else if (r.material.HasProperty("_TintColor"))
                     {
                         Color c = r.material.GetColor("_TintColor");
-                        r.material.SetColor(
-                            "_TintColor",
-                            new Color(color.r, color.g, color.b, c.a)
-                        );
+                        r.material.SetColor("_TintColor", new Color(color.r, color.g, color.b, c.a));
                     }
                 }
                 catch (System.Exception e)
@@ -442,7 +477,6 @@ namespace UI.Managers
         {
             float maxDistance = box.size.y * 0.5f * _previewInstance.transform.lossyScale.y + 0.1f;
 
-            // Get all 4 bottom corners in world space
             Vector3 half = Vector3.Scale(box.size * 0.5f, box.transform.lossyScale);
 
             Vector3[] localOffsets =
@@ -456,8 +490,6 @@ namespace UI.Managers
             foreach (var offset in localOffsets)
             {
                 Vector3 worldPoint = box.transform.TransformPoint(box.center + offset);
-
-                // Every corner must be on NavMesh
                 if (!NavMesh.SamplePosition(worldPoint, out _, maxDistance, NavMesh.AllAreas))
                     return false;
             }

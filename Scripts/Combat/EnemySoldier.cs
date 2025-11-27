@@ -244,10 +244,9 @@ namespace GameJam.Combat
 
                 // Check if it's a building (has Health but no Fighter - or specific Building component)
                 Health buildingHealth = col.GetComponent<Health>();
-                bool isBuilding = col.GetComponent<BaseBuilding>() != null;
-                // bool isBuilding = col.GetComponent<GameJam.Production.BaseBuilding>() != null;
+                BaseBuilding isBuilding = col.GetComponent<BaseBuilding>();
 
-                if (isBuilding && buildingHealth != null && !buildingHealth.IsDead())
+                if (isBuilding  != null && isBuilding.enabled && buildingHealth != null && !buildingHealth.IsDead())
                 {
                     float distance = Vector3.Distance(transform.position, col.transform.position);
                     if (distance < nearestDistance)
