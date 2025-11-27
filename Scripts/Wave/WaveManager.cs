@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Controller;
 using GameJam.Combat;
 using GameJam.Core;
 using TMPro;
@@ -30,41 +31,37 @@ public class WaveManager : MonoBehaviour
         public List<EnemySpawnInfo> enemies = new List<EnemySpawnInfo>();
     }
 
-    [Header("UI References")]
-    [SerializeField]
+    [Header("UI References")] [SerializeField]
     private TMP_Text currentWaveText;
 
-    [SerializeField]
-    private TMP_Text nextWaveText;
+    [SerializeField] private TMP_Text nextWaveText;
 
-    [Header("Wave Settings")]
-    [SerializeField]
+    [Header("Wave Settings")] [SerializeField]
     private List<Wave> waves = new List<Wave>();
 
-    [SerializeField]
-    private Transform[] spawnPoints;
+    [SerializeField] private Transform[] spawnPoints;
 
-    [SerializeField]
-    private Transform playerBase;
+    [SerializeField] private Transform playerBase;
 
-    [SerializeField]
-    float initialDelay = 60f;
+    [SerializeField] float initialDelay = 60f;
 
-    [SerializeField]
-    float timeBetweenWaves = 120f;
+    [SerializeField] float timeBetweenWaves = 120f;
 
-    [Header("Cinematics")]
-    [SerializeField]
+    [Header("Cinematics")] [SerializeField]
     CinemachineCamera waveIntroCamera;
 
-    [SerializeField]
-    float introCameraDuration = 3f;
+    [SerializeField] float introCameraDuration = 3f;
 
-    [SerializeField]
-    List<GameObject> uiControlsToHideDuringIntro;
+    [SerializeField] List<GameObject> uiControlsToHideDuringIntro;
 
-    [SerializeField]
-    List<GameObject> uiControlsToShowDuringIntro;
+    [SerializeField] List<GameObject> uiControlsToShowDuringIntro;
+
+    [Header("Ghost Ship Settings")] [SerializeField]
+    private GameObject ghostShipPrefab;
+
+    [SerializeField] private Transform islandCenter;
+    [SerializeField] private float waterLevel = 0f;
+    [SerializeField] private float shipEntryDistance = 50f;
 
     private int currentWave = 0;
     private float countdownToNextWave;
@@ -132,6 +129,7 @@ public class WaveManager : MonoBehaviour
                 countdownToNextWave -= Time.deltaTime;
                 UpdateWaveUI();
             }
+
             currentWave++;
         }
     }
@@ -147,15 +145,57 @@ public class WaveManager : MonoBehaviour
             lastWaveEnemiesAlive = 0;
         }
 
+        // pick a random spawn point for the ship to crash on
+        Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)];
+        Vector3 targetPos = spawnPoint.position;
+
+// calculate where the ship enters from
+        Vector3 entryPos = ComputeShipEntryPoint(targetPos);
+
+// spawn the ghost ship
+        GameObject ship = Instantiate(ghostShipPrefab);
+        var controller = ship.GetComponent<GhostShipController>();
+
+        bool waveSpawned = false;
+
+        controller.StartSequence(entryPos, targetPos, waterLevel);
+        controller.onCrash = () =>
+        {
+            if (!waveSpawned)
+            {
+                waveSpawned = true;
+                StartCoroutine(SpawnEnemiesAfterShipCrash(wave, isLastWave, spawnPoint));
+            }
+        };
+
+// wait until ship triggers its crash callback
+        while (!waveSpawned)
+        {
+            yield return null;
+        }
+    }
+
+    private IEnumerator SpawnEnemiesAfterShipCrash(Wave wave, bool isLastWave, Transform spawnPoint)
+    {
+        if (isLastWave)
+        {
+            lastWaveEnemies.Clear();
+            lastWaveEnemiesAlive = 0;
+        }
+
         foreach (EnemySpawnInfo enemyInfo in wave.enemies)
         {
             for (int i = 0; i < enemyInfo.count; i++)
             {
-                GameObject enemy = SpawnEnemy(enemyInfo.enemyPrefab);
+                GameObject enemy = Instantiate(enemyInfo.enemyPrefab, spawnPoint.position, spawnPoint.rotation);
 
-                if (isLastWave && enemy != null)
+                var aiController = enemy.GetComponent<EnemySoldier>();
+                if (aiController != null && playerBase != null)
+                    aiController.SetPlayerBase(playerBase);
+
+                if (isLastWave)
                 {
-                    Health health = enemy.GetComponent<Health>();
+                    var health = enemy.GetComponent<Health>();
                     if (health != null)
                     {
                         lastWaveEnemies.Add(health);
@@ -168,6 +208,7 @@ public class WaveManager : MonoBehaviour
             }
         }
     }
+
 
     GameObject SpawnEnemy(GameObject enemyPrefab)
     {
@@ -290,5 +331,13 @@ public class WaveManager : MonoBehaviour
                 uiElement.SetActive(false);
             }
         }
+    }
+
+    private Vector3 ComputeShipEntryPoint(Vector3 spawnPoint)
+    {
+        Vector3 outwardDir = (spawnPoint - islandCenter.position).normalized;
+        Vector3 entry = spawnPoint + outwardDir * shipEntryDistance;
+        entry.y = waterLevel - 8f;
+        return entry;
     }
 }
