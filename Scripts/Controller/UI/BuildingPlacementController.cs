@@ -35,8 +35,7 @@ namespace UI.Managers
         private float _maxRaycastDistance = 500f;
 
         // distance used when sampling the NavMesh to determine if placement point is on a navmesh
-        [SerializeField]
-        private float navMeshSampleDistance = 0.5f;
+        [SerializeField] private float navMeshSampleDistance = 0.5f;
 
         private bool TryGetGroundHit(out RaycastHit hit)
         {
@@ -131,9 +130,7 @@ namespace UI.Managers
             }
         }
 
-        private (bool noBlockers, bool onNavMesh, List<Collider> blockers) IsValidPlacement(
-            Vector3 position
-        )
+        private (bool noBlockers, bool onNavMesh, List<Collider> blockers) IsValidPlacement(Vector3 position)
         {
             var blockers = new List<Collider>();
 
