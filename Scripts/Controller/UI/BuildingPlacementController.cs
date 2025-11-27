@@ -35,7 +35,8 @@ namespace UI.Managers
         private float _maxRaycastDistance = 500f;
 
         // distance used when sampling the NavMesh to determine if placement point is on a navmesh
-        [SerializeField] private float navMeshSampleDistance = 0.5f;
+        [SerializeField]
+        private float navMeshSampleDistance = 0.5f;
 
         private bool TryGetGroundHit(out RaycastHit hit)
         {
@@ -300,7 +301,7 @@ namespace UI.Managers
                 : _currentPrefab.GetComponent<BaseBuilding>(); // placing new building
 
             float multiplier = _isBeingRelocated ? 0.25f : 1f;
-            
+
             // Check resources for both cases
             if (!ResourceManager.Instance.HasSufficientResources(buildingData, multiplier))
             {
@@ -310,7 +311,7 @@ namespace UI.Managers
                 );
                 return;
             }
-            
+
             // Deduct resources and show floating texts
             ResourceManager.Instance.DeductResources(buildingData, multiplier);
             foreach (var cost in buildingData.costs)
@@ -381,9 +382,35 @@ namespace UI.Managers
         {
             foreach (Renderer r in obj.GetComponentsInChildren<Renderer>())
             {
-                var mat = new Material(r.material);
-                mat.color = new Color(mat.color.r, mat.color.g, mat.color.b, 0.5f);
-                r.material = mat;
+                try
+                {
+                    var mat = new Material(r.material);
+
+                    // Check if material has a color property before trying to access it
+                    if (mat.HasProperty("_Color"))
+                    {
+                        mat.color = new Color(mat.color.r, mat.color.g, mat.color.b, 0.5f);
+                    }
+                    else if (mat.HasProperty("_TintColor"))
+                    {
+                        Color tint = mat.GetColor("_TintColor");
+                        mat.SetColor("_TintColor", new Color(tint.r, tint.g, tint.b, 0.5f));
+                    }
+                    else
+                    {
+                        // For shaders without color properties, try to set alpha via shader property
+                        if (mat.HasProperty("_Alpha"))
+                        {
+                            mat.SetFloat("_Alpha", 0.5f);
+                        }
+                    }
+
+                    r.material = mat;
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogError($"Error setting preview material: {e.Message}");
+                }
             }
         }
 
@@ -391,8 +418,26 @@ namespace UI.Managers
         {
             foreach (var r in _previewRenderers)
             {
-                Color c = r.material.color;
-                r.material.color = new Color(color.r, color.g, color.b, c.a);
+                try
+                {
+                    if (r.material.HasProperty("_Color"))
+                    {
+                        Color c = r.material.color;
+                        r.material.color = new Color(color.r, color.g, color.b, c.a);
+                    }
+                    else if (r.material.HasProperty("_TintColor"))
+                    {
+                        Color c = r.material.GetColor("_TintColor");
+                        r.material.SetColor(
+                            "_TintColor",
+                            new Color(color.r, color.g, color.b, c.a)
+                        );
+                    }
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogError($"Error setting preview color: {e.Message}");
+                }
             }
         }
 
