@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 3171904627083374580}
   - component: {fileID: 6448575568631425907}
   - component: {fileID: 858033633922039365}
-  - component: {fileID: -1648190698832610650}
   m_Layer: 0
   m_Name: Wood
   m_TagString: Wood
@@ -89,25 +88,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2, y: 1, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-1648190698832610650
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4391544495835618487}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fdc07ed7143304749aba12fd54c54031, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BuildingData
-  buildingName: Tree
-  description: Used to spawn a Tree. Workers will use the Tree to collect Wood
-  icon: {fileID: 21300000, guid: c1abcc91b047c6240a74ca1bc15ee18a, type: 3}
-  costs:
-  - resource: 2
-    amount: 100
-  refunds: []
 --- !u!1001 &108806636246819469
 PrefabInstance:
   m_ObjectHideFlags: 0

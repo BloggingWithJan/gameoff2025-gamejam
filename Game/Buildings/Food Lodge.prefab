@@ -292,7 +292,7 @@ Transform:
   m_GameObject: {fileID: 545191156118467605}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.29903, y: 4.76932, z: -6}
+  m_LocalPosition: {x: -0.61, y: 4.76932, z: -6.59}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1314,7 +1314,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b57dd7f5a0947640b8e7ad2bdfe3e04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Core.Health
-  maxHealth: 100
+  maxHealth: 450
 --- !u!114 &1850030508306093270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1351,10 +1351,14 @@ MonoBehaviour:
   isDismantable: 1
   costs:
   - resource: 0
-    amount: 50
+    amount: 40
+  - resource: 1
+    amount: 20
   refunds:
   - resource: 0
-    amount: 10
+    amount: 4
+  - resource: 0
+    amount: 2
   gathererType: {fileID: 11400000, guid: 2f219bc075b04134489939ba9eba86d9, type: 2}
 --- !u!1 &3554460161819164901
 GameObject:

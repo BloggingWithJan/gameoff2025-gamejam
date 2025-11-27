@@ -15,7 +15,7 @@ MonoBehaviour:
   typeName: Food Chad
   toolPrefab: {fileID: 11400000, guid: e1e92fa7a809efd4eb42e0d9425f3bd7, type: 2}
   resourceTag: Food
-  gatherTime: 3
+  gatherTime: 5
   gatherAmount: 10
   gatherSound: {fileID: 8300000, guid: 2e85be738b3bc4f4f9509d662187b5c1, type: 3}
   headMesh: {fileID: -1793059242609255079, guid: d92903b785289cb4eb314d20502362d6, type: 3}

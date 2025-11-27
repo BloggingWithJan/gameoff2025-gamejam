@@ -16,7 +16,7 @@ MonoBehaviour:
   toolPrefab: {fileID: 11400000, guid: 609731a5cda6b7444b6221285eded679, type: 2}
   resourceTag: Stone
   gatherTime: 5
-  gatherAmount: 10
+  gatherAmount: 5
   gatherSound: {fileID: 8300000, guid: b0bd56fef2752c9489ae26f1e8506ad2, type: 3}
   headMesh: {fileID: -1793059242609255079, guid: bc1f101bce4b6a646a6e44a9b087e9b0, type: 3}
   bodyMesh: {fileID: 988656143610355917, guid: bc1f101bce4b6a646a6e44a9b087e9b0, type: 3}

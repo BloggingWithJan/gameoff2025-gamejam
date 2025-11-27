@@ -291,7 +291,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b57dd7f5a0947640b8e7ad2bdfe3e04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Core.Health
-  maxHealth: 100
+  maxHealth: 950
 --- !u!114 &6948967033234731732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -328,14 +328,14 @@ MonoBehaviour:
   isDismantable: 1
   costs:
   - resource: 0
-    amount: 50
+    amount: 180
   - resource: 1
-    amount: 10
+    amount: 250
   refunds:
   - resource: 0
-    amount: 10
+    amount: 18
   - resource: 1
-    amount: 2
+    amount: 25
   soldierType: {fileID: 11400000, guid: b62861fa94fb6094c917142e220d8c1d, type: 2}
 --- !u!54 &5385279385527283474
 Rigidbody:

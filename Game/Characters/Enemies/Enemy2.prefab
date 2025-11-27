@@ -122,7 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b57dd7f5a0947640b8e7ad2bdfe3e04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Core.Health
-  maxHealth: 25
+  maxHealth: 50
 --- !u!114 &7142714823947597515
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -261,7 +261,7 @@ MonoBehaviour:
   leftHandTransform: {fileID: 7251075886009760442}
   headSlotRenderer: {fileID: 0}
   bodySlotRenderer: {fileID: 0}
-  unitName: Villager
+  unitName: Spear Thrower
   assignedBuilding: {fileID: 0}
 --- !u!114 &-1704521870967619847
 MonoBehaviour:

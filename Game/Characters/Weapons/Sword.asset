@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Combat.Weapon
   animatorOverride: {fileID: 0}
   equippedPrefab: {fileID: 7951638916513677963, guid: 548cb98c876d24049b8fbca809a80769, type: 3}
-  weaponDamage: 5
+  weaponDamage: 12.5
   weaponRange: 2
   timeBetweenAttacks: 1
   isRightHanded: 1
