@@ -1085,7 +1085,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82ad44065e608f44a9c487bbe81112e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenu
-  introSceneName: IntroScene
+  introSceneName: GameJamScene
 --- !u!4 &580791605 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1443667911885127724, guid: d3d6d551d061a984c8a47fecc5b5534f, type: 3}
