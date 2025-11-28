@@ -21,6 +21,9 @@ namespace Controller
         [Header("Entry Settings")]
         [Tooltip("How far below the water the ship starts")]
         public float startDepth = 30;
+        
+        [Header("Audio")]
+        public AudioSource crashAudioSource;
 
         Vector3 startPos, midPos, crashPos;
         Quaternion midRot, diveRot;
@@ -96,8 +99,12 @@ namespace Controller
                 if (!explosionTriggered && k >= 0.01f)
                 {
                     explosionTriggered = true;
+
                     if (diveExplosionPrefab != null)
                         Instantiate(diveExplosionPrefab, new Vector3(crashPos.x, crashPos.y + crashDepth, crashPos.z), Quaternion.identity);
+
+                    if (crashAudioSource != null)
+                        crashAudioSource.Play();
                 }
 
                 yield return null;
