@@ -21,11 +21,14 @@ namespace GameJam.Military
         private Health health;
         private Health currentTarget;
 
+        private AudioSource audioSource;
+
         private float timeSinceLastAttack = Mathf.Infinity;
 
         void Start()
         {
             health = GetComponent<Health>();
+            audioSource = GetComponent<AudioSource>();
             Patrol();
         }
 
@@ -82,6 +85,7 @@ namespace GameJam.Military
             {
                 timeSinceLastAttack = 0;
                 weapon.LaunchProjectile(transform, transform, currentTarget);
+                audioSource.PlayOneShot(weapon.GetAttackSound());
             }
         }
 

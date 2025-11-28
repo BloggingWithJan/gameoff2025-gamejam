@@ -27,6 +27,9 @@ namespace GameJam.Combat
         [SerializeField]
         Projectile projectile = null;
 
+        [SerializeField]
+        AudioClip attackSound = null;
+
         GameObject instantiatedWeapon = null;
 
         private Animator animatorController = null;
@@ -98,6 +101,11 @@ namespace GameJam.Combat
             {
                 animatorController.runtimeAnimatorController = originalController;
             }
+        }
+
+        public AudioClip GetAttackSound()
+        {
+            return attackSound;
         }
     }
 }
