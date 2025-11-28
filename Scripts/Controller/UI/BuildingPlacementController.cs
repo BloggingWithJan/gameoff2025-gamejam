@@ -19,6 +19,8 @@ namespace UI.Managers
         public GameObject buildPlacingControls;
         public GameObject buildingsParentGameObject;
 
+        [SerializeField] private AudioSource placementAudioSource;
+        
         private GameObject _currentPrefab;
         private GameObject _previewInstance;
         private bool _isPlacing;
@@ -377,6 +379,9 @@ namespace UI.Managers
                 EnableBuildingScripts(placed); // **re-enable scripts**
             }
 
+            if (placementAudioSource != null)
+                placementAudioSource.Play();
+            
             // Cleanup
             Destroy(_previewInstance);
             ClearBlockerOutlines();
