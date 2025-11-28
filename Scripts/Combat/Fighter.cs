@@ -16,6 +16,7 @@ namespace GameJam.Combat
         float timeSinceLastAttack = Mathf.Infinity;
 
         private ActionScheduler actionScheduler;
+        private AudioSource audioSource;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -23,6 +24,7 @@ namespace GameJam.Combat
             unit = GetComponent<Unit>();
             fighter = GetComponent<Health>();
             actionScheduler = GetComponent<ActionScheduler>();
+            audioSource = GetComponent<AudioSource>();
         }
 
         // Update is called once per frame
@@ -53,6 +55,7 @@ namespace GameJam.Combat
             if (target == null)
                 return;
             target.TakeDamage(unit.GetWeapon().GetDamage());
+            audioSource.PlayOneShot(unit.GetWeapon().GetAttackSound());
         }
 
         void Shoot()
@@ -65,6 +68,7 @@ namespace GameJam.Combat
                     unit.GetLeftHandTransform(),
                     target
                 );
+            audioSource.PlayOneShot(unit.GetWeapon().GetAttackSound());
         }
 
         public bool CanAttack(GameObject combatTarget)

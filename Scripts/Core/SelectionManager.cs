@@ -28,6 +28,11 @@ namespace Core
         [SerializeField]
         private Camera mainCamera;
 
+        [SerializeField]
+        List<AudioClip> interactionSounds;
+
+        private AudioSource interactionAudioSource;
+
         private Vector2 dragStart;
         private bool isDragging;
 
@@ -37,6 +42,14 @@ namespace Core
         private const float MIN_DRAG_DISTANCE = 10f;
 
         private readonly HashSet<string> ignoredTags = new() { "Building", "Enemy" };
+
+        private void Awake()
+        {
+            // Create a dedicated AudioSource for interaction sounds
+            interactionAudioSource = gameObject.AddComponent<AudioSource>();
+            interactionAudioSource.playOnAwake = false;
+            interactionAudioSource.spatialBlend = 0f; // 2D sound
+        }
 
         private void OnEnable()
         {
@@ -356,6 +369,7 @@ namespace Core
                     selectedEntities[0] as MonoBehaviour
                 )?.GetComponent<IUnitCommandable>();
                 commandable?.MoveTo(clickedPosition, clickedPosition + offset);
+                PlayInteractionSound();
             }
             else
             {
@@ -371,6 +385,7 @@ namespace Core
                         selectedEntities[i] as MonoBehaviour
                     )?.GetComponent<IUnitCommandable>();
                     commandable?.MoveTo(clickedPosition, slots[i]);
+                    PlayInteractionSound();
                 }
             }
         }
@@ -383,6 +398,7 @@ namespace Core
                     entity as MonoBehaviour
                 )?.GetComponent<IUnitCommandable>();
                 commandable?.InteractWith(target);
+                PlayInteractionSound();
             }
         }
 
@@ -489,6 +505,22 @@ namespace Core
                     selectedEntities.Remove(entity);
                 }
             }
+        }
+
+        private void PlayInteractionSound()
+        {
+            if (interactionSounds.Count == 0)
+                return;
+
+            // Stop any currently playing interaction sound
+            if (interactionAudioSource.isPlaying)
+                interactionAudioSource.Stop();
+
+            // Play new sound
+            int randomIndex = UnityEngine.Random.Range(0, interactionSounds.Count);
+            AudioClip clip = interactionSounds[randomIndex];
+            interactionAudioSource.clip = clip;
+            interactionAudioSource.Play();
         }
     }
 }

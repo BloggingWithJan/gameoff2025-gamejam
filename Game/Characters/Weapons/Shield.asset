@@ -19,3 +19,4 @@ MonoBehaviour:
   timeBetweenAttacks: 1.5
   isRightHanded: 1
   projectile: {fileID: 0}
+  attackSound: {fileID: 8300000, guid: bbd5c61c07c273a49ab1f4b962fb750e, type: 3}
