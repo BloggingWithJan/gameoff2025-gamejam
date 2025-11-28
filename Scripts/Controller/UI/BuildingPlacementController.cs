@@ -20,6 +20,7 @@ namespace UI.Managers
         public GameObject buildingsParentGameObject;
 
         [SerializeField] private AudioSource placementAudioSource;
+        [SerializeField] private AudioSource dismantleAudioSource;
         
         private GameObject _currentPrefab;
         private GameObject _previewInstance;
@@ -524,6 +525,8 @@ namespace UI.Managers
                     FloatingTextController.Instance.ShowFloatingText(message, Color.green);
                 }
             }
+            
+            dismantleAudioSource.Play();
 
             Destroy(building);
         }

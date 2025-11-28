@@ -12,30 +12,23 @@ namespace Controller.UI
     {
         public static BuildingInfoPanel Instance { get; private set; }
 
-        [Header("UI References")]
-        [SerializeField]
+        [Header("UI References")] [SerializeField]
         private TMP_Text buildingNameText;
 
-        [SerializeField]
-        private TMP_Text descriptionText;
+        [SerializeField] private TMP_Text descriptionText;
 
-        [SerializeField]
-        private TMP_Text unitSlotsText;
-        [SerializeField]
-        private GameObject isAssignableDivider;
+        [SerializeField] private TMP_Text unitSlotsText;
 
-        [SerializeField]
-        private Button moveButton;
+        [SerializeField] private GameObject isAssignableDivider;
 
-        [SerializeField]
-        private Button deleteButton;
+        [SerializeField] private Button moveButton;
 
-        [Header("Controller Reference")]
-        [SerializeField]
+        [SerializeField] private Button deleteButton;
+
+        [Header("Controller Reference")] [SerializeField]
         private BuildingPlacementController buildingPlacementController;
 
-        [Header("Follow Settings")]
-        [SerializeField]
+        [Header("Follow Settings")] [SerializeField]
         private Vector3 offset = new Vector3(0, 1f, 0);
 
         private Transform followTarget;
@@ -114,6 +107,7 @@ namespace Controller.UI
         {
             if (currentBuilding != null && buildingPlacementController != null)
             {
+                HidePanel();
                 buildingPlacementController.RepositionBuilding(currentBuilding);
             }
 
@@ -128,6 +122,7 @@ namespace Controller.UI
             }
 
             HidePanel();
+            TooltipController.Instance.Hide();
         }
     }
 }
