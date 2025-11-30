@@ -19,8 +19,9 @@ namespace UI.Managers
         public GameObject buildPlacingControls;
         public GameObject buildingsParentGameObject;
 
-        [SerializeField] private AudioSource placementAudioSource;
-        
+        [SerializeField]
+        private AudioClip placementAudioClip;
+
         private GameObject _currentPrefab;
         private GameObject _previewInstance;
         private bool _isPlacing;
@@ -36,8 +37,11 @@ namespace UI.Managers
         private float _rotationSpeed = 90f;
         private float _maxRaycastDistance = 500f;
 
+        private AudioSource audioSource;
+
         // distance used when sampling the NavMesh to determine if placement point is on a navmesh
-        [SerializeField] private float navMeshSampleDistance = 0.5f;
+        [SerializeField]
+        private float navMeshSampleDistance = 0.5f;
 
         //track disabled scripts during preview
         private readonly List<MonoBehaviour> _disabledScripts = new();
@@ -53,6 +57,11 @@ namespace UI.Managers
             Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
             return Physics.Raycast(ray, out hit, _maxRaycastDistance, groundMask);
         }
+
+        // void Start()
+        // {
+        //     audioSource = GetComponent<AudioSource>();
+        // }
 
         void Update()
         {
@@ -135,7 +144,9 @@ namespace UI.Managers
             }
         }
 
-        private (bool noBlockers, bool onNavMesh, List<Collider> blockers) IsValidPlacement(Vector3 position)
+        private (bool noBlockers, bool onNavMesh, List<Collider> blockers) IsValidPlacement(
+            Vector3 position
+        )
         {
             var blockers = new List<Collider>();
 
@@ -255,12 +266,12 @@ namespace UI.Managers
 
             _currentPrefab = prefab;
             _previewInstance = Instantiate(prefab, buildingsParentGameObject.transform);
-            
+
             if (_previewInstance.TryGetComponent<BaseBuilding>(out var building))
             {
                 building.IsPreview = true;
             }
-            
+
             // disable all scripts during placement**
             DisableBuildingScripts(_previewInstance);
 
@@ -370,18 +381,18 @@ namespace UI.Managers
                     _previewInstance.transform.rotation,
                     buildingsParentGameObject.transform
                 );
-                
+
                 if (placed.TryGetComponent<BaseBuilding>(out var placedBuilding))
                 {
                     placedBuilding.IsPreview = false;
                 }
-                
+
                 EnableBuildingScripts(placed); // **re-enable scripts**
             }
 
-            if (placementAudioSource != null)
-                placementAudioSource.Play();
-            
+            if (placementAudioClip != null)
+                GetComponent<AudioSource>().PlayOneShot(placementAudioClip);
+
             // Cleanup
             Destroy(_previewInstance);
             ClearBlockerOutlines();
@@ -468,7 +479,10 @@ namespace UI.Managers
                     else if (r.material.HasProperty("_TintColor"))
                     {
                         Color c = r.material.GetColor("_TintColor");
-                        r.material.SetColor("_TintColor", new Color(color.r, color.g, color.b, c.a));
+                        r.material.SetColor(
+                            "_TintColor",
+                            new Color(color.r, color.g, color.b, c.a)
+                        );
                     }
                 }
                 catch (System.Exception e)
