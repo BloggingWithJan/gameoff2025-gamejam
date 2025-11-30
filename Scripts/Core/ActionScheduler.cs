@@ -6,7 +6,7 @@ namespace GameJam.Core
     public class ActionScheduler : MonoBehaviour
     {
         [SerializeField]
-        IAction currentAction;
+        public IAction currentAction;
 
         public void StartAction(IAction action)
         {

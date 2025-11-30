@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc55e05a30781074fa9205f6960e0a7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Resource.ResourceNode
-  maxResourceAmount: 100
+  maxResourceAmount: 200
   currentResourceAmount: 0
   numberOfGatherSlots: 4
   gatherRadius: 1
