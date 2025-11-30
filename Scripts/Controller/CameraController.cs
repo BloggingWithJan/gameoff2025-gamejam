@@ -5,36 +5,22 @@ namespace Controller
 {
     public class CameraController : MonoBehaviour
     {
-        [Header("Movement Settings")]
+        [Header("Settings")]
         public float moveSpeed = 50f;
-        public float moveSpeedMultiplierWhenZoomedOut = 2f;
-
-        [Header("Rotation Settings")]
         public float rotationSpeed = 0.1f;
         public float tiltSpeed = 0.1f;
-
-        [Header("Zoom Settings")]
         public float zoomSpeed = 150f;
         public float minZoom = 3f;
         public float maxZoom = 60f;
-        public AnimationCurve zoomSpeedCurve = AnimationCurve.Linear(0, 1, 1, 1);
-
-        [Header("Auto-Tilt on Zoom")]
-        [Tooltip("X rotation when fully zoomed in (lower = more top-down)")]
-        public float minZoomPitch = 30f;
-
-        [Tooltip("X rotation when fully zoomed out (higher = more angled)")]
-        public float maxZoomPitch = 60f;
-        public bool autoTiltOnZoom = true;
+        public InputActionAsset cameraActionsAsset;
 
         [Header("Camera Bounds")]
         public bool useBounds = true;
         public Vector2 minBounds = new Vector2(-100f, -100f);
         public Vector2 maxBounds = new Vector2(100f, 100f);
+
         [Tooltip("Draw bounds in Scene view")]
         public bool showBoundsGizmo = true;
-
-        public InputActionAsset cameraActionsAsset;
 
         private InputAction _moveAction;
         private InputAction _zoomAction;
@@ -44,7 +30,6 @@ namespace Controller
         private float _distanceToPivot;
         private float _pitch; //vertical angle
         private float _yaw; //horizontal angle
-        private bool _isManuallyRotating;
 
         private void OnEnable()
         {
@@ -84,22 +69,7 @@ namespace Controller
             HandleZoom();
 
             if (Mouse.current.middleButton.isPressed)
-            {
                 HandleMouseOrbit();
-                _isManuallyRotating = true;
-            }
-            else if (Mouse.current.middleButton.wasReleasedThisFrame)
-            {
-                _isManuallyRotating = false;
-            }
-
-            // Auto-tilt based on zoom level
-            if (autoTiltOnZoom && !_isManuallyRotating)
-            {
-                ApplyAutoTilt();
-            }
-
-            UpdateCameraPosition();
         }
 
         private void HandleMovement()
@@ -107,20 +77,11 @@ namespace Controller
             Vector2 input = _moveAction.ReadValue<Vector2>();
             Vector3 forward = Vector3.Scale(transform.forward, new Vector3(1, 0, 1)).normalized;
             Vector3 right = transform.right;
-
-            // Calculate speed multiplier based on zoom distance
-            float zoomNormalized = Mathf.InverseLerp(minZoom, maxZoom, _distanceToPivot);
-            float speedMultiplier = 1f + (zoomNormalized * (moveSpeedMultiplierWhenZoomedOut - 1f));
-
-            Vector3 moveVector =
-                (forward * input.y + right * input.x)
-                * moveSpeed
-                * speedMultiplier
-                * Time.deltaTime;
-            transform.position += moveVector;
+            transform.position +=
+                (forward * input.y + right * input.x) * moveSpeed * Time.deltaTime;
 
             // Update pivot to maintain relative offset
-            _pivotPoint += moveVector;
+            _pivotPoint += (forward * input.y + right * input.x) * moveSpeed * Time.deltaTime;
 
             // Apply bounds
             if (useBounds)
@@ -134,20 +95,10 @@ namespace Controller
             Vector2 scroll = _zoomAction.ReadValue<Vector2>();
             float zoomAmount = scroll.y;
 
-            // Evaluate zoom speed curve based on current zoom level
-            float zoomNormalized = Mathf.InverseLerp(minZoom, maxZoom, _distanceToPivot);
-            float curveMultiplier = zoomSpeedCurve.Evaluate(zoomNormalized);
-
-            _distanceToPivot -= zoomAmount * zoomSpeed * curveMultiplier * Time.deltaTime;
+            _distanceToPivot -= zoomAmount * zoomSpeed * Time.deltaTime;
             _distanceToPivot = Mathf.Clamp(_distanceToPivot, minZoom, maxZoom);
-        }
 
-        private void ApplyAutoTilt()
-        {
-            // Lerp pitch based on zoom level (closer = lower pitch, farther = higher pitch)
-            float zoomNormalized = Mathf.InverseLerp(minZoom, maxZoom, _distanceToPivot);
-            float targetPitch = Mathf.Lerp(minZoomPitch, maxZoomPitch, zoomNormalized);
-            _pitch = Mathf.Lerp(_pitch, targetPitch, tiltSpeed * Time.deltaTime);
+            UpdateCameraPosition();
         }
 
         /**
