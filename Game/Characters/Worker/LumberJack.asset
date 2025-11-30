@@ -16,7 +16,7 @@ MonoBehaviour:
   toolPrefab: {fileID: 11400000, guid: 9080793d9fd758c4996aff02f09dbc4d, type: 2}
   resourceTag: Wood
   gatherTime: 3
-  gatherAmount: 7
+  gatherAmount: 9
   gatherSound: {fileID: 8300000, guid: 2e85be738b3bc4f4f9509d662187b5c1, type: 3}
   headMesh: {fileID: -1793059242609255079, guid: f6eb4d78251df294a929ffc1e980fcbe, type: 3}
   bodyMesh: {fileID: 988656143610355917, guid: f6eb4d78251df294a929ffc1e980fcbe, type: 3}
