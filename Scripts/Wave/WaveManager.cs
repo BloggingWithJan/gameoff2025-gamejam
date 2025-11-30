@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Controller;
 using GameJam.Combat;
 using GameJam.Core;
 using TMPro;
@@ -13,7 +14,7 @@ public class WaveManager : MonoBehaviour
 
     public static event Action onAllWavesCompleted;
 
-    [System.Serializable]
+    [Serializable]
     public class EnemySpawnInfo
     {
         public GameObject enemyPrefab;
@@ -23,7 +24,7 @@ public class WaveManager : MonoBehaviour
         public float spawnInterval = 0.5f;
     }
 
-    [System.Serializable]
+    [Serializable]
     public class Wave
     {
         public string waveName = "Wave";
@@ -31,40 +32,28 @@ public class WaveManager : MonoBehaviour
     }
 
     [Header("UI References")]
-    [SerializeField]
-    private TMP_Text currentWaveText;
-
-    [SerializeField]
-    private TMP_Text nextWaveText;
+    [SerializeField] private TMP_Text currentWaveText;
+    [SerializeField] private TMP_Text nextWaveText;
 
     [Header("Wave Settings")]
-    [SerializeField]
-    private List<Wave> waves = new List<Wave>();
+    [SerializeField] private List<Wave> waves = new List<Wave>();
+    [SerializeField] private Transform[] spawnPoints;
+    [SerializeField] private Transform playerBase;
 
-    [SerializeField]
-    private Transform[] spawnPoints;
-
-    [SerializeField]
-    private Transform playerBase;
-
-    [SerializeField]
-    float initialDelay = 60f;
-
-    [SerializeField]
-    float timeBetweenWaves = 120f;
+    [SerializeField] float initialDelay = 60f;
+    [SerializeField] float timeBetweenWaves = 120f;
 
     [Header("Cinematics")]
-    [SerializeField]
-    CinemachineCamera waveIntroCamera;
+    [SerializeField] private CinemachineCamera waveIntroCamera;
+    [SerializeField] float introCameraDuration = 3f;
+    [SerializeField] List<GameObject> uiControlsToHideDuringIntro;
+    [SerializeField] List<GameObject> uiControlsToShowDuringIntro;
 
-    [SerializeField]
-    float introCameraDuration = 3f;
-
-    [SerializeField]
-    List<GameObject> uiControlsToHideDuringIntro;
-
-    [SerializeField]
-    List<GameObject> uiControlsToShowDuringIntro;
+    [Header("Ghost Ship Settings")]
+    [SerializeField] private GameObject ghostShipPrefab;
+    [SerializeField] private Transform islandCenter;
+    [SerializeField] private float waterLevel = 0f;
+    [SerializeField] private float shipEntryDistance = 300f;
 
     private int currentWave = 0;
     private float countdownToNextWave;
@@ -84,7 +73,7 @@ public class WaveManager : MonoBehaviour
         Instance = this;
     }
 
-    void Start()
+    private void Start()
     {
         if (waveCoroutine == null)
         {
@@ -108,10 +97,10 @@ public class WaveManager : MonoBehaviour
                 int waveIndex = currentWave - 1; // Wave 1 = index 0
                 if (waveIndex < waves.Count)
                 {
-                    bool isLastWave = (waveIndex == waves.Count - 1);
+                    bool isLastWave = waveIndex == waves.Count - 1;
+
                     yield return StartCoroutine(SpawnEnemyWave(waves[waveIndex], isLastWave));
 
-                    // If this was the last wave, stop spawning
                     if (isLastWave)
                     {
                         Debug.Log("Last wave spawned! Waiting for enemies to be defeated...");
@@ -126,12 +115,14 @@ public class WaveManager : MonoBehaviour
             }
 
             UpdateWaveUI();
+
             while (countdownToNextWave > 0)
             {
                 yield return null;
                 countdownToNextWave -= Time.deltaTime;
                 UpdateWaveUI();
             }
+
             currentWave++;
         }
     }
@@ -147,15 +138,49 @@ public class WaveManager : MonoBehaviour
             lastWaveEnemiesAlive = 0;
         }
 
-        foreach (EnemySpawnInfo enemyInfo in wave.enemies)
+        Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)];
+        Vector3 targetPos = spawnPoint.position;
+
+        Vector3 entryPos = ComputeShipEntryPoint(targetPos);
+
+        GameObject ship = Instantiate(ghostShipPrefab);
+        var controller = ship.GetComponent<GhostShipController>();
+
+        bool waveSpawned = false;
+
+        controller.StartSequence(entryPos, targetPos, waterLevel);
+        controller.onCrash = () =>
+        {
+            if (!waveSpawned)
+            {
+                waveSpawned = true;
+                StartCoroutine(SpawnEnemiesAfterCrash(wave, isLastWave, spawnPoint));
+            }
+        };
+
+        while (!waveSpawned)
+            yield return null;
+    }
+
+    IEnumerator SpawnEnemiesAfterCrash(Wave wave, bool isLastWave, Transform spawnPoint)
+    {
+        foreach (var enemyInfo in wave.enemies)
         {
             for (int i = 0; i < enemyInfo.count; i++)
             {
-                GameObject enemy = SpawnEnemy(enemyInfo.enemyPrefab);
+                GameObject enemy = Instantiate(
+                    enemyInfo.enemyPrefab,
+                    spawnPoint.position,
+                    spawnPoint.rotation
+                );
 
-                if (isLastWave && enemy != null)
+                var ai = enemy.GetComponent<EnemySoldier>();
+                if (ai != null && playerBase != null)
+                    ai.SetPlayerBase(playerBase);
+
+                if (isLastWave)
                 {
-                    Health health = enemy.GetComponent<Health>();
+                    var health = enemy.GetComponent<Health>();
                     if (health != null)
                     {
                         lastWaveEnemies.Add(health);
@@ -169,35 +194,29 @@ public class WaveManager : MonoBehaviour
         }
     }
 
-    GameObject SpawnEnemy(GameObject enemyPrefab)
+    private void OnLastWaveEnemyDied(Health enemy)
     {
-        if (spawnPoints == null || spawnPoints.Length == 0)
+        lastWaveEnemiesAlive--;
+
+        if (lastWaveEnemiesAlive <= 0)
         {
-            Debug.LogError("No spawn points assigned!");
-            return null;
+            Debug.Log("All waves cleared!");
+            onAllWavesCompleted?.Invoke();
         }
+    }
 
-        // Choose random spawn point
-        Transform spawnPoint = spawnPoints[currentWave - 1];
-
-        // Spawn enemy
-        GameObject enemy = Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
-
-        // Set player base target (if enemy has AI controller)
-        var aiController = enemy.GetComponent<EnemySoldier>();
-        if (aiController != null && playerBase != null)
-        {
-            aiController.SetPlayerBase(playerBase);
-        }
-
-        Debug.Log($"Spawned {enemyPrefab.name} at {spawnPoint.position}");
-        return enemy;
+    private Vector3 ComputeShipEntryPoint(Vector3 spawnPoint)
+    {
+        Vector3 dir = (spawnPoint - islandCenter.position).normalized;
+        Vector3 entry = spawnPoint + dir * shipEntryDistance;
+        entry.y = waterLevel - 8f;
+        return entry;
     }
 
     void UpdateWaveUI()
     {
-        currentWaveText.text = "Wave: " + currentWave + "/" + waves.Count;
-        nextWaveText.text = "Next Wave In: " + FormatTime(countdownToNextWave);
+        currentWaveText.text = $"Wave: {currentWave} / {waves.Count}";
+        nextWaveText.text = $"Next Wave In: {FormatTime(countdownToNextWave)}";
     }
 
     string FormatTime(float time)
@@ -207,25 +226,10 @@ public class WaveManager : MonoBehaviour
         return string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 
-    // Optional: Manually trigger next wave (for testing or gameplay feature)
     public void TriggerNextWave()
     {
         if (countdownToNextWave > 0)
-        {
-            countdownToNextWave = 0; // Skip countdown
-        }
-    }
-
-    private void OnLastWaveEnemyDied(Health enemyHealth)
-    {
-        lastWaveEnemiesAlive--;
-        Debug.Log($"Last wave enemy died. Remaining: {lastWaveEnemiesAlive}");
-
-        if (lastWaveEnemiesAlive <= 0)
-        {
-            Debug.Log("All waves completed! Player wins!");
-            onAllWavesCompleted?.Invoke();
-        }
+            countdownToNextWave = 0;
     }
 
     private IEnumerator PlayCinemachineIntro()
