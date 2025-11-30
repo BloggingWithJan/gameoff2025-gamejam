@@ -7,8 +7,8 @@ namespace Controller
     {
         [Header("Settings")]
         public float moveSpeed = 50f;
-        public float rotationSpeed = 0.1f;
-        public float tiltSpeed = 0.1f;
+        public float rotationSpeed = 15f;
+        public float tiltSpeed = 15f;
         public float zoomSpeed = 150f;
         public float minZoom = 3f;
         public float maxZoom = 60f;

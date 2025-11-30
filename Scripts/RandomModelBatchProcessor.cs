@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using UnityEngine;
 using UnityEditor;
 using System;
 
@@ -17,3 +18,4 @@ public static class RandomModelBatchProcessor
         Debug.Log($"Randomized {selectors.Length} RandomModelSelectors in the scene.");
     }
 }
+#endif

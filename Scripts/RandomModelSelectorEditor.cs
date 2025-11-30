@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(RandomModelSelector))]
@@ -35,3 +36,4 @@ public class RandomModelSelectorEditor : Editor
         }
     }
 }
+#endif
