@@ -19,11 +19,9 @@ namespace UI.Managers
         public GameObject buildPlacingControls;
         public GameObject buildingsParentGameObject;
 
-        [SerializeField]
-        private AudioClip placementAudioClip;
+        [SerializeField] private AudioClip placementAudioClip;
+        [SerializeField] private AudioClip dismantleAudioClip;
 
-        [SerializeField] private AudioSource dismantleAudioSource;
-        
         private GameObject _currentPrefab;
         private GameObject _previewInstance;
         private bool _isPlacing;
@@ -42,8 +40,7 @@ namespace UI.Managers
         private AudioSource audioSource;
 
         // distance used when sampling the NavMesh to determine if placement point is on a navmesh
-        [SerializeField]
-        private float navMeshSampleDistance = 0.5f;
+        [SerializeField] private float navMeshSampleDistance = 0.5f;
 
         //track disabled scripts during preview
         private readonly List<MonoBehaviour> _disabledScripts = new();
@@ -268,12 +265,12 @@ namespace UI.Managers
 
             _currentPrefab = prefab;
             _previewInstance = Instantiate(prefab, buildingsParentGameObject.transform);
-            
+
             if (_previewInstance.TryGetComponent<BaseBuilding>(out var building))
             {
                 building.IsPreview = true;
             }
-            
+
             // disable all scripts during placement**
             DisableBuildingScripts(_previewInstance);
 
@@ -383,12 +380,12 @@ namespace UI.Managers
                     _previewInstance.transform.rotation,
                     buildingsParentGameObject.transform
                 );
-                
+
                 if (placed.TryGetComponent<BaseBuilding>(out var placedBuilding))
                 {
                     placedBuilding.IsPreview = false;
                 }
-                
+
                 EnableBuildingScripts(placed); // **re-enable scripts**
             }
 
@@ -537,8 +534,9 @@ namespace UI.Managers
                     FloatingTextController.Instance.ShowFloatingText(message, Color.green);
                 }
             }
-            
-            dismantleAudioSource.Play();
+
+            if (dismantleAudioClip != null)
+                GetComponent<AudioSource>().PlayOneShot(dismantleAudioClip);
 
             Destroy(building);
         }
