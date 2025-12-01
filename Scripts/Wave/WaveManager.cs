@@ -32,28 +32,53 @@ public class WaveManager : MonoBehaviour
     }
 
     [Header("UI References")]
-    [SerializeField] private TMP_Text currentWaveText;
-    [SerializeField] private TMP_Text nextWaveText;
+    [SerializeField]
+    private TMP_Text currentWaveText;
+
+    [SerializeField]
+    private TMP_Text nextWaveText;
 
     [Header("Wave Settings")]
-    [SerializeField] private List<Wave> waves = new List<Wave>();
-    [SerializeField] private Transform[] spawnPoints;
-    [SerializeField] private Transform playerBase;
+    [SerializeField]
+    private List<Wave> waves = new List<Wave>();
 
-    [SerializeField] float initialDelay = 60f;
-    [SerializeField] float timeBetweenWaves = 120f;
+    [SerializeField]
+    private Transform[] spawnPoints;
+
+    [SerializeField]
+    private Transform playerBase;
+
+    [SerializeField]
+    float initialDelay = 60f;
+
+    [SerializeField]
+    float timeBetweenWaves = 120f;
 
     [Header("Cinematics")]
-    [SerializeField] private CinemachineCamera waveIntroCamera;
-    [SerializeField] float introCameraDuration = 3f;
-    [SerializeField] List<GameObject> uiControlsToHideDuringIntro;
-    [SerializeField] List<GameObject> uiControlsToShowDuringIntro;
+    [SerializeField]
+    private CinemachineCamera waveIntroCamera;
+
+    [SerializeField]
+    float introCameraDuration = 3f;
+
+    [SerializeField]
+    List<GameObject> uiControlsToHideDuringIntro;
+
+    [SerializeField]
+    List<GameObject> uiControlsToShowDuringIntro;
 
     [Header("Ghost Ship Settings")]
-    [SerializeField] private GameObject ghostShipPrefab;
-    [SerializeField] private Transform islandCenter;
-    [SerializeField] private float waterLevel = 0f;
-    [SerializeField] private float shipEntryDistance = 300f;
+    [SerializeField]
+    private GameObject ghostShipPrefab;
+
+    [SerializeField]
+    private Transform islandCenter;
+
+    [SerializeField]
+    private float waterLevel = 0f;
+
+    [SerializeField]
+    private float shipEntryDistance = 300f;
 
     private int currentWave = 0;
     private float countdownToNextWave;
@@ -130,7 +155,7 @@ public class WaveManager : MonoBehaviour
     IEnumerator SpawnEnemyWave(Wave wave, bool isLastWave)
     {
         Debug.Log($"Spawning wave: {wave.waveName}");
-        yield return StartCoroutine(PlayCinemachineIntro());
+        // yield return StartCoroutine(PlayCinemachineIntro());
 
         if (isLastWave)
         {
@@ -138,22 +163,30 @@ public class WaveManager : MonoBehaviour
             lastWaveEnemiesAlive = 0;
         }
 
-        Transform spawnPoint = spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)];
+        Transform spawnPoint = spawnPoints[currentWave - 1];
         Vector3 targetPos = spawnPoint.position;
 
         Vector3 entryPos = ComputeShipEntryPoint(targetPos);
 
         GameObject ship = Instantiate(ghostShipPrefab);
+        waveIntroCamera.transform.position = entryPos + new Vector3(25f, 10f, 0);
+        waveIntroCamera.Follow = ship.transform;
         var controller = ship.GetComponent<GhostShipController>();
 
         bool waveSpawned = false;
 
-        controller.StartSequence(entryPos, targetPos, waterLevel);
+        SaveAndHideUI();
+        waveIntroCamera.enabled = true;
+        waveIntroCamera.Priority = 999;
+        controller.StartSequence(entryPos, targetPos, waterLevel, waveIntroCamera);
         controller.onCrash = () =>
         {
             if (!waveSpawned)
             {
                 waveSpawned = true;
+                RestoreUI();
+                waveIntroCamera.Priority = 0;
+                waveIntroCamera.enabled = false;
                 StartCoroutine(SpawnEnemiesAfterCrash(wave, isLastWave, spawnPoint));
             }
         };
