@@ -35,8 +35,22 @@ namespace GameJam.Combat
 
         public bool GetIsInRange()
         {
-            return Vector3.Distance(transform.position, target.transform.position)
-                < unit.GetWeapon().GetRange();
+            if (target == null)
+                return false;
+
+            float distance = Vector3.Distance(transform.position, target.transform.position);
+            float effectiveRange = unit.GetWeapon().GetRange();
+
+            // If target is a building, add its collider size to the range
+            Collider targetCollider = target.GetComponent<Collider>();
+            if (targetCollider != null)
+            {
+                // Get the closest point on the collider bounds to the unit
+                Vector3 closestPoint = targetCollider.ClosestPoint(transform.position);
+                distance = Vector3.Distance(transform.position, closestPoint);
+            }
+
+            return distance < effectiveRange;
         }
 
         public void AttackBehaviour()
