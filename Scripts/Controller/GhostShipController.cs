@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Unity.Cinemachine;
 using UnityEngine;
 
 namespace Controller
@@ -6,9 +7,9 @@ namespace Controller
     public class GhostShipController : MonoBehaviour
     {
         [Header("Timing")]
-        public float riseDuration = 2f;  // coming out of water
-        public float rideDuration = 2.5f;  // floating toward island
-        public float diveDuration = 2f;  // crashing down
+        public float riseDuration = 2f; // coming out of water
+        public float rideDuration = 2.5f; // floating toward island
+        public float diveDuration = 2f; // crashing down
 
         [Header("Crash Settings")]
         public float crashDepth = 50f; // how far below the island the ship sinks
@@ -21,16 +22,24 @@ namespace Controller
         [Header("Entry Settings")]
         [Tooltip("How far below the water the ship starts")]
         public float startDepth = 30;
-        
+
         [Header("Audio")]
         public AudioSource crashAudioSource;
 
-        Vector3 startPos, midPos, crashPos;
-        Quaternion midRot, diveRot;
+        Vector3 startPos,
+            midPos,
+            crashPos;
+        Quaternion midRot,
+            diveRot;
 
         public System.Action onCrash;
 
-        public void StartSequence(Vector3 entryPoint, Vector3 destination, float waterLevel)
+        public void StartSequence(
+            Vector3 entryPoint,
+            Vector3 destination,
+            float waterLevel,
+            CinemachineCamera introCamera
+        )
         {
             // Start below water
             startPos = entryPoint;
@@ -88,6 +97,7 @@ namespace Controller
             t = 0;
             Vector3 diveStart = transform.position;
             bool explosionTriggered = false;
+            onCrash?.Invoke();
             while (t < diveDuration)
             {
                 t += Time.deltaTime;
@@ -101,7 +111,11 @@ namespace Controller
                     explosionTriggered = true;
 
                     if (diveExplosionPrefab != null)
-                        Instantiate(diveExplosionPrefab, new Vector3(crashPos.x, crashPos.y + crashDepth, crashPos.z), Quaternion.identity);
+                        Instantiate(
+                            diveExplosionPrefab,
+                            new Vector3(crashPos.x, crashPos.y + crashDepth, crashPos.z),
+                            Quaternion.identity
+                        );
 
                     if (crashAudioSource != null)
                         crashAudioSource.Play();
@@ -110,7 +124,6 @@ namespace Controller
                 yield return null;
             }
 
-            onCrash?.Invoke();
             Destroy(gameObject, 0.5f);
         }
     }
