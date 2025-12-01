@@ -16,8 +16,8 @@ namespace Controller
 
         [Header("Camera Bounds")]
         public bool useBounds = true;
-        public Vector2 minBounds = new Vector2(-100f, -100f);
-        public Vector2 maxBounds = new Vector2(100f, 100f);
+        public Vector2 minBounds = new Vector2(-271.5f, -171.2f);
+        public Vector2 maxBounds = new Vector2(312.7f, 415.7f);
 
         [Tooltip("Draw bounds in Scene view")]
         public bool showBoundsGizmo = true;
