@@ -326,16 +326,18 @@ MonoBehaviour:
   spawnPoint: {fileID: 4997859593653415954}
   isMovable: 1
   isDismantable: 1
+  isAssignable: 1
   costs:
   - resource: 0
     amount: 180
   - resource: 1
-    amount: 250
+    amount: 200
   refunds:
   - resource: 0
     amount: 18
   - resource: 1
     amount: 25
+  IsPreview: 0
   soldierType: {fileID: 11400000, guid: b62861fa94fb6094c917142e220d8c1d, type: 2}
 --- !u!54 &5385279385527283474
 Rigidbody:

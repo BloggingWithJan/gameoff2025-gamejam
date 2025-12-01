@@ -313,7 +313,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b57dd7f5a0947640b8e7ad2bdfe3e04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Core.Health
-  maxHealth: 2000
+  maxHealth: 1000
 --- !u!114 &2662737973471051225
 MonoBehaviour:
   m_ObjectHideFlags: 0
