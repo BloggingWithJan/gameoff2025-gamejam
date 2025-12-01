@@ -24,6 +24,8 @@ namespace GameJam.Military
         private AudioSource audioSource;
 
         private float timeSinceLastAttack = Mathf.Infinity;
+        private float timeSinceTargetOutOfRange = 0f;
+        private const float TARGET_SEARCH_DELAY = 1f;
 
         void Start()
         {
@@ -71,11 +73,26 @@ namespace GameJam.Military
             if (currentTarget == null || currentTarget.IsDead())
             {
                 currentState = CombatBuildingState.Patrol;
+                timeSinceTargetOutOfRange = 0f;
                 return;
             }
+
             if (GetIsInRange())
             {
+                timeSinceTargetOutOfRange = 0f; // Reset timer when target is in range
                 AttackBehaviour();
+            }
+            else
+            {
+                // Target is out of range, start counting
+                timeSinceTargetOutOfRange += Time.deltaTime;
+
+                // If target has been out of range for too long, find a new target
+                if (timeSinceTargetOutOfRange >= TARGET_SEARCH_DELAY)
+                {
+                    currentState = CombatBuildingState.Patrol;
+                    timeSinceTargetOutOfRange = 0f;
+                }
             }
         }
 
