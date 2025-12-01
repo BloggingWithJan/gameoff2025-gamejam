@@ -369,7 +369,10 @@ namespace Core
                     selectedEntities[0] as MonoBehaviour
                 )?.GetComponent<IUnitCommandable>();
                 commandable?.MoveTo(clickedPosition, clickedPosition + offset);
-                PlayInteractionSound();
+                if (commandable != null)
+                {
+                    PlayInteractionSound();
+                }
             }
             else
             {
