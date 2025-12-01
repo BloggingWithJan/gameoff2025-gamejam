@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b710e3e2f3c387b4e844cfd230326368, type: 3}
   m_Name: StoneQuarry
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Worker.WorkerType
-  typeName: StoneQuarry
+  typeName: Stone Gatherer
   toolPrefab: {fileID: 11400000, guid: 609731a5cda6b7444b6221285eded679, type: 2}
   resourceTag: Stone
   gatherTime: 5
-  gatherAmount: 5
+  gatherAmount: 7
   gatherSound: {fileID: 8300000, guid: b0bd56fef2752c9489ae26f1e8506ad2, type: 3}
   headMesh: {fileID: -1793059242609255079, guid: bc1f101bce4b6a646a6e44a9b087e9b0, type: 3}
   bodyMesh: {fileID: 988656143610355917, guid: bc1f101bce4b6a646a6e44a9b087e9b0, type: 3}

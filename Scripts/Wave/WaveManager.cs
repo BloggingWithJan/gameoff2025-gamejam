@@ -248,8 +248,15 @@ public class WaveManager : MonoBehaviour
 
     void UpdateWaveUI()
     {
-        currentWaveText.text = $"Wave: {currentWave} / {waves.Count}";
-        nextWaveText.text = $"Next Wave In: {FormatTime(countdownToNextWave)}";
+        if (currentWaveText != null)
+        {
+            currentWaveText.text = $"Wave: {currentWave} / {waves.Count}";
+        }
+
+        if (nextWaveText != null)
+        {
+            nextWaveText.text = $"Next Wave In: {FormatTime(countdownToNextWave)}";
+        }
     }
 
     string FormatTime(float time)

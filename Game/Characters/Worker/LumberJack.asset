@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b710e3e2f3c387b4e844cfd230326368, type: 3}
   m_Name: LumberJack
   m_EditorClassIdentifier: Assembly-CSharp::GameJam.Worker.WorkerType
-  typeName: LumberJack
+  typeName: Wood Gatherer
   toolPrefab: {fileID: 11400000, guid: 9080793d9fd758c4996aff02f09dbc4d, type: 2}
   resourceTag: Wood
   gatherTime: 3
